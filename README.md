@@ -1,3 +1,17 @@
+# 커밋 컨벤션
+
+feat: 새로운 기능 추가  
+fix: 버그 수정  
+chore: 빌드 작업이나 패키지 매니저 설정 등 코드 변경이 아닌 작업  
+docs: 문서 수정  
+style: 코드 포맷팅, 세미콜론 누락 등 (비즈니스 로직에 변화 없음)  
+refactor: 코드 리팩토링 (기능 변경 없음)  
+test: 테스트 추가 또는 수정  
+perf: 성능 개선  
+ci: CI 설정 변경  
+build: 빌드 시스템이나 외부 종속성 관련 변경  
+revert: 이전 커밋을 되돌릴 때 사용  
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
