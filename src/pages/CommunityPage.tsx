@@ -1,5 +1,10 @@
 import styled from "styled-components";
+import CommunityHeader from "../components/CommunityHeader";
 
 export default function CommunityPage() {
-  return <>커뮤니티 자리임 ㅋㅋ</>;
+  return (
+    <>
+      <CommunityHeader />
+    </>
+  );
 }
