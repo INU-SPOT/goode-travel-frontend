@@ -3,10 +3,20 @@ import { COLOR } from "../utils/color";
 
 interface StyledCommunityProps {
   title: string;
-  details: string[]; // 4가지 계획
-  recommendations: number; // 추천 수
-  children?: React.ReactNode;
+  details: string[];
+  recommendations: number;
 }
+
+const communityData = {
+  title: "대전 투어",
+  details: [
+    "굳이? 성심당 가서 망고시루 먹기",
+    "남선 공원에서 산책하기",
+    "대동하늘공원에서 일몰 보기",
+    "KAIST 거위 구경하기",
+  ],
+  recommendations: 123,
+};
 
 export default function HomePage() {
   return (
@@ -15,10 +25,10 @@ export default function HomePage() {
       <Container>
         <Text>커뮤니티 Best!</Text>
         <StyledCommunity
-          title="대전 투어"
-          details={["상세 항목 1", "상세 항목 2", "상세 항목 3", "상세 항목 4"]}
-          recommendations={123}
-        ></StyledCommunity>
+          title={communityData.title}
+          details={communityData.details}
+          recommendations={communityData.recommendations}
+        />
       </Container>
     </>
   );
@@ -27,7 +37,13 @@ export default function HomePage() {
 const StyledHeader = styled.header`
   width: 100%;
   height: 72px;
+  font-size: 28px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
   background-color: ${COLOR.green};
+  padding-left: 24px;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
 `;
 
 const Container = styled.div`
@@ -57,31 +73,34 @@ const StyledCommunity = ({
     background-color: ${COLOR.green};
     justify-content: center;
     border-radius: 16px;
-    padding: 16px;
+    padding: 18px;
     box-sizing: border-box;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
   `;
 
   const Title = styled.h2`
-    font-size: 24px;
+    font-size: 19px;
     font-weight: bold;
     margin-bottom: 12px;
+    margin-top: 0;
+    text-align: center;
   `;
 
   const DetailList = styled.ul`
     list-style: none;
     padding: 0;
     margin: 0;
-    margin-bottom: 12px;
+    margin-bottom: 9px;
   `;
 
   const DetailItem = styled.li`
-    font-size: 16px;
-    margin-bottom: 8px;
+    font-size: 14px;
+    margin-bottom: 9px;
   `;
 
   const Recommendations = styled.div`
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 12px;
+    text-align: right;
   `;
 
   return (
@@ -92,7 +111,7 @@ const StyledCommunity = ({
           <DetailItem key={index}>{detail}</DetailItem>
         ))}
       </DetailList>
-      <Recommendations>추천 수: {recommendations}</Recommendations>
+      <Recommendations>{recommendations}개</Recommendations>
     </CommunityWrapper>
   );
 };
