@@ -1,6 +1,6 @@
 ---
 name: Custom issue template
-about: Describe this issue template's purpose here.
+about: 양식은 당신의 마음!
 title: ''
 labels: ''
 assignees: ''
