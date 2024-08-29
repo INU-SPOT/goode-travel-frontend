@@ -1,31 +1,19 @@
 import styled from "styled-components";
-import { ReactComponent as HeartIconSVG } from "../assets/icons/heart-icon.svg";
-import { ReactComponent as CommentIconSVG } from "../assets/icons/comment-icon.svg";
+import { ReactComponent as HeartIconSVG } from "../../assets/icons/heart-icon.svg";
+import { ReactComponent as CommentIconSVG } from "../../assets/icons/comment-icon.svg";
 
 interface PostCardProps {
-  title: string;
-  subTitles: string[];
-  likes: number;
-  comments: number;
-  author: string;
-  thumbnail: string;
+  post: Post; // 글로벌 Post 타입 사용
 }
 
-export default function PostCard({
-  title,
-  subTitles,
-  likes,
-  comments,
-  author,
-  thumbnail,
-}: PostCardProps) {
+export default function PostCard({ post }: PostCardProps) {
   return (
     <StyledPostCard>
       <PostContent>
         <TitleWrapper>
-          <Title>{title}</Title>
-          {subTitles &&
-            subTitles.map((subtitle, index) => (
+          <Title>{post.title}</Title>
+          {post.subTitles &&
+            post.subTitles.map((subtitle, index) => (
               <Subtitle key={index}>- {subtitle}</Subtitle>
             ))}
         </TitleWrapper>
@@ -33,17 +21,17 @@ export default function PostCard({
           <IconsWrapper>
             <IconWrapper>
               <HeartIcon />
-              <Count>{likes}</Count>
+              <Count>{post.likes}</Count>
             </IconWrapper>
             <IconWrapper>
               <CommentIcon />
-              <Count>{comments}</Count>
+              <Count>{post.comments}</Count>
             </IconWrapper>
           </IconsWrapper>
-          <Author>by {author}</Author>
+          <Author>by {post.author}</Author>
         </PostFooter>
       </PostContent>
-      <Thumbnail src={thumbnail} alt={`${title} 썸네일`} />
+      <Thumbnail src={post.thumbnail} alt={`${post.title} 썸네일`} />
     </StyledPostCard>
   );
 }
@@ -54,7 +42,6 @@ const StyledPostCard = styled.div`
   min-height: 160px;
   border-radius: 8px;
   box-shadow: 0px 2px 8px 0px #0000001a;
-  margin: 0 24px;
   background-color: white;
 `;
 
