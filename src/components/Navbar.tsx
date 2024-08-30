@@ -29,6 +29,7 @@ const NavbarContainer = styled.nav`
   max-width: 480px;
   width: 100%;
   height: 68px;
+  background-color: white;
   box-shadow: 0px -4px 6px 0px #3030301a;
   display: flex;
   align-items: center;
