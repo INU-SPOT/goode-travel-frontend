@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { COLOR } from "../utils/color";
 import exampleImage from "../assets/images/KakaoTalk_Photo_2024-08-07-20-33-27.png";
+import BentoGrid from "../components/BentoGrid";
 
 interface SharedProps {
   title?: string;
@@ -10,6 +11,7 @@ interface SharedProps {
   image?: string;
 }
 
+// 커뮤니티 게시글에 대한 임시 데이터입니다.
 const communityData = {
   title: "대전 투어",
   goode: "굳이? 성심당 가서 망고시루 먹기",
@@ -23,18 +25,36 @@ const communityData = {
 };
 
 export default function HomePage() {
-  return (
-    <>
-      <StyledHeader>홈</StyledHeader>
-      <Container>
-        <Text>커뮤니티 Best!</Text>
+  const items = [
+    {
+      id: 1,
+      width: 8,
+      height: 2,
+      component: (
         <StyledCommunity
           title={communityData.title}
           goode={communityData.goode}
           details={communityData.details}
           recommendations={communityData.recommendations}
         />
+      ),
+    },
+    {
+      id: 2,
+      width: 3,
+      height: 2,
+      component: (
         <StyledImage goode={communityData.goode} image={communityData.image} />
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <StyledHeader>홈</StyledHeader>
+      <Container>
+        <Text>커뮤니티 Best!</Text>
+        <BentoGrid items={items} />
       </Container>
     </>
   );
@@ -54,16 +74,15 @@ const StyledHeader = styled.header`
 
 const Container = styled.div`
   display: flex;
-  height: 100vh;
-  width: 100%;
   flex-direction: column;
   gap: 18px;
+  padding: 18px;
 `;
 
 const Text = styled.div`
   font-size: 20px;
   font-weight: bold;
-  margin-left: 28px;
+  /* margin-left: 23px; */
   margin-top: 18px;
 `;
 
@@ -90,7 +109,6 @@ const StyledCommunity = ({
 const CommunityWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 0 28px;
   background-color: ${COLOR.green};
   justify-content: center;
   border-radius: 16px;
@@ -117,7 +135,6 @@ const Goode = styled.div`
 const DetailList = styled.ul`
   list-style: none;
   padding: 0;
-
   margin: 0;
   margin-bottom: 9px;
 `;
@@ -144,9 +161,8 @@ const ImageWrapper = styled.div<{ image?: string }>`
   position: relative;
   display: flex;
   flex-direction: column;
-  margin: 0 28px;
-  width: 33%;
-  height: 33%;
+  width: 100%;
+  height: 100%;
   justify-content: center;
   border-radius: 16px;
   box-sizing: border-box;
