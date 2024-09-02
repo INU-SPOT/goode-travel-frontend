@@ -1,26 +1,22 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
-import { setPosts } from "../store/postsSlice";
+import usePostsStore from "../store/usePostsStore";
 
 export const usePosts = () => {
-  const dispatch = useDispatch();
-  const searchQuery = useSelector((state: RootState) => state.posts.searchQuery);
-  const filters = useSelector((state: RootState) => state.posts.filters);
-  const posts = useSelector((state: RootState) => state.posts.posts);
+  const { posts, searchQuery, filters, setPosts } = usePostsStore();
 
+  // searchQuery나 filters가 변경될 때마다 게시물을 다시 가져옴
   useEffect(() => {
     const getPosts = async () => {
       try {
         const fetchedPosts = await fetchPosts(searchQuery, filters);
-        dispatch(setPosts(fetchedPosts));
+        setPosts(fetchedPosts);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
       }
     };
 
     getPosts();
-  }, [searchQuery, filters, dispatch]);
+  }, [searchQuery, filters, setPosts]);
 
   return { posts, searchQuery, filters };
 };
@@ -41,7 +37,10 @@ const fetchPosts = async (
     },
     {
       title: "노잼 도시 탈출기",
-      subTitles: ["오월드 가서 동물원 구경하기", "뿌리공원에서 나의 성씨 비석 찾기"],
+      subTitles: [
+        "오월드 가서 동물원 구경하기",
+        "뿌리공원에서 나의 성씨 비석 찾기",
+      ],
       likes: 84888,
       comments: 1602,
       author: "ㄱㅁㄱ",
@@ -59,3 +58,5 @@ const fetchPosts = async (
 
   return allPosts;
 };
+
+export default usePosts;
