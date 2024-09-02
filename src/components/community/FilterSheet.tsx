@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Sheet } from "react-modal-sheet";
-import { RootState } from "../../store";
-import { setFilters } from "../../store/postsSlice";
+import usePostsStore from "../../store/usePostsStore";
 import { themes } from "../../data/themes";
 import { districts } from "../../data/districts";
 import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
@@ -14,8 +12,7 @@ interface FilterSheetProps {
 }
 
 export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
-  const dispatch = useDispatch();
-  const filters = useSelector((state: RootState) => state.posts.filters);
+  const { filters, setFilters } = usePostsStore();
   const [selectedTheme, setSelectedTheme] = useState<string[]>([]);
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [selectedDistricts, setSelectedDistricts] = useState<string[]>([]);
@@ -55,12 +52,10 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
 
   // 적용 버튼: 로컬 상태의 필터를 전역 상태로 set
   const handleApplyFilters = () => {
-    dispatch(
-      setFilters({
-        theme: selectedTheme,
-        district: selectedDistricts,
-      })
-    );
+    setFilters({
+      theme: selectedTheme,
+      district: selectedDistricts,
+    });
     onClose();
   };
 
