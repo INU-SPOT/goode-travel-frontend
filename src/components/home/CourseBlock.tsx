@@ -8,16 +8,16 @@ interface CourseProps {
 
 const CourseBlock: React.FC<CourseProps> = ({ details }) => {
   return (
-    <>
+    <CourseWrapper>
       <Title>관광코스 살펴보기 &gt;</Title>
-      <CourseWrapper>
+      <DetailWrapper>
         <DetailList>
           {details?.map((detail, index) => (
             <DetailItem key={index}>{detail}</DetailItem>
           ))}
         </DetailList>
-      </CourseWrapper>
-    </>
+      </DetailWrapper>
+    </CourseWrapper>
   );
 };
 
@@ -25,7 +25,7 @@ export default CourseBlock;
 
 const Title = styled.h2`
   font-size: 15px;
-  margin-bottom: 9px;
+  margin: 0 0 9px 0;
   text-align: right;
 `;
 
@@ -33,8 +33,12 @@ const CourseWrapper = styled.div`
   cursor: pointer;
   display: flex;
   flex-direction: column;
+`;
+
+const DetailWrapper = styled.div`
   background-color: ${COLOR.blue};
   justify-content: center;
+  height: 100%;
   border-radius: 16px;
   padding: 18px;
   box-sizing: border-box;
@@ -47,11 +51,10 @@ const DetailList = styled.ul`
   margin: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* 아이템 간의 간격을 동일하게 */
-  height: 100%; /* 부모 요소의 높이를 차지하도록 */
+  justify-content: space-between;
 `;
 
 const DetailItem = styled.li`
   font-size: 12px;
-  padding: 5px 0; /* 위아래로 일정한 간격 */
+  padding: 5px 0;
 `;

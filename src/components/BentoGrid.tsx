@@ -14,7 +14,7 @@ interface BentoGridProps {
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(10, 1fr);
   gap: 13px;
   grid-auto-rows: 100px;
 `;
