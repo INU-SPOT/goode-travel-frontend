@@ -5,8 +5,10 @@ import exampleImage from "../assets/images/KakaoTalk_Photo_2024-08-07-20-33-27.p
 import BentoGrid from "../components/BentoGrid";
 import CommunityBlock from "../components/home/CommunityBlock";
 import ImageBlock from "../components/home/ImageBlock";
+import CourseBlock from "../components/home/CourseBlock";
 import { ReactComponent as SearchIcon } from "../assets/icons/bell-svgrepo-com.svg";
 
+// 커뮤니티 게시글에 대한 임시 데이터입니다.
 const communityData = {
   title: "대전 투어",
   goode: "굳이? 성심당 가서 망고시루 먹기",
@@ -17,6 +19,15 @@ const communityData = {
   ],
   recommendations: 123,
   image: exampleImage,
+};
+
+// 관광코스에 대한 임시 데이터입니다.
+const courseData = {
+  details: [
+    "한화 이글스 경기 보기 ^^",
+    "소제동 카페거리에서 커피 마시기",
+    "대전역에서 전역 사진 찍기",
+  ],
 };
 
 export default function HomePage() {
@@ -41,6 +52,12 @@ export default function HomePage() {
       component: (
         <ImageBlock goode={communityData.goode} image={communityData.image} />
       ),
+    },
+    {
+      id: 3,
+      width: 5,
+      height: 1,
+      component: <CourseBlock details={courseData.details} />,
     },
   ];
 
