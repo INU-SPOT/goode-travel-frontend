@@ -36,7 +36,7 @@ export default function HomePage() {
     {
       id: 1,
       width: 10,
-      height: 2,
+      height: 5,
       component: (
         <CommunityBlock
           title={communityData.title}
@@ -49,7 +49,7 @@ export default function HomePage() {
     {
       id: 2,
       width: 4,
-      height: 2,
+      height: 6,
       component: (
         <ImageBlock goode={communityData.goode} image={communityData.image} />
       ),
@@ -57,13 +57,13 @@ export default function HomePage() {
     {
       id: 3,
       width: 6,
-      height: 1,
+      height: 3,
       component: <GoodeListBlock />,
     },
     {
       id: 4,
       width: 6,
-      height: 1,
+      height: 3,
       component: <CourseBlock details={courseData.details} />,
     },
   ];

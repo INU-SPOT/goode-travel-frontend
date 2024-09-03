@@ -35,43 +35,44 @@ const CommunityWrapper = styled.div`
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  height: 100%;
   background-color: ${COLOR.green};
   justify-content: center;
   border-radius: 16px;
   padding: 18px;
-  box-sizing: border-box;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
 `;
 
-const Title = styled.h2`
+const Title = styled.div`
+  flex-grow: 1.5;
   font-size: 19px;
   font-weight: bold;
-  margin-bottom: 12px;
   margin-top: 0;
   text-align: center;
 `;
 
 const Goode = styled.div`
+  flex-grow: 1;
   font-size: 15px;
   font-weight: bold;
-  margin-bottom: 12px;
-  margin-top: 0;
 `;
 
 const DetailList = styled.ul`
+  flex-grow: 1;
   list-style: none;
   padding: 0;
   margin: 0;
-  margin-bottom: 10px;
   color: #888888;
 `;
 
 const DetailItem = styled.li`
   font-size: 14px;
-  margin-bottom: 9px;
+  margin: 5px 0;
 `;
 
 const Recommendations = styled.div`
+  flex-grow: 1;
   font-size: 12px;
   text-align: right;
+  justify-content: center;
 `;

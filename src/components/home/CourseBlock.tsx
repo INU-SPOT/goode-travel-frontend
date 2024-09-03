@@ -23,22 +23,24 @@ const CourseBlock: React.FC<CourseProps> = ({ details }) => {
 
 export default CourseBlock;
 
-const Title = styled.h2`
-  font-size: 15px;
-  margin: 0 0 9px 0;
-  text-align: right;
-`;
-
 const CourseWrapper = styled.div`
+  height: 100%;
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  gap: 7px;
+`;
+
+const Title = styled.div`
+  font-size: 14px;
+  font-weight: 800;
+  text-align: right;
 `;
 
 const DetailWrapper = styled.div`
+  height: 100%;
   background-color: ${COLOR.blue};
   justify-content: center;
-  height: 100%;
   border-radius: 16px;
   padding: 18px;
   box-sizing: border-box;
@@ -46,6 +48,7 @@ const DetailWrapper = styled.div`
 `;
 
 const DetailList = styled.ul`
+  height: 100%;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -55,6 +58,5 @@ const DetailList = styled.ul`
 `;
 
 const DetailItem = styled.li`
-  font-size: 12px;
-  padding: 5px 0;
+  font-size: 10px;
 `;

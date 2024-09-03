@@ -16,10 +16,10 @@ const TagButton: React.FC<TagButtonProps> = ({ text }) => {
 export default TagButton;
 
 const StyledTagButton = styled.div`
-  height: 30px;
+  height: 28px;
   width: 56px;
   background-color: #f6f6f6;
-  border-radius: 13.31px;
+  border-radius: 16px;
   position: relative;
   display: flex;
   align-items: center;
@@ -29,9 +29,5 @@ const StyledTagButton = styled.div`
 
 const TextWrapper = styled.div`
   color: #000000;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: -0.33px;
-  line-height: 17px;
-  white-space: nowrap;
+  font-size: 13px;
 `;
