@@ -8,6 +8,7 @@ import ImageBlock from "../components/home/ImageBlock";
 import CourseBlock from "../components/home/CourseBlock";
 import { ReactComponent as SearchIcon } from "../assets/icons/bell-svgrepo-com.svg";
 import GoodeListBlock from "../components/home/GoodeListBlock";
+import FolderBlock from "../components/home/FolderBlock";
 
 // 커뮤니티 게시글에 대한 임시 데이터입니다.
 const communityData = {
@@ -49,7 +50,7 @@ export default function HomePage() {
     {
       id: 2,
       width: 4,
-      height: 6,
+      height: 7,
       component: (
         <ImageBlock goode={communityData.goode} image={communityData.image} />
       ),
@@ -63,9 +64,15 @@ export default function HomePage() {
     {
       id: 4,
       width: 6,
-      height: 3,
+      height: 4,
       component: <CourseBlock details={courseData.details} />,
     },
+    // {
+    //   id: 5,
+    //   width: 10,
+    //   height: 4,
+    //   component: <FolderBlock user={"John"} />,
+    // },
   ];
 
   return (

@@ -58,5 +58,5 @@ const DetailList = styled.ul`
 `;
 
 const DetailItem = styled.li`
-  font-size: 10px;
+  font-size: 12px;
 `;
