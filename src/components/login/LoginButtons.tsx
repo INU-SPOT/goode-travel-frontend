@@ -23,7 +23,10 @@ export default function LoginButtons() {
             onClick={() => (window.location.href = authService.url)}
           >
             <ContentArea>
-              <img src={iconMap[authService.service]} />
+              <img
+                src={iconMap[authService.service]}
+                alt={authService.service}
+              />
               <span>{authService.label}</span>
             </ContentArea>
           </LoginButton>
