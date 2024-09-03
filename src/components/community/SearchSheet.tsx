@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Sheet } from "react-modal-sheet";
-import { useDispatch } from "react-redux";
-import { setSearchQuery } from "../../store/postsSlice";
+import usePostsStore from "../../store/usePostsStore";
 import styled from "styled-components";
 import { ReactComponent as SearchIcon } from "../../assets/icons/search-icon.svg";
 
@@ -11,11 +10,11 @@ interface SearchSheetProps {
 }
 
 export default function SearchSheet({ isOpen, onClose }: SearchSheetProps) {
-  const dispatch = useDispatch();
+  const setSearchQuery = usePostsStore((state) => state.setSearchQuery);
   const [inputValue, setInputValue] = useState("");
 
   const handleSearch = () => {
-    dispatch(setSearchQuery(inputValue));
+    setSearchQuery(inputValue);
     onClose();
   };
 
