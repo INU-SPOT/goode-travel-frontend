@@ -154,12 +154,16 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
                       </IconWrapper>
                     </FilterTag>
                   ))}
-                  <FilterTag onClick={handleResetFilters}>초기화</FilterTag>
                 </>
+              )}
+              {(selectedTheme.length > 0 || selectedDistricts.length > 0) && (
+                <FilterTag onClick={handleResetFilters}>초기화</FilterTag>
               )}
             </SelectedFilters>
           </ContentWrapper>
-          <ActionButton onClick={handleApplyFilters}>GOOD !</ActionButton>
+          {(selectedTheme.length > 0 || selectedDistricts.length > 0) && (
+            <ActionButton onClick={handleApplyFilters}>GOOD !</ActionButton>
+          )}
         </Sheet.Content>
       </Sheet.Container>
       <Sheet.Backdrop onTap={onClose} />
