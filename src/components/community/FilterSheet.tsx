@@ -43,11 +43,31 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
   // 시/군/구 선택
   const handleDistrictSelect = (district: string) => {
     const fullDistrict = `${selectedCity} ${district}`;
-    setSelectedDistricts((prevDistricts) =>
-      prevDistricts.includes(fullDistrict)
-        ? prevDistricts.filter((d) => d !== fullDistrict)
-        : [...prevDistricts, fullDistrict]
-    );
+
+    setSelectedDistricts((prevDistricts) => {
+      // 현재 선택된 광역시/도에 대한 기존 선택된 시/군/구들을 필터링
+      const updatedDistricts = prevDistricts.filter(
+        (d) => !d.startsWith(selectedCity)
+      );
+
+      if (district === "전체") {
+        // '전체'가 선택된 경우: 현재 광역시/도의 기존 선택들을 모두 제거하고 '전체'만 추가
+        return [...updatedDistricts, fullDistrict];
+      } else {
+        // '전체'가 선택되지 않은 경우: 현재 선택한 시/군/구 추가, 이미 선택된 경우는 제거
+        const isAlreadySelected = prevDistricts.includes(fullDistrict);
+
+        if (isAlreadySelected) {
+          return updatedDistricts;
+        } else {
+          // 만약 '전체'가 이전에 선택되어 있다면, 그것을 제거하고 새 선택을 추가
+          return [
+            ...updatedDistricts.filter((d) => d !== `${selectedCity} 전체`),
+            fullDistrict,
+          ];
+        }
+      }
+    });
   };
 
   // 적용 버튼: 로컬 상태의 필터를 전역 상태로 set
@@ -111,6 +131,15 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
               <>
                 <h3>#시/군/구</h3>
                 <FiltersWrapper>
+                  <FilterButton
+                    key="전체"
+                    onClick={() => handleDistrictSelect("전체")}
+                    selected={selectedDistricts.includes(
+                      `${selectedCity} 전체`
+                    )}
+                  >
+                    전체
+                  </FilterButton>
                   {districts[selectedCity].map((district) => (
                     <FilterButton
                       key={district}
