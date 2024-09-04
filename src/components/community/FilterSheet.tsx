@@ -16,6 +16,7 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
   const [selectedTheme, setSelectedTheme] = useState<string[]>([]);
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [selectedDistricts, setSelectedDistricts] = useState<string[]>([]);
+  const maxCount = 5;
 
   // FilterSheet가 열릴 때: 전역 상태의 필터를 로컬 상태로 가져오기
   useEffect(() => {
@@ -45,26 +46,35 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
     const fullDistrict = `${selectedCity} ${district}`;
 
     setSelectedDistricts((prevDistricts) => {
-      // 현재 선택된 광역시/도에 대한 기존 선택된 시/군/구들을 필터링
-      const updatedDistricts = prevDistricts.filter(
-        (d) => !d.startsWith(selectedCity)
-      );
-
+      // '전체'가 선택된 경우: 현재 광역시/도의 기존 선택들을 모두 제거하고 '전체'만 추가
       if (district === "전체") {
-        // '전체'가 선택된 경우: 현재 광역시/도의 기존 선택들을 모두 제거하고 '전체'만 추가
+        // 같은 광역시/도 내의 기존 선택을 모두 제거하고 '전체'만 추가
+        const updatedDistricts = prevDistricts.filter(
+          (d) => !d.startsWith(selectedCity)
+        );
         return [...updatedDistricts, fullDistrict];
       } else {
-        // '전체'가 선택되지 않은 경우: 현재 선택한 시/군/구 추가, 이미 선택된 경우는 제거
+        // 같은 광역시/도 내에서 선택을 관리
         const isAlreadySelected = prevDistricts.includes(fullDistrict);
 
         if (isAlreadySelected) {
-          return updatedDistricts;
+          // 이미 선택된 시/군/구를 클릭하면 제거
+          return prevDistricts.filter((d) => d !== fullDistrict);
         } else {
           // 만약 '전체'가 이전에 선택되어 있다면, 그것을 제거하고 새 선택을 추가
-          return [
-            ...updatedDistricts.filter((d) => d !== `${selectedCity} 전체`),
-            fullDistrict,
-          ];
+          const updatedDistricts = prevDistricts.filter(
+            (d) => d !== `${selectedCity} 전체`
+          );
+
+          // 최대 maxCount개까지만 선택 가능
+          if (
+            updatedDistricts.filter((d) => d.startsWith(selectedCity)).length >=
+            maxCount
+          ) {
+            return prevDistricts; // maxCount개 이상 선택된 경우, 더 이상 추가하지 않음
+          }
+
+          return [...updatedDistricts, fullDistrict];
         }
       }
     });
@@ -137,6 +147,7 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
                     selected={selectedDistricts.includes(
                       `${selectedCity} 전체`
                     )}
+                    disabled={selectedDistricts.length >= maxCount}
                   >
                     전체
                   </FilterButton>
@@ -147,6 +158,12 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
                       selected={selectedDistricts.includes(
                         `${selectedCity} ${district}`
                       )}
+                      disabled={
+                        selectedDistricts.length >= maxCount &&
+                        !selectedDistricts.includes(
+                          `${selectedCity} ${district}`
+                        )
+                      }
                     >
                       {district}
                     </FilterButton>
@@ -189,6 +206,9 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
                 <FilterTag onClick={handleResetFilters}>초기화</FilterTag>
               )}
             </SelectedFilters>
+            <SelectedCount>
+              선택된 도시: {selectedDistricts.length} / {maxCount}
+            </SelectedCount>
           </ContentWrapper>
           {(selectedTheme.length > 0 || selectedDistricts.length > 0) && (
             <ActionButton onClick={handleApplyFilters}>GOOD !</ActionButton>
@@ -224,13 +244,15 @@ const FiltersWrapper = styled.div`
   gap: 8px;
 `;
 
-const FilterButton = styled.button<{ selected: boolean }>`
+const FilterButton = styled.button<{ selected: boolean; disabled?: boolean }>`
   padding: 8px 0;
   background-color: ${({ selected }) => (selected ? "#3C61E6" : "#ffffff")};
   color: ${({ selected }) => (selected ? "white" : "black")};
   border: 1px solid #3c61e6;
   border-radius: 12px;
   text-align: center;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `;
 
 const SelectedFilters = styled.div`
@@ -239,6 +261,12 @@ const SelectedFilters = styled.div`
   gap: 8px;
   flex-wrap: wrap;
   font-size: 14px;
+`;
+
+const SelectedCount = styled.div`
+  margin-top: 4px;
+  font-size: 14px;
+  color: #666;
 `;
 
 const FilterTag = styled.span`
