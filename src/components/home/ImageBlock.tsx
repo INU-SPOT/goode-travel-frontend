@@ -24,7 +24,7 @@ const ImageWrapper = styled.div<{ image?: string }>`
   width: 100%;
   height: 100%;
   justify-content: center;
-  border-radius: 16px;
+  border-radius: 13px;
   box-sizing: border-box;
   padding: 0 10px;
   background-image: url(${(props) => props.image});

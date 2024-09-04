@@ -78,14 +78,14 @@ const OuterContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 -24px;
+  /* margin: 0 -24px; */
 `;
 
 const Title = styled.div`
   flex-grow: 1.5;
   font-size: 19px;
   font-weight: bold;
-  margin: 0 0 0 24px;
+  /* margin: 0 0 0 24px; */
   align-self: flex-start;
 `;
 
@@ -109,7 +109,7 @@ const Block = styled.div<BlockProps>`
   scroll-snap-align: center;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
 
-  ${({ position }) =>
+  /* ${({ position }) =>
     position === 0 &&
     `
     margin-left: 24px;
@@ -119,5 +119,5 @@ const Block = styled.div<BlockProps>`
     position === totalBlocks - 1 &&
     `
     margin-right: 24px;
-  `}
+  `} */
 `;

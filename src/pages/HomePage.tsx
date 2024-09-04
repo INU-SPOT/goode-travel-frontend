@@ -9,6 +9,8 @@ import CourseBlock from "../components/home/CourseBlock";
 import { ReactComponent as SearchIcon } from "../assets/icons/bell-svgrepo-com.svg";
 import GoodeListBlock from "../components/home/GoodeListBlock";
 import FolderBlock from "../components/home/FolderBlock";
+import RandomBlock from "../components/home/RandomBlock";
+import AdBlock from "../components/home/AdBlock";
 
 // 커뮤니티 게시글에 대한 임시 데이터입니다.
 const communityData = {
@@ -67,12 +69,24 @@ export default function HomePage() {
       height: 4,
       component: <CourseBlock details={courseData.details} />,
     },
-    // {
-    //   id: 5,
-    //   width: 10,
-    //   height: 4,
-    //   component: <FolderBlock user={"John"} />,
-    // },
+    {
+      id: 5,
+      width: 10,
+      height: 5,
+      component: <FolderBlock user={"지인"} />,
+    },
+    {
+      id: 6,
+      width: 10,
+      height: 2,
+      component: <RandomBlock />,
+    },
+    {
+      id: 7,
+      width: 10,
+      height: 5,
+      component: <AdBlock />,
+    },
   ];
 
   return (

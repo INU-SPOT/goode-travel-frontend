@@ -38,7 +38,7 @@ const CommunityWrapper = styled.div`
   height: 100%;
   background-color: ${COLOR.green};
   justify-content: center;
-  border-radius: 16px;
+  border-radius: 13px;
   padding: 18px;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
 `;
@@ -47,7 +47,7 @@ const Title = styled.div`
   flex-grow: 1.5;
   font-size: 19px;
   font-weight: bold;
-  margin-top: 0;
+  margin-bottom: 10px;
   text-align: center;
 `;
 
