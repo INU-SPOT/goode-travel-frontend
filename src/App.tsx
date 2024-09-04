@@ -3,8 +3,12 @@ import MainPage from "./pages/MainPage";
 import HomePage from "./pages/HomePage";
 import CommunityPage from "./pages/CommunityPage";
 import MyPage from "./pages/MyPage";
+import LoginPage from "./pages/LoginPage";
+import useAuth from "./hooks/useAuth";
 
 function App() {
+  useAuth();
+
   return (
     <Router>
       <Routes>
@@ -13,6 +17,7 @@ function App() {
           <Route path="community" element={<CommunityPage />} />
           <Route path="mypage" element={<MyPage />} />
         </Route>
+        <Route path="login" element={<LoginPage />} />
       </Routes>
     </Router>
   );

@@ -16,6 +16,7 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
   const [selectedTheme, setSelectedTheme] = useState<string[]>([]);
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [selectedDistricts, setSelectedDistricts] = useState<string[]>([]);
+  const maxCount = 5;
 
   // FilterSheet가 열릴 때: 전역 상태의 필터를 로컬 상태로 가져오기
   useEffect(() => {
@@ -43,11 +44,40 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
   // 시/군/구 선택
   const handleDistrictSelect = (district: string) => {
     const fullDistrict = `${selectedCity} ${district}`;
-    setSelectedDistricts((prevDistricts) =>
-      prevDistricts.includes(fullDistrict)
-        ? prevDistricts.filter((d) => d !== fullDistrict)
-        : [...prevDistricts, fullDistrict]
-    );
+
+    setSelectedDistricts((prevDistricts) => {
+      // '전체'가 선택된 경우: 현재 광역시/도의 기존 선택들을 모두 제거하고 '전체'만 추가
+      if (district === "전체") {
+        // 같은 광역시/도 내의 기존 선택을 모두 제거하고 '전체'만 추가
+        const updatedDistricts = prevDistricts.filter(
+          (d) => !d.startsWith(selectedCity)
+        );
+        return [...updatedDistricts, fullDistrict];
+      } else {
+        // 같은 광역시/도 내에서 선택을 관리
+        const isAlreadySelected = prevDistricts.includes(fullDistrict);
+
+        if (isAlreadySelected) {
+          // 이미 선택된 시/군/구를 클릭하면 제거
+          return prevDistricts.filter((d) => d !== fullDistrict);
+        } else {
+          // 만약 '전체'가 이전에 선택되어 있다면, 그것을 제거하고 새 선택을 추가
+          const updatedDistricts = prevDistricts.filter(
+            (d) => d !== `${selectedCity} 전체`
+          );
+
+          // 최대 maxCount개까지만 선택 가능
+          if (
+            updatedDistricts.filter((d) => d.startsWith(selectedCity)).length >=
+            maxCount
+          ) {
+            return prevDistricts; // maxCount개 이상 선택된 경우, 더 이상 추가하지 않음
+          }
+
+          return [...updatedDistricts, fullDistrict];
+        }
+      }
+    });
   };
 
   // 적용 버튼: 로컬 상태의 필터를 전역 상태로 set
@@ -78,7 +108,7 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
   };
 
   return (
-    <Sheet isOpen={isOpen} onClose={onClose}>
+    <StyledSheet isOpen={isOpen} onClose={onClose}>
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content>
@@ -111,6 +141,16 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
               <>
                 <h3>#시/군/구</h3>
                 <FiltersWrapper>
+                  <FilterButton
+                    key="전체"
+                    onClick={() => handleDistrictSelect("전체")}
+                    selected={selectedDistricts.includes(
+                      `${selectedCity} 전체`
+                    )}
+                    disabled={selectedDistricts.length >= maxCount}
+                  >
+                    전체
+                  </FilterButton>
                   {districts[selectedCity].map((district) => (
                     <FilterButton
                       key={district}
@@ -118,6 +158,12 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
                       selected={selectedDistricts.includes(
                         `${selectedCity} ${district}`
                       )}
+                      disabled={
+                        selectedDistricts.length >= maxCount &&
+                        !selectedDistricts.includes(
+                          `${selectedCity} ${district}`
+                        )
+                      }
                     >
                       {district}
                     </FilterButton>
@@ -154,18 +200,32 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
                       </IconWrapper>
                     </FilterTag>
                   ))}
-                  <FilterTag onClick={handleResetFilters}>초기화</FilterTag>
                 </>
               )}
+              {(selectedTheme.length > 0 || selectedDistricts.length > 0) && (
+                <FilterTag onClick={handleResetFilters}>초기화</FilterTag>
+              )}
             </SelectedFilters>
+            <SelectedCount>
+              선택된 도시: {selectedDistricts.length} / {maxCount}
+            </SelectedCount>
           </ContentWrapper>
-          <ActionButton onClick={handleApplyFilters}>GOOD !</ActionButton>
+          {(selectedTheme.length > 0 || selectedDistricts.length > 0) && (
+            <ActionButton onClick={handleApplyFilters}>GOOD !</ActionButton>
+          )}
         </Sheet.Content>
       </Sheet.Container>
       <Sheet.Backdrop onTap={onClose} />
-    </Sheet>
+    </StyledSheet>
   );
 }
+
+const StyledSheet = styled(Sheet)`
+  width: 100%;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+`;
 
 const ContentWrapper = styled.div`
   padding: 0 16px 100px 16px;
@@ -184,13 +244,15 @@ const FiltersWrapper = styled.div`
   gap: 8px;
 `;
 
-const FilterButton = styled.button<{ selected: boolean }>`
+const FilterButton = styled.button<{ selected: boolean; disabled?: boolean }>`
   padding: 8px 0;
   background-color: ${({ selected }) => (selected ? "#3C61E6" : "#ffffff")};
   color: ${({ selected }) => (selected ? "white" : "black")};
   border: 1px solid #3c61e6;
   border-radius: 12px;
   text-align: center;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `;
 
 const SelectedFilters = styled.div`
@@ -199,6 +261,12 @@ const SelectedFilters = styled.div`
   gap: 8px;
   flex-wrap: wrap;
   font-size: 14px;
+`;
+
+const SelectedCount = styled.div`
+  margin-top: 4px;
+  font-size: 14px;
+  color: #666;
 `;
 
 const FilterTag = styled.span`

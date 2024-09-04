@@ -10,6 +10,9 @@ interface PostsState {
   setPosts: (posts: Post[]) => void;
   setSearchQuery: (query: string) => void;
   setFilters: (filters: PostsState["filters"]) => void;
+  removeTheme: (theme: string) => void;
+  removeDistrict: (district: string) => void;
+  clearSearchQuery: () => void;
 }
 
 const usePostsStore = create<PostsState>((set) => ({
@@ -22,6 +25,21 @@ const usePostsStore = create<PostsState>((set) => ({
   setPosts: (posts) => set({ posts }),
   setSearchQuery: (query) => set({ searchQuery: query }),
   setFilters: (filters) => set({ filters }),
+  removeTheme: (theme) =>
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        theme: state.filters.theme.filter((t) => t !== theme),
+      },
+    })),
+  removeDistrict: (district) =>
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        district: state.filters.district.filter((d) => d !== district),
+      },
+    })),
+  clearSearchQuery: () => set({ searchQuery: "" }),
 }));
 
 export default usePostsStore;
