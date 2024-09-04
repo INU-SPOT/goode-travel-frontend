@@ -78,7 +78,7 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
   };
 
   return (
-    <Sheet isOpen={isOpen} onClose={onClose}>
+    <StyledSheet isOpen={isOpen} onClose={onClose}>
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content>
@@ -163,9 +163,16 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
         </Sheet.Content>
       </Sheet.Container>
       <Sheet.Backdrop onTap={onClose} />
-    </Sheet>
+    </StyledSheet>
   );
 }
+
+const StyledSheet = styled(Sheet)`
+  width: 100%;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+`;
 
 const ContentWrapper = styled.div`
   padding: 0 16px 100px 16px;
