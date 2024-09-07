@@ -13,8 +13,6 @@ const Item = styled.div<GridItemProps>`
   grid-column-end: span ${({ width }) => width};
 `;
 
-const GridItem: React.FC<GridItemProps> = ({ width, height, color }) => {
+export default function GridItem({ width, height, color }: GridItemProps) {
   return <Item width={width} height={height} color={color} />;
-};
-
-export default GridItem;
+}

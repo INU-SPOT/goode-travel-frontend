@@ -8,11 +8,11 @@ interface FolderProps {
   details?: string[][];
 }
 
-const FolderBlock: React.FC<FolderProps> = ({
+export default function FolderBlock({
   user,
   title = [],
   details = [[]],
-}) => {
+}: FolderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDown, setIsDown] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -86,9 +86,7 @@ const FolderBlock: React.FC<FolderProps> = ({
       </HorizontalScrollContainer>
     </OuterContainer>
   );
-};
-
-export default FolderBlock;
+}
 
 interface BlockProps {
   position: number;

@@ -2,15 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import { COLOR } from "../../utils/color";
 
-const RandomBlock = () => {
+export default function RandomBlock() {
   return (
     <RandomWrapper>
       <Title>즉흥 굳이 뽑기</Title>
     </RandomWrapper>
   );
-};
-
-export default RandomBlock;
+}
 
 const RandomWrapper = styled.div`
   height: 100%;

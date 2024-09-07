@@ -5,15 +5,13 @@ interface TagButtonProps {
   text: string;
 }
 
-const TagButton: React.FC<TagButtonProps> = ({ text }) => {
+export default function TagButton({ text }: TagButtonProps) {
   return (
     <StyledTagButton>
       <TextWrapper>{text}</TextWrapper>
     </StyledTagButton>
   );
-};
-
-export default TagButton;
+}
 
 const StyledTagButton = styled.div`
   height: 28px;

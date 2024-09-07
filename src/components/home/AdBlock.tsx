@@ -3,16 +3,14 @@ import styled from "styled-components";
 import { COLOR } from "../../utils/color";
 import carImage from "../../assets/images/main-palisade-24my-45side.png";
 
-const AdBlock: React.FC = () => {
+export default function AdBlock() {
   return (
     <AdWrapper>
       <Title>현재 렌터카 최저가는?</Title>
       <Image src={carImage} alt="렌터카 광고 이미지" />
     </AdWrapper>
   );
-};
-
-export default AdBlock;
+}
 
 const AdWrapper = styled.div`
   height: 100%;

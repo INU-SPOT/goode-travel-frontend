@@ -6,7 +6,7 @@ interface CourseProps {
   details: string[];
 }
 
-const CourseBlock: React.FC<CourseProps> = ({ details }) => {
+export default function CourseBlock({ details }: CourseProps) {
   return (
     <CourseWrapper>
       <Title>관광코스 살펴보기 &gt;</Title>
@@ -19,9 +19,7 @@ const CourseBlock: React.FC<CourseProps> = ({ details }) => {
       </DetailWrapper>
     </CourseWrapper>
   );
-};
-
-export default CourseBlock;
+}
 
 const CourseWrapper = styled.div`
   height: 100%;

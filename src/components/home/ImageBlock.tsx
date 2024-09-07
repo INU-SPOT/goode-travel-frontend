@@ -6,15 +6,13 @@ interface SharedProps {
   image?: string;
 }
 
-const ImageBlock: React.FC<SharedProps> = ({ goode, image }) => {
+export default function ImageBlock({ goode, image }: SharedProps) {
   return (
     <ImageWrapper image={image}>
       <ImageGoode>{goode}</ImageGoode>
     </ImageWrapper>
   );
-};
-
-export default ImageBlock;
+}
 
 const ImageWrapper = styled.div<{ image?: string }>`
   cursor: pointer;

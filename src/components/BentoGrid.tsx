@@ -24,7 +24,7 @@ const GridItemWrapper = styled.div<{ width: number; height: number }>`
   grid-column-end: span ${({ width }) => width};
 `;
 
-const BentoGrid: React.FC<BentoGridProps> = ({ items }) => {
+export default function BentoGrid({ items }: BentoGridProps) {
   return (
     <GridContainer>
       {items.map((item) => (
@@ -34,6 +34,4 @@ const BentoGrid: React.FC<BentoGridProps> = ({ items }) => {
       ))}
     </GridContainer>
   );
-};
-
-export default BentoGrid;
+}

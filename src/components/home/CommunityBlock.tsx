@@ -9,12 +9,12 @@ interface SharedProps {
   recommendations?: number;
 }
 
-const CommunityBlock: React.FC<SharedProps> = ({
+export default function CommunityBlock({
   title,
   goode,
   details,
   recommendations,
-}) => {
+}: SharedProps) {
   return (
     <CommunityWrapper>
       <Title>{title}</Title>
@@ -27,9 +27,7 @@ const CommunityBlock: React.FC<SharedProps> = ({
       <Recommendations>{recommendations}개</Recommendations>
     </CommunityWrapper>
   );
-};
-
-export default CommunityBlock;
+}
 
 const CommunityWrapper = styled.div`
   cursor: pointer;

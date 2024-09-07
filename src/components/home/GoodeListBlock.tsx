@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import TagButton from "./TagButton";
 
-const GoodeListBlock = () => {
+export default function GoodeListBlock() {
   return (
     <GoodeListWrapper>
       <Title>더 많은 굳이? 보기 &gt;</Title>
@@ -16,9 +16,7 @@ const GoodeListBlock = () => {
       </ButtonContainer>
     </GoodeListWrapper>
   );
-};
-
-export default GoodeListBlock;
+}
 
 const GoodeListWrapper = styled.div`
   height: 100%;
