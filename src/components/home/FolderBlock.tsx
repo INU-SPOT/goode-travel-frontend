@@ -21,7 +21,7 @@ export default function FolderBlock({
   details = [[]],
 }: FolderProps) {
   const colors = [COLOR.beige, COLOR.yellow, COLOR.green, COLOR.blue];
-  const totalBlocks = title.length;
+  const totalblocks = title.length;
 
   return (
     <OuterContainer>
@@ -41,7 +41,7 @@ export default function FolderBlock({
             <StyledSlide
               key={index}
               position={index}
-              totalBlocks={totalBlocks}
+              totalblocks={totalblocks}
               color={colors[index % colors.length]}
             >
               <TitleText>{title[index]}</TitleText>
@@ -62,7 +62,7 @@ export default function FolderBlock({
 
 interface BlockProps {
   position: number;
-  totalBlocks: number;
+  totalblocks: number;
   color: string;
 }
 
