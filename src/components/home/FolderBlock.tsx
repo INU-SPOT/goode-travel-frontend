@@ -1,6 +1,13 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { COLOR } from "../../utils/color";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/scss";
+import "swiper/scss/navigation";
+import "swiper/scss/pagination";
 
 interface FolderProps {
   user: string;
@@ -13,63 +20,28 @@ export default function FolderBlock({
   title = [],
   details = [[]],
 }: FolderProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isDown, setIsDown] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (containerRef.current) {
-      setIsDown(true);
-      setStartX(e.pageX - containerRef.current.offsetLeft);
-      setScrollLeft(containerRef.current.scrollLeft);
-      containerRef.current.classList.add("active");
-    }
-  };
-
-  const handleMouseLeave = () => {
-    setIsDown(false);
-    if (containerRef.current) {
-      containerRef.current.classList.remove("active");
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDown(false);
-    if (containerRef.current) {
-      containerRef.current.classList.remove("active");
-    }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDown) return;
-    e.preventDefault();
-    if (containerRef.current) {
-      const x = e.pageX - containerRef.current.offsetLeft;
-      const walk = (x - startX) * 2; // 스크롤 속도 조절
-      containerRef.current.scrollLeft = scrollLeft - walk;
-    }
-  };
-
   const colors = [COLOR.beige, COLOR.yellow, COLOR.green, COLOR.blue];
-  const totalBlocks = title.length;
+  const totalblocks = title.length;
 
   return (
     <OuterContainer>
       <Title>{user}님의 저장된 리스트</Title>
-      <HorizontalScrollContainer
-        ref={containerRef}
-        onMouseDown={handleMouseDown}
-        onMouseLeave={handleMouseLeave}
-        onMouseUp={handleMouseUp}
-        onMouseMove={handleMouseMove}
-      >
-        {title.length > 0 ? (
-          title.map((item, index) => (
-            <Block
+      {title.length > 0 ? (
+        <StyledSwiper
+          pagination={{
+            dynamicBullets: true,
+            clickable: true,
+          }}
+          modules={[Pagination]}
+          centeredSlides={true}
+          grabCursor={true}
+          spaceBetween={20}
+        >
+          {title.map((item, index) => (
+            <StyledSlide
               key={index}
               position={index}
-              totalBlocks={totalBlocks}
+              totalblocks={totalblocks}
               color={colors[index % colors.length]}
             >
               <TitleText>{title[index]}</TitleText>
@@ -78,21 +50,37 @@ export default function FolderBlock({
                   <DetailItem key={detailIndex}>{detail}</DetailItem>
                 ))}
               </DetailList>
-            </Block>
-          ))
-        ) : (
-          <EmptyBlock>폴더를 생성해보세요!</EmptyBlock>
-        )}
-      </HorizontalScrollContainer>
+            </StyledSlide>
+          ))}
+        </StyledSwiper>
+      ) : (
+        <EmptyBlock>폴더를 생성해보세요!</EmptyBlock>
+      )}
     </OuterContainer>
   );
 }
 
 interface BlockProps {
   position: number;
-  totalBlocks: number;
+  totalblocks: number;
   color: string;
 }
+
+const StyledSwiper = styled(Swiper)`
+  width: 100%;
+  height: 100%;
+  padding: 0 2px 25px 2px;
+`;
+
+const StyledSlide = styled(SwiperSlide)<BlockProps>`
+  flex: 0 0 100%;
+  background-color: ${(props) => props.color};
+  border-radius: 16px;
+  padding: 18px;
+  box-sizing: border-box;
+  scroll-snap-align: center;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.15);
+`;
 
 const OuterContainer = styled.div`
   height: 100%;
@@ -108,34 +96,6 @@ const Title = styled.div`
   font-weight: bold;
   align-self: flex-start;
   margin-bottom: 10px;
-`;
-
-const HorizontalScrollContainer = styled.div`
-  height: 100%;
-  width: calc(100% + 10px);
-  padding: 10px;
-  display: flex;
-  overflow-x: hidden;
-  scroll-snap-type: x mandatory;
-  gap: 18px;
-  touch-action: pan-x;
-  align-items: center;
-
-  &.active {
-    cursor: grabbing;
-    cursor: -webkit-grabbing;
-  }
-`;
-
-const Block = styled.div<BlockProps>`
-  height: 100%;
-  flex: 0 0 70%;
-  background-color: ${(props) => props.color};
-  border-radius: 16px;
-  padding: 18px;
-  box-sizing: border-box;
-  scroll-snap-align: center;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.15);
 `;
 
 const TitleText = styled.div`
