@@ -1,8 +1,8 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { COLOR } from "../../utils/color";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Scrollbar } from "swiper/modules";
+import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/scss";
