@@ -78,6 +78,7 @@ export default function HomePage() {
         <FolderBlock
           user={"지인"}
           title={["나의 여름 대전 여행", "인천 여행", "임시 폴더"]}
+          // title={[]}
           details={[
             [
               "남선 공원에서 산책하기",

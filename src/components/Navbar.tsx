@@ -34,6 +34,7 @@ const NavbarContainer = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-around;
+  z-index: 1000;
 `;
 
 const NavItem = styled.div`
