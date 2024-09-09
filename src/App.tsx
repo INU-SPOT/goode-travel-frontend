@@ -5,12 +5,14 @@ import CommunityPage from "./pages/CommunityPage";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
 import useAuth from "./hooks/useAuth";
+import ScrollDetector from "./components/ScrollDetector";
 
 function App() {
   useAuth();
 
   return (
     <Router>
+      <ScrollDetector />
       <Routes>
         <Route path="/" element={<MainPage />}>
           <Route path="/" element={<HomePage />} />

@@ -1,6 +1,7 @@
 // HomePage.tsx
 import styled from "styled-components";
 import { COLOR } from "../utils/color";
+import { useState } from "react";
 import exampleImage from "../assets/images/KakaoTalk_Photo_2024-08-07-20-33-27.png";
 import BentoGrid from "../components/BentoGrid";
 import CommunityBlock from "../components/home/CommunityBlock";
@@ -11,6 +12,7 @@ import GoodeListBlock from "../components/home/GoodeListBlock";
 import FolderBlock from "../components/home/FolderBlock";
 import RandomBlock from "../components/home/RandomBlock";
 import AdBlock from "../components/home/AdBlock";
+import NotificationSheet from "../components/home/NotificationSheet";
 
 // 커뮤니티 게시글에 대한 임시 데이터입니다.
 const communityData = {
@@ -35,6 +37,8 @@ const courseData = {
 };
 
 export default function HomePage() {
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+
   const items = [
     {
       id: 1,
@@ -106,20 +110,28 @@ export default function HomePage() {
   ];
 
   return (
-    <>
+    <HomeContainer>
       <StyledHeader>홈</StyledHeader>
       <Container>
         <HeaderContainer>
           <Text>커뮤니티 Best!</Text>
-          <IconButton onClick={() => {}}>
+          <IconButton onClick={() => setIsNotificationOpen(true)}>
             <SearchIcon />
           </IconButton>
         </HeaderContainer>
         <BentoGrid items={items} />
       </Container>
-    </>
+      <NotificationSheet
+        isOpen={isNotificationOpen}
+        onClose={() => setIsNotificationOpen(false)}
+      />
+    </HomeContainer>
   );
 }
+
+const HomeContainer = styled.div`
+  width: 100%;
+`;
 
 const StyledHeader = styled.header`
   width: 100%;
