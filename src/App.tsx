@@ -5,6 +5,7 @@ import CommunityPage from "./pages/CommunityPage";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
 import useAuth from "./hooks/useAuth";
+import WritePage from "./pages/WritePage";
 
 function App() {
   useAuth();
@@ -18,6 +19,7 @@ function App() {
           <Route path="mypage" element={<MyPage />} />
         </Route>
         <Route path="login" element={<LoginPage />} />
+        <Route path="write" element={<WritePage />} />
       </Routes>
     </Router>
   );

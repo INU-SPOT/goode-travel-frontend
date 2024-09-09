@@ -5,10 +5,12 @@ import { ReactComponent as FilterIcon } from "../../assets/icons/filter-icon.svg
 import { ReactComponent as PencilIcon } from "../../assets/icons/pencil-icon.svg";
 import SearchSheet from "./SearchSheet";
 import FilterSheet from "./FilterSheet";
+import { useNavigate } from "react-router-dom";
 
 export default function CommunityHeader() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -21,7 +23,7 @@ export default function CommunityHeader() {
           <IconButton onClick={() => setIsFilterOpen(true)}>
             <StyledIcon as={FilterIcon} />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={() => navigate("/write")}>
             <StyledIcon as={PencilIcon} />
           </IconButton>
         </IconGroup>
@@ -42,13 +44,14 @@ export default function CommunityHeader() {
 const StyledHeader = styled.header`
   height: 72px;
   padding: 0 24px;
-  border-bottom: 2px solid #e0e0e0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   h2 {
     margin: 0;
   }
+  background-color: #abe5e3;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
 `;
 
 const IconGroup = styled.div`
