@@ -143,7 +143,6 @@ const StyledItemButton = styled.button<{ $isAdded: boolean }>`
   background-color: ${({ $isAdded }) => ($isAdded ? "#ccc" : "white")};
   box-shadow: 0px 2px 8px 0px #0000001a;
   color: ${({ $isAdded }) => ($isAdded ? "#888" : "black")};
-  cursor: ${({ $isAdded }) => ($isAdded ? "not-allowed" : "pointer")};
 `;
 
 const ConfirmButton = styled.button`

@@ -8,7 +8,7 @@ interface ItemContainerProps {
   content: string;
   updateContent: (id: number, content: string) => void;
   removeItemPost: (id: number) => void;
-  dragListeners: any; // 드래그 핸들러 리스너
+  dragListeners: any;
 }
 
 export default function ItemContainer({
@@ -26,7 +26,6 @@ export default function ItemContainer({
   return (
     <StyledItemContainer>
       <TitleWrapper>
-        {/* 드래그 핸들로 사용될 부분 */}
         <span {...dragListeners} style={{ cursor: "grab" }}>
           {title}
         </span>
@@ -64,5 +63,4 @@ const TitleWrapper = styled.div`
 const StyledMinusIcon = styled(MinusIcon)`
   width: 16px;
   height: 16px;
-  cursor: pointer;
 `;
