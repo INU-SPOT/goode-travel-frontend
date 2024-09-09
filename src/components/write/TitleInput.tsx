@@ -20,7 +20,6 @@ export default function TitleInput({ value, onChange }: TitleInputProps) {
 }
 
 const StyledTitleInput = styled.input`
-  margin: 0 24px;
   padding-bottom: 12px;
   border: none;
   border-bottom: 2px solid #666666;

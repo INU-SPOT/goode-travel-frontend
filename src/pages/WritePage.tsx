@@ -3,6 +3,8 @@ import styled from "styled-components";
 import WriteHeader from "../components/write/WriteHeader";
 import TitleInput from "../components/write/TitleInput";
 import WriteTextArea from "../components/write/WriteTextArea";
+import ItemsContainer from "../components/write/ItemsContainer";
+import AddItemButton from "../components/write/AddItemButton";
 import DateRangePicker from "../components/write/DateRangePicker";
 
 export default function WritePage() {
@@ -21,6 +23,8 @@ export default function WritePage() {
         onChange={setFirstContent}
         placeholder="전반적인 여행에 대해 소개해 주세요."
       />
+      <ItemsContainer />
+      <AddItemButton />
       <WriteTextArea
         value={lastContent}
         onChange={setLastContent}
@@ -38,6 +42,7 @@ export default function WritePage() {
 
 const WriteContainer = styled.div`
   width: 100%;
+  padding: 0 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;

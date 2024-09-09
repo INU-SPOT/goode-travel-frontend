@@ -27,7 +27,6 @@ export default function WriteTextArea({
 }
 
 const StyledWriteTextArea = styled.textarea`
-  margin: 0 24px;
   border: none;
   outline: none;
   font-size: 14px;

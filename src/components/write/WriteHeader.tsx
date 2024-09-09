@@ -17,7 +17,6 @@ export default function WriteHeader() {
 
 const StyledHeader = styled.header`
   height: 72px;
-  padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
