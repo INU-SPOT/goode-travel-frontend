@@ -124,7 +124,7 @@ export default function DateRangePicker({
 }
 
 const DateDisplay = styled.div`
-  font-size: 14px;
+  font-size: 16px;
   text-decoration: underline;
 `;
 

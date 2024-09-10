@@ -24,7 +24,7 @@ const StyledTitleInput = styled.input`
   border: none;
   border-bottom: 2px solid #666666;
   outline: none;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   &::placeholder {
     color: #aaa;
