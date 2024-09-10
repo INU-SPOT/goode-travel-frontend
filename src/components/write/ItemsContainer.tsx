@@ -12,12 +12,11 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import styled from "styled-components";
-import useItemPostsStore from "../../store/useItemPostsStore";
+import useWriteStore from "../../store/useWriteStore";
 import ItemContainer from "./ItemContainer";
 
 export default function ItemsContainer() {
-  const { ItemPosts, updateContent, reorderItems, removeItemPost } =
-    useItemPostsStore();
+  const { ItemPosts, reorderItems } = useWriteStore();
 
   // 드래그 센서 설정: 터치와 마우스 모두 사용
   const sensors = useSensors(
@@ -59,14 +58,7 @@ export default function ItemsContainer() {
         <Container>
           {ItemPosts.length > 0 &&
             ItemPosts.map((item) => (
-              <SortableItem
-                key={item.id}
-                id={item.id}
-                title={item.title}
-                content={item.content}
-                updateContent={updateContent}
-                removeItemPost={removeItemPost}
-              />
+              <SortableItem key={item.id} id={item.id} title={item.title} />
             ))}
         </Container>
       </SortableContext>
@@ -75,19 +67,7 @@ export default function ItemsContainer() {
 }
 
 // SortableItem 컴포넌트 정의
-function SortableItem({
-  id,
-  title,
-  content,
-  updateContent,
-  removeItemPost,
-}: {
-  id: number;
-  title: string;
-  content: string;
-  updateContent: (id: number, content: string) => void;
-  removeItemPost: (id: number) => void;
-}) {
+function SortableItem({ id, title }: { id: number; title: string }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
 
@@ -98,14 +78,7 @@ function SortableItem({
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
-      <ItemContainer
-        id={id}
-        title={title}
-        content={content}
-        updateContent={updateContent}
-        removeItemPost={removeItemPost}
-        dragListeners={listeners}
-      />
+      <ItemContainer id={id} title={title} dragListeners={listeners} />
     </div>
   );
 }

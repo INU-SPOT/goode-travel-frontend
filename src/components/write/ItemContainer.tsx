@@ -1,24 +1,21 @@
 import styled from "styled-components";
 import { ReactComponent as MinusIcon } from "../../assets/icons/minus-icon.svg";
 import WriteTextArea from "./WriteTextArea";
+import useWriteStore from "../../store/useWriteStore";
 
 interface ItemContainerProps {
   id: number;
   title: string;
-  content: string;
-  updateContent: (id: number, content: string) => void;
-  removeItemPost: (id: number) => void;
   dragListeners: any;
 }
 
 export default function ItemContainer({
   id,
   title,
-  content,
-  updateContent,
-  removeItemPost,
   dragListeners,
 }: ItemContainerProps) {
+  const { removeItemPost } = useWriteStore();
+
   const handleDelete = () => {
     removeItemPost(id);
   };
@@ -31,11 +28,7 @@ export default function ItemContainer({
         </span>
         <StyledMinusIcon onClick={handleDelete} />
       </TitleWrapper>
-      <WriteTextArea
-        value={content}
-        onChange={(newValue) => updateContent(id, newValue)}
-        placeholder="일정에 대해 소개해 주세요."
-      />
+      <WriteTextArea id={id} placeholder="일정에 대해 소개해 주세요." />
     </StyledItemContainer>
   );
 }

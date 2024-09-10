@@ -2,11 +2,11 @@ import styled from "styled-components";
 import { ReactComponent as PlusIcon } from "../../assets/icons/plus-icon.svg";
 import { Sheet } from "react-modal-sheet";
 import { useEffect, useState } from "react";
-import useItemPostsStore from "../../store/useItemPostsStore";
+import useWriteStore from "../../store/useWriteStore";
 
 export default function AddItemButton() {
   const [isOpen, setIsOpen] = useState(false);
-  const { ItemPosts, addItemPost, removeItemPost } = useItemPostsStore();
+  const { ItemPosts, addItemPost, removeItemPost } = useWriteStore();
   const [localItems, setLocalItems] = useState<
     { id: number; title: string; content: string }[]
   >([]);

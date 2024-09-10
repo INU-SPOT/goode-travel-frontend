@@ -1,19 +1,13 @@
 import styled from "styled-components";
+import useWriteStore from "../../store/useWriteStore";
 
-interface TitleInputProps {
-  value: string;
-  onChange: (newValue: string) => void;
-}
-
-export default function TitleInput({ value, onChange }: TitleInputProps) {
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(event.target.value);
-  };
+export default function TitleInput() {
+  const { title, setTitle } = useWriteStore();
 
   return (
     <StyledTitleInput
-      value={value}
-      onChange={handleInputChange}
+      value={title}
+      onChange={(e) => setTitle(e.target.value)}
       placeholder="제목"
     />
   );

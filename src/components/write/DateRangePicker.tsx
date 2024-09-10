@@ -4,24 +4,17 @@ import { Sheet } from "react-modal-sheet";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { TileClassNameFunc } from "react-calendar";
-
-interface DateRangePickerProps {
-  startDate: Date | null;
-  endDate: Date | null;
-  setStartDate: (date: Date | null) => void;
-  setEndDate: (date: Date | null) => void;
-}
+import useWriteStore from "../../store/useWriteStore";
 
 type DatePiece = Date | null;
 type TmpDate = DatePiece | [DatePiece, DatePiece];
 
-export default function DateRangePicker({
-  startDate,
-  endDate,
-  setStartDate,
-  setEndDate,
-}: DateRangePickerProps) {
+export default function DateRangePicker() {
+  const { startDate, endDate, setStartDate, setEndDate } = useWriteStore();
   const [isOpen, setIsOpen] = useState(false);
+
+  const [localStartDate, setLocalStartDate] = useState<Date | null>(startDate);
+  const [localEndDate, setLocalEndDate] = useState<Date | null>(endDate);
   const [tmpDate, setTmpDate] = useState<TmpDate>(null);
   const [selectedDate, setSelectedDate] = useState<TmpDate>(null);
 
@@ -29,22 +22,29 @@ export default function DateRangePicker({
     if (selectedDate instanceof Date) {
       if (tmpDate instanceof Date) {
         if (tmpDate < selectedDate) {
-          setStartDate(tmpDate);
-          setEndDate(selectedDate);
+          setLocalStartDate(tmpDate);
+          setLocalEndDate(selectedDate);
           setTmpDate(null);
         } else {
-          setStartDate(selectedDate);
-          setEndDate(tmpDate);
+          setLocalStartDate(selectedDate);
+          setLocalEndDate(tmpDate);
           setTmpDate(null);
         }
       } else {
-        setStartDate(null);
-        setEndDate(null);
+        setLocalStartDate(null);
+        setLocalEndDate(null);
         setTmpDate(selectedDate);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate, setStartDate, setEndDate]);
+  }, [selectedDate]);
+
+  // 적용 버튼: 로컬 상태의 Date를 전역 상태로 set
+  const handleConfirm = () => {
+    setStartDate(localStartDate);
+    setEndDate(localEndDate);
+    setIsOpen(false);
+  };
 
   const tileClassName: TileClassNameFunc = ({ date, view }) => {
     if (view === "month") {
@@ -52,8 +52,8 @@ export default function DateRangePicker({
       if (
         (tmpDate instanceof Date && sameDay(d, tmpDate)) ||
         (selectedDate instanceof Date && sameDay(d, selectedDate)) ||
-        (startDate && sameDay(d, startDate)) ||
-        (endDate && sameDay(d, endDate))
+        (localStartDate && sameDay(d, localStartDate)) ||
+        (localEndDate && sameDay(d, localEndDate))
       ) {
         return "special-date";
       }
@@ -91,12 +91,14 @@ export default function DateRangePicker({
               <TmpDateDisplayWrapper>
                 <TmpDateDisplay>
                   <span>간 날</span>
-                  {tmpDate instanceof Date || startDate ? (
+                  {tmpDate instanceof Date || localStartDate ? (
                     <>
                       {tmpDate instanceof Date && (
                         <h4>{tmpDate.toLocaleDateString()}</h4>
                       )}
-                      {startDate && <h4>{startDate.toLocaleDateString()}</h4>}
+                      {localStartDate && (
+                        <h4>{localStartDate.toLocaleDateString()}</h4>
+                      )}
                     </>
                   ) : (
                     <h4>날짜를 선택해 주세요.</h4>
@@ -104,16 +106,16 @@ export default function DateRangePicker({
                 </TmpDateDisplay>
                 <TmpDateDisplay>
                   <span>온 날</span>
-                  {endDate ? (
-                    <h4>{endDate.toLocaleDateString()}</h4>
+                  {localEndDate ? (
+                    <h4>{localEndDate.toLocaleDateString()}</h4>
                   ) : (
                     <h4>날짜를 선택해 주세요.</h4>
                   )}
                 </TmpDateDisplay>
               </TmpDateDisplayWrapper>
-              <ConfirmButton onClick={() => setIsOpen(false)}>
-                확인
-              </ConfirmButton>
+              {localStartDate && localEndDate && (
+                <ConfirmButton onClick={handleConfirm}>확인</ConfirmButton>
+              )}
             </ContentWrapper>
           </Sheet.Content>
         </Sheet.Container>
