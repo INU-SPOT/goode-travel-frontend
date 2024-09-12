@@ -13,6 +13,7 @@ import FolderBlock from "../components/home/FolderBlock";
 import RandomBlock from "../components/home/RandomBlock";
 import AdBlock from "../components/home/AdBlock";
 import NotificationSheet from "../components/home/NotificationSheet";
+import { useNavigate } from "react-router-dom";
 
 // 커뮤니티 게시글에 대한 임시 데이터입니다.
 const communityData = {
@@ -38,6 +39,7 @@ const courseData = {
 
 export default function HomePage() {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const navigate = useNavigate();
 
   const items = [
     {
@@ -99,7 +101,7 @@ export default function HomePage() {
       id: 6,
       width: 10,
       height: 2,
-      component: <RandomBlock />,
+      component: <RandomBlock onClick={() => navigate("/random-goode")} />,
     },
     {
       id: 7,

@@ -6,6 +6,7 @@ import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
 import useAuth from "./hooks/useAuth";
 import ScrollDetector from "./components/ScrollDetector";
+import RandomGoodePage from "./pages/RandomGoodePage";
 
 function App() {
   useAuth();
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="community" element={<CommunityPage />} />
           <Route path="mypage" element={<MyPage />} />
+          <Route path="random-goode" element={<RandomGoodePage />} />
         </Route>
         <Route path="login" element={<LoginPage />} />
       </Routes>

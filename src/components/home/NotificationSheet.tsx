@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { COLOR } from "../../utils/color";
 import { Sheet } from "react-modal-sheet";
 import { useScrollStore } from "../../store/scrollStore";
+import Notification from "./NotificationBlock";
 
 interface NotificationSheetProps {
   isOpen: boolean;
@@ -41,7 +42,9 @@ export default function NotificationSheet({
     >
       <Sheet.Container>
         <Sheet.Header />
-        <Sheet.Content>알림</Sheet.Content>
+        <Sheet.Content>
+          <Notification />
+        </Sheet.Content>
       </Sheet.Container>
       <Sheet.Backdrop onTap={onClose} />
     </StyledSheet>
@@ -55,7 +58,8 @@ const StyledSheet = styled(Sheet)<{
   width: 100%;
   max-width: 480px;
   margin-top: 40px;
-  margin-left: ${({ hasScrollBar, scrollBarWidth }) =>
-    hasScrollBar ? `calc(240px - ${scrollBarWidth / 2}px)` : "auto"};
+  /* margin-left: ${({ hasScrollBar, scrollBarWidth }) =>
+    hasScrollBar ? `${scrollBarWidth}px` : "auto"}; */
+  margin-left: auto;
   margin-right: auto;
 `;

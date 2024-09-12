@@ -2,9 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import { COLOR } from "../../utils/color";
 
-export default function RandomBlock() {
+interface RandomBlockProps {
+  onClick?: () => void;
+}
+
+export default function RandomBlock({ onClick }: RandomBlockProps) {
   return (
-    <RandomWrapper>
+    <RandomWrapper onClick={onClick}>
       <Title>즉흥 굳이 뽑기</Title>
     </RandomWrapper>
   );
