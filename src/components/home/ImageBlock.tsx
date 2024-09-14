@@ -4,9 +4,10 @@ import styled from "styled-components";
 interface SharedProps {
   goode: string;
   image?: string;
+  onClick?: () => void;
 }
 
-export default function ImageBlock({ goode, image }: SharedProps) {
+export default function ImageBlock({ goode, image, onClick }: SharedProps) {
   return (
     <ImageWrapper image={image}>
       <ImageGoode>{goode}</ImageGoode>

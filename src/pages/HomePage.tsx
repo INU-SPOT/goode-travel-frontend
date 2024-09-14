@@ -52,6 +52,9 @@ export default function HomePage() {
           goode={communityData.goode}
           details={communityData.details}
           recommendations={communityData.recommendations}
+          onClick={() => {
+            /* 비어있는 핸들러 */
+          }}
         />
       ),
     },
@@ -60,31 +63,49 @@ export default function HomePage() {
       width: 4,
       height: 7,
       component: (
-        <ImageBlock goode={communityData.goode} image={communityData.image} />
+        <ImageBlock
+          goode={communityData.goode}
+          image={communityData.image}
+          onClick={() => {
+            /* 비어있는 핸들러 */
+          }}
+        />
       ),
     },
     {
       id: 3,
       width: 6,
       height: 3,
-      component: <GoodeListBlock />,
+      component: (
+        <GoodeListBlock
+          onClick={() => {
+            /* 비어있는 핸들러 */
+          }}
+        />
+      ),
     },
     {
       id: 4,
       width: 6,
       height: 4,
-      component: <CourseBlock details={courseData.details} />,
+      component: (
+        <CourseBlock
+          details={courseData.details}
+          onClick={() => {
+            /* 비어있는 핸들러 */
+          }}
+        />
+      ),
     },
     {
       id: 5,
       width: 10,
       height: 6,
       component: (
-        // 임시 데이터로 이루어져 있습니다.
         <FolderBlock
           user={"지인"}
           title={["나의 여름 대전 여행", "인천 여행", "임시 폴더"]}
-          // title={[]}
+          // 임시 데이터로 이루어져 있습니다.
           details={[
             [
               "남선 공원에서 산책하기",
@@ -94,6 +115,9 @@ export default function HomePage() {
             ],
             ["솔찬공원에서 갈매기 새우깡 주기", "센트럴파크 가기"],
           ]}
+          onClick={() => {
+            /* 비어있는 핸들러 */
+          }}
         />
       ),
     },
@@ -107,7 +131,13 @@ export default function HomePage() {
       id: 7,
       width: 10,
       height: 5,
-      component: <AdBlock />,
+      component: (
+        <AdBlock
+          onClick={() => {
+            /* 비어있는 핸들러 */
+          }}
+        />
+      ),
     },
   ];
 

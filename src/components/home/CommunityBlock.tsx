@@ -7,6 +7,7 @@ interface SharedProps {
   goode: string;
   details?: string[];
   recommendations?: number;
+  onClick?: () => void;
 }
 
 export default function CommunityBlock({
@@ -14,6 +15,7 @@ export default function CommunityBlock({
   goode,
   details,
   recommendations,
+  onClick,
 }: SharedProps) {
   return (
     <CommunityWrapper>

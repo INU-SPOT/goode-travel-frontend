@@ -3,9 +3,10 @@ import styled from "styled-components";
 
 interface TagButtonProps {
   text: string;
+  onClick?: () => void;
 }
 
-export default function TagButton({ text }: TagButtonProps) {
+export default function TagButton({ text, onClick }: TagButtonProps) {
   return (
     <StyledTagButton>
       <TextWrapper>{text}</TextWrapper>

@@ -13,12 +13,14 @@ interface FolderProps {
   user: string;
   title?: string[];
   details?: string[][];
+  onClick?: () => void;
 }
 
 export default function FolderBlock({
   user,
   title = [],
   details = [[]],
+  onClick,
 }: FolderProps) {
   const colors = [COLOR.beige, COLOR.yellow, COLOR.green, COLOR.blue];
   const totalblocks = title.length;

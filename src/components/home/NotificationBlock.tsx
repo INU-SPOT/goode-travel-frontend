@@ -38,6 +38,7 @@ interface NotificationData {
   type: string;
   message: string;
   time: string;
+  onClick?: () => void;
 }
 
 export default function NotificationBlock() {
