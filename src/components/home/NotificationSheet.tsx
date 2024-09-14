@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { COLOR } from "../../utils/color";
 import { Sheet } from "react-modal-sheet";
 import { useScrollStore } from "../../store/scrollStore";
-import Notification from "./NotificationBlock";
+import NotificationBlock from "./NotificationBlock";
 
 interface NotificationSheetProps {
   isOpen: boolean;
@@ -18,7 +18,6 @@ export default function NotificationSheet({
   isOpen,
   onClose,
 }: NotificationSheetProps) {
-  // useScrollStore 훅을 사용해 스크롤 상태를 가져옵니다.
   const hasScrollBar = useScrollStore((state) => state.hasScrollBar);
   const [scrollBarWidth, setScrollBarWidth] = useState(0);
 
@@ -27,11 +26,6 @@ export default function NotificationSheet({
       setScrollBarWidth(getScrollBarWidth());
     }
   }, [hasScrollBar]);
-
-  useEffect(() => {
-    if (isOpen) {
-    }
-  }, [isOpen]);
 
   return (
     <StyledSheet
@@ -43,7 +37,7 @@ export default function NotificationSheet({
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content>
-          <Notification />
+          <NotificationBlock /> {/* 알림 목록을 보여줌 */}
         </Sheet.Content>
       </Sheet.Container>
       <Sheet.Backdrop onTap={onClose} />
@@ -58,8 +52,6 @@ const StyledSheet = styled(Sheet)<{
   width: 100%;
   max-width: 480px;
   margin-top: 40px;
-  /* margin-left: ${({ hasScrollBar, scrollBarWidth }) =>
-    hasScrollBar ? `${scrollBarWidth}px` : "auto"}; */
   margin-left: auto;
   margin-right: auto;
 `;
