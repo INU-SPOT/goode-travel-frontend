@@ -84,34 +84,34 @@ export default function NotificationBlock() {
 }
 
 const Text = styled.div`
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
+  margin-bottom: 15px;
 `;
 
 const NotificationWrapper = styled.div`
   width: 100%;
   padding: 25px;
-  border-radius: 8px;
-  margin-top: 10px;
+  box-sizing: border-box;
 `;
 
 const NotificationItem = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 10px 0;
+  padding: 14px 0;
   border-bottom: 1px solid #cccccc;
-  margin: 10px 0;
+  margin: 0;
 `;
 
 const NotificationType = styled.div`
   font-size: 14px;
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 `;
 
 const NotificationMessage = styled.div`
   font-size: 15px;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   color: #808080;
 `;
 
