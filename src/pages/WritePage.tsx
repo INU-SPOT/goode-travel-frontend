@@ -5,6 +5,7 @@ import WriteTextArea from "../components/write/WriteTextArea";
 import ItemsContainer from "../components/write/ItemsContainer";
 import AddItemButton from "../components/write/AddItemButton";
 import DateRangePicker from "../components/write/DateRangePicker";
+import WriteTips from "../components/write/WriteTips";
 
 export default function WritePage() {
   return (
@@ -16,6 +17,7 @@ export default function WritePage() {
       <AddItemButton />
       <WriteTextArea placeholder="글을 마무리하는 인사말을 적어주세요." />
       <DateRangePicker />
+      <WriteTips />
     </WriteContainer>
   );
 }
