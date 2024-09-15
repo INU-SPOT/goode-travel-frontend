@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
-interface ItemPostSummary extends Pick<ItemPost, "id" | "title" | "content"> {}
+interface ItemPostSummary
+  extends Pick<ItemPost, "id" | "title" | "content" | "postImages"> {}
 
 interface WriteState {
   title: string;
@@ -16,6 +17,7 @@ interface WriteState {
   setEndDate: (date: Date | null) => void;
   addItemPost: (newItem: ItemPostSummary) => void;
   updateContent: (id: number, content: string) => void;
+  updatePostImages: (id: number, images: string[]) => void; // 새로운 함수
   removeItemPost: (id: number) => void;
   reorderItems: (startIndex: number, endIndex: number) => void;
   clearItemPosts: () => void;
@@ -50,6 +52,12 @@ const useWriteStore = create<WriteState>((set) => ({
     set((state) => ({
       ItemPosts: state.ItemPosts.map((item) =>
         item.id === id ? { ...item, content } : item
+      ),
+    })),
+  updatePostImages: (id, images) =>
+    set((state) => ({
+      ItemPosts: state.ItemPosts.map((item) =>
+        item.id === id ? { ...item, postImages: images } : item
       ),
     })),
   removeItemPost: (id) =>

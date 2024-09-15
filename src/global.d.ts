@@ -19,6 +19,7 @@ declare global {
   }
   interface ItemPost extends Item {
     content: string;
+    postImages?: string[];
   }
 }
 

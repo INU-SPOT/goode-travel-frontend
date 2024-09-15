@@ -9,6 +9,7 @@ export default function WriteTips() {
     "일정 추가 후, 일정의 제목을 드래그하면 일정 순서가 변경됩니다.",
     "글 작성 중 30초마다 자동 임시 저장됩니다.",
     "임시 저장된 글은 브라우저에 저장되며, 다른 기기에서 불러올 수 없습니다.",
+    "이미지는 임시 저장되지 않습니다.",
     "매너 있는 글 작성 부탁드려요 🙏",
   ];
 
@@ -73,4 +74,5 @@ const StyledXIcon = styled(XIcon)`
   align-self: flex-end;
   width: 14px;
   height: 14px;
+  margin: 4px;
 `;
