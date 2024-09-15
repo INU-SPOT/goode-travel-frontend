@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useScrollStore } from "../store/scrollStore";
 
 export default function ScrollDetector() {

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { COLOR } from "../utils/color";
 
 // 예시 데이터 리스트
 const data = [
