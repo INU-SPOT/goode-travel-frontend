@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import useAuth from "./hooks/useAuth";
 import ScrollDetector from "./components/ScrollDetector";
 import RandomGoodePage from "./pages/RandomGoodePage";
+import WritePage from "./pages/WritePage";
 
 function App() {
   useAuth();
@@ -22,6 +23,7 @@ function App() {
           <Route path="random-goode" element={<RandomGoodePage />} />
         </Route>
         <Route path="login" element={<LoginPage />} />
+        <Route path="write" element={<WritePage />} />
       </Routes>
     </Router>
   );
