@@ -15,3 +15,25 @@ code {
 .swiper-pagination-bullet {
   --swiper-theme-color: #000000;
 }
+
+html {
+  scrollbar-gutter: stable both-edges;
+  /* scrollbar-gutter: stable; */
+}
+
+body {
+  overflow-y: scroll; /* 항상 세로 스크롤바 표시 */
+}
+
+body::-webkit-scrollbar {
+  width: 5px; /* 스크롤바 너비 설정 */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: rgba(107, 107, 107, 0.5); /* 스크롤바 색상 */
+  border-radius: 6px; /* 스크롤바 모서리 둥글게 */
+}
+
+body::-webkit-scrollbar-track {
+  background-color: transparent; /* 스크롤바 트랙 투명 */
+}

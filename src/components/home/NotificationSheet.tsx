@@ -1,8 +1,7 @@
+// NotificationSheet.tsx
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { COLOR } from "../../utils/color";
 import { Sheet } from "react-modal-sheet";
-import { useScrollStore } from "../../store/scrollStore";
 import NotificationBlock from "./NotificationBlock";
 
 interface NotificationSheetProps {
@@ -18,22 +17,28 @@ export default function NotificationSheet({
   isOpen,
   onClose,
 }: NotificationSheetProps) {
-  const hasScrollBar = useScrollStore((state) => state.hasScrollBar);
-  const [scrollBarWidth, setScrollBarWidth] = useState(0);
-
   useEffect(() => {
-    if (hasScrollBar) {
-      setScrollBarWidth(getScrollBarWidth());
+    const scrollBarWidth = getScrollBarWidth();
+
+    if (isOpen) {
+      // 스크롤바 너비만큼 body에 padding-right 추가
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = `${scrollBarWidth}px`;
+    } else {
+      // 원래대로 복원
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
     }
-  }, [hasScrollBar]);
+
+    // 컴포넌트가 언마운트될 때 원래대로 복원
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+    };
+  }, [isOpen]);
 
   return (
-    <StyledSheet
-      isOpen={isOpen}
-      onClose={onClose}
-      hasScrollBar={hasScrollBar}
-      scrollBarWidth={scrollBarWidth}
-    >
+    <StyledSheet isOpen={isOpen} onClose={onClose}>
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content>
@@ -45,10 +50,7 @@ export default function NotificationSheet({
   );
 }
 
-const StyledSheet = styled(Sheet)<{
-  hasScrollBar: boolean;
-  scrollBarWidth: number;
-}>`
+const StyledSheet = styled(Sheet)`
   width: 100%;
   max-width: 480px;
   margin-top: 40px;
