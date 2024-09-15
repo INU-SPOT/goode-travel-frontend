@@ -1,3 +1,4 @@
+// 커뮤니티 페이지 글 목록을 관리
 import { useEffect } from "react";
 import usePostsStore from "../store/usePostsStore";
 
