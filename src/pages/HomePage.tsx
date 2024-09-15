@@ -1,6 +1,7 @@
 // HomePage.tsx
 import styled from "styled-components";
 import { COLOR } from "../utils/color";
+import { useState } from "react";
 import exampleImage from "../assets/images/KakaoTalk_Photo_2024-08-07-20-33-27.png";
 import BentoGrid from "../components/BentoGrid";
 import CommunityBlock from "../components/home/CommunityBlock";
@@ -11,6 +12,8 @@ import GoodeListBlock from "../components/home/GoodeListBlock";
 import FolderBlock from "../components/home/FolderBlock";
 import RandomBlock from "../components/home/RandomBlock";
 import AdBlock from "../components/home/AdBlock";
+import NotificationSheet from "../components/home/NotificationSheet";
+import { useNavigate } from "react-router-dom";
 
 // 커뮤니티 게시글에 대한 임시 데이터입니다.
 const communityData = {
@@ -35,6 +38,9 @@ const courseData = {
 };
 
 export default function HomePage() {
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const navigate = useNavigate();
+
   const items = [
     {
       id: 1,
@@ -46,6 +52,9 @@ export default function HomePage() {
           goode={communityData.goode}
           details={communityData.details}
           recommendations={communityData.recommendations}
+          onClick={() => {
+            /* 비어있는 핸들러 */
+          }}
         />
       ),
     },
@@ -54,31 +63,49 @@ export default function HomePage() {
       width: 4,
       height: 7,
       component: (
-        <ImageBlock goode={communityData.goode} image={communityData.image} />
+        <ImageBlock
+          goode={communityData.goode}
+          image={communityData.image}
+          onClick={() => {
+            /* 비어있는 핸들러 */
+          }}
+        />
       ),
     },
     {
       id: 3,
       width: 6,
       height: 3,
-      component: <GoodeListBlock />,
+      component: (
+        <GoodeListBlock
+          onClick={() => {
+            /* 비어있는 핸들러 */
+          }}
+        />
+      ),
     },
     {
       id: 4,
       width: 6,
       height: 4,
-      component: <CourseBlock details={courseData.details} />,
+      component: (
+        <CourseBlock
+          details={courseData.details}
+          onClick={() => {
+            /* 비어있는 핸들러 */
+          }}
+        />
+      ),
     },
     {
       id: 5,
       width: 10,
       height: 6,
       component: (
-        // 임시 데이터로 이루어져 있습니다.
         <FolderBlock
           user={"지인"}
           title={["나의 여름 대전 여행", "인천 여행", "임시 폴더"]}
-          // title={[]}
+          // 임시 데이터로 이루어져 있습니다.
           details={[
             [
               "남선 공원에서 산책하기",
@@ -88,6 +115,9 @@ export default function HomePage() {
             ],
             ["솔찬공원에서 갈매기 새우깡 주기", "센트럴파크 가기"],
           ]}
+          onClick={() => {
+            /* 비어있는 핸들러 */
+          }}
         />
       ),
     },
@@ -95,31 +125,45 @@ export default function HomePage() {
       id: 6,
       width: 10,
       height: 2,
-      component: <RandomBlock />,
+      component: <RandomBlock onClick={() => navigate("/random-goode")} />,
     },
     {
       id: 7,
       width: 10,
       height: 5,
-      component: <AdBlock />,
+      component: (
+        <AdBlock
+          onClick={() => {
+            /* 비어있는 핸들러 */
+          }}
+        />
+      ),
     },
   ];
 
   return (
-    <>
+    <HomeContainer>
       <StyledHeader>홈</StyledHeader>
       <Container>
         <HeaderContainer>
           <Text>커뮤니티 Best!</Text>
-          <IconButton onClick={() => {}}>
+          <IconButton onClick={() => setIsNotificationOpen(true)}>
             <SearchIcon />
           </IconButton>
         </HeaderContainer>
         <BentoGrid items={items} />
       </Container>
-    </>
+      <NotificationSheet
+        isOpen={isNotificationOpen}
+        onClose={() => setIsNotificationOpen(false)}
+      />
+    </HomeContainer>
   );
 }
+
+const HomeContainer = styled.div`
+  width: 100%;
+`;
 
 const StyledHeader = styled.header`
   width: 100%;

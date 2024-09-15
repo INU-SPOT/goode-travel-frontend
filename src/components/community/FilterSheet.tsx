@@ -4,6 +4,7 @@ import usePostsStore from "../../store/usePostsStore";
 import { themes } from "../../data/themes";
 import { districts } from "../../data/districts";
 import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
+import { useScrollStore } from "../../store/scrollStore";
 import styled from "styled-components";
 
 interface FilterSheetProps {
@@ -11,12 +12,24 @@ interface FilterSheetProps {
   onClose: () => void;
 }
 
+const getScrollBarWidth = () => {
+  return window.innerWidth - document.documentElement.clientWidth;
+};
+
 export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
   const { filters, setFilters } = usePostsStore();
   const [selectedTheme, setSelectedTheme] = useState<string[]>([]);
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [selectedDistricts, setSelectedDistricts] = useState<string[]>([]);
+  const hasScrollBar = useScrollStore((state) => state.hasScrollBar);
+  const [scrollBarWidth, setScrollBarWidth] = useState(0);
   const maxCount = 5;
+
+  useEffect(() => {
+    if (hasScrollBar) {
+      setScrollBarWidth(getScrollBarWidth());
+    }
+  }, [hasScrollBar]);
 
   // FilterSheet가 열릴 때: 전역 상태의 필터를 로컬 상태로 가져오기
   useEffect(() => {
@@ -108,7 +121,12 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
   };
 
   return (
-    <StyledSheet isOpen={isOpen} onClose={onClose}>
+    <StyledSheet
+      isOpen={isOpen}
+      onClose={onClose}
+      hasScrollBar={hasScrollBar}
+      scrollBarWidth={scrollBarWidth}
+    >
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content>
@@ -220,10 +238,14 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
   );
 }
 
-const StyledSheet = styled(Sheet)`
+const StyledSheet = styled(Sheet)<{
+  hasScrollBar: boolean;
+  scrollBarWidth: number;
+}>`
   width: 100%;
   max-width: 480px;
-  margin-left: auto;
+  margin-left: ${({ hasScrollBar, scrollBarWidth }) =>
+    hasScrollBar ? `calc(240px - ${scrollBarWidth / 2}px)` : "auto"};
   margin-right: auto;
 `;
 

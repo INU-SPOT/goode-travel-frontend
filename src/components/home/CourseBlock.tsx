@@ -4,9 +4,10 @@ import { COLOR } from "../../utils/color";
 
 interface CourseProps {
   details: string[];
+  onClick?: () => void;
 }
 
-export default function CourseBlock({ details }: CourseProps) {
+export default function CourseBlock({ details, onClick }: CourseProps) {
   return (
     <CourseWrapper>
       <Title>관광코스 살펴보기 &gt;</Title>

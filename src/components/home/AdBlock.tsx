@@ -3,7 +3,11 @@ import styled from "styled-components";
 import { COLOR } from "../../utils/color";
 import carImage from "../../assets/images/main-palisade-24my-45side.png";
 
-export default function AdBlock() {
+interface AdBlockProps {
+  onClick?: () => void; // 비어있는 onClick 핸들러
+}
+
+export default function AdBlock({ onClick }: AdBlockProps) {
   return (
     <AdWrapper>
       <Title>현재 렌터카 최저가는?</Title>
