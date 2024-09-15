@@ -18,6 +18,7 @@ interface WriteState {
   updateContent: (id: number, content: string) => void;
   removeItemPost: (id: number) => void;
   reorderItems: (startIndex: number, endIndex: number) => void;
+  clearItemPosts: () => void;
 }
 
 const reorder = (
@@ -59,6 +60,7 @@ const useWriteStore = create<WriteState>((set) => ({
     set((state) => ({
       ItemPosts: reorder(state.ItemPosts, startIndex, endIndex),
     })),
+  clearItemPosts: () => set(() => ({ ItemPosts: [] })),
 }));
 
 export default useWriteStore;

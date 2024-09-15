@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
 import { useNavigate } from "react-router-dom";
+import TemporarySave from "./TemporarySave";
 
 export default function WriteHeader() {
   const navigate = useNavigate();
@@ -10,7 +11,10 @@ export default function WriteHeader() {
         <StyledXIcon onClick={() => navigate(-1)} />
         <p>굳이? 커뮤니티 글 작성</p>
       </div>
-      <button>완료</button>
+      <div>
+        <TemporarySave />
+        <button>완료</button>
+      </div>
     </StyledHeader>
   );
 }
