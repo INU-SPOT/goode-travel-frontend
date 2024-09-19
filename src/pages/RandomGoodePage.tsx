@@ -1,83 +1,169 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import { useEffect, useState } from "react";
+import styled, { keyframes, css } from "styled-components";
+import Confetti from "react-confetti"; // react-confetti 추가
+import { goodeList } from "../data/goodeList";
+import { COLOR } from "../utils/color";
 
-// 예시 데이터 리스트
-const data = [
-  "굳이 1",
-  "굳이 2",
-  "굳이 3",
-  "굳이 4",
-  "굳이 5",
-  "굳이 6",
-  "굳이 7",
-  "굳이 8",
-  "굳이 9",
-  "굳이 10",
-  "굳이 11",
-  "굳이 12",
-  "굳이 13",
-  "굳이 14",
-  "굳이 15",
-  "굳이 16",
-  "굳이 17",
-  "굳이 18",
-  "굳이 19",
-  "굳이 20",
-  "굳이 21",
-  "굳이 22",
-  "굳이 23",
-  "굳이 24",
-  "굳이 25",
-  "굳이 26",
-  "굳이 27",
-  "굳이 28",
-  "굳이 29",
-  "굳이 30",
-];
+const fetchRandomGoode = () => {
+  return new Promise<{ name: string; url: string }>((resolve) => {
+    setTimeout(() => {
+      const randomIndex = Math.floor(Math.random() * goodeList.length);
+      resolve({
+        name: goodeList[randomIndex],
+        url: `https://example.com/${goodeList[randomIndex]}`,
+      });
+    }, 3000);
+  });
+};
 
 export default function RandomGoodePage() {
-  const [selectedBox, setSelectedBox] = useState<number | null>(null);
+  const [isAnimated, setIsAnimated] = useState(true);
+  const [selectedGoode, setSelectedGoode] = useState<{
+    name: string;
+    url: string;
+  } | null>(null);
+  const [showConfetti, setShowConfetti] = useState(false); // 폭죽 상태
 
-  const handleClick = () => {
-    const randomIndex = Math.floor(Math.random() * data.length);
-    setSelectedBox(randomIndex);
+  const handleShuffleClick = () => {
+    setSelectedGoode(null);
+    setIsAnimated(true);
+    setShowConfetti(false); // 클릭할 때마다 폭죽을 숨기기
+
+    setTimeout(async () => {
+      const goode = await fetchRandomGoode();
+      setIsAnimated(false);
+      setSelectedGoode(goode);
+      setShowConfetti(true); // 애니메이션이 끝나면 폭죽 효과 나타내기
+    }, 3000);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsAnimated(true);
+      const goode = await fetchRandomGoode();
+      setIsAnimated(false);
+      setSelectedGoode(goode);
+      setShowConfetti(true); // 처음 로드할 때도 폭죽 효과 추가
+    };
+    fetchData();
+  }, []);
+
   return (
-    <Container>
-      {selectedBox !== null && <Box>{data[selectedBox]}</Box>}
-      <Button onClick={handleClick}>즉흥 굳이 뽑기</Button>
-    </Container>
+    <CardWrapper>
+      {showConfetti && (
+        <Confetti width={window.innerWidth} height={window.innerHeight} />
+      )}{" "}
+      {/* 폭죽 효과 */}
+      <CardList isAnimated={isAnimated}>
+        {goodeList.slice(0, 3).map((goode, index) => (
+          <CardItem key={index} data-card={index} zIndex={6 - index}>
+            <Card
+              color={
+                index === 0
+                  ? COLOR.blue
+                  : index === 1
+                  ? COLOR.green
+                  : COLOR.beige
+              }
+              onClick={() => {
+                if (selectedGoode && index === 0) {
+                  window.location.href = selectedGoode.url;
+                }
+              }}
+            >
+              {selectedGoode && index === 0 ? selectedGoode.name : ""}
+            </Card>
+          </CardItem>
+        ))}
+      </CardList>
+      <ShuffleButton onClick={handleShuffleClick}>다시 뽑기</ShuffleButton>
+    </CardWrapper>
   );
 }
 
-const Container = styled.div`
-  height: 100%;
+const shuffle = keyframes`
+  0% { transform: rotate(0) translateX(0) scale(1); }
+  50% { transform: rotate(5deg) translateX(105%) scale(0.96); }
+  100% { transform: rotate(0) translateX(0); }
+`;
+
+const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  background-color: #636363;
+  justify-content: center;
+  height: 80vh;
 `;
 
-const Box = styled.div`
-  width: 300px;
-  height: 70px;
+const CardList = styled.ul<{ isAnimated: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-height: 100%;
+  height: 500px;
+  margin: 0;
+  padding: 30px;
+  list-style: none;
+  position: relative;
+
+  ${(props) =>
+    props.isAnimated &&
+    css`
+      & li[data-card="0"] {
+        animation: ${shuffle} 1s ease-in-out 0s 1 normal;
+        z-index: 2;
+        transition: z-index 0s ease-in-out 0.5s;
+      }
+      & li[data-card="1"] {
+        animation: ${shuffle} 1s ease-in-out 1s 1 normal;
+        z-index: 1;
+        transition: z-index 0s ease-in-out 1.5s;
+      }
+      & li[data-card="2"] {
+        animation: ${shuffle} 1s ease-in-out 2s 1 normal;
+        z-index: 0;
+        transition: z-index 0s ease-in-out 2.5s;
+      }
+    `}
+`;
+
+const CardItem = styled.li<{ zIndex: number }>`
+  position: absolute;
+  z-index: ${(props) => props.zIndex};
+  margin-top: ${(props) => props.zIndex * 8}px;
+`;
+
+const Card = styled.div<{ color: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #fff;
-  color: #000000;
-  border-radius: 13px;
-  font-size: 21px;
-  font-weight: 600;
-  text-align: center;
+  max-width: 100%;
+  width: 200px;
+  max-height: 100%;
+  height: 350px;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 1px 3px 0 #222;
+  background: ${(props) => props.color};
+  color: #fff;
+  font-size: 25px;
+  cursor: pointer;
 `;
 
-const Button = styled.button`
-  position: absolute;
-  bottom: 100px;
-  font-size: 16px;
-  color: #fff;
+const ShuffleButton = styled.button`
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
   background-color: #000000;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0d2a3d;
+  }
 `;
