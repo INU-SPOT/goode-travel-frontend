@@ -36,7 +36,7 @@ axiosInstance.interceptors.response.use(
         try {
           // refreshToken을 헤더에 추가하여 재발급 요청
           const response = await axios.post(
-            "/v1/auth/reissue",
+            `${process.env.REACT_APP_BACKEND_URL}/v1/auth/reissue`,
             {},
             {
               headers: {
@@ -45,7 +45,8 @@ axiosInstance.interceptors.response.use(
             }
           );
 
-          const { accessToken, refreshToken: newRefreshToken } = response.data;
+          const { accessToken, refreshToken: newRefreshToken } =
+            response.data.data;
 
           // 새로 받은 accessToken과 refreshToken을 저장
           localStorage.setItem("accessToken", accessToken);
