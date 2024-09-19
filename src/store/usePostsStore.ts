@@ -1,14 +1,19 @@
 // 커뮤니티 페이지 글 목록을 관리
 import { create } from "zustand";
+import { PostThumbnailResponse } from "../types/post";
 
 interface PostsState {
-  posts: Post[];
+  posts: PostThumbnailResponse[];
   searchQuery: string;
   filters: {
     theme: string[];
     district: string[];
   };
-  setPosts: (posts: Post[]) => void;
+  setPosts: (
+    posts:
+      | PostThumbnailResponse[]
+      | ((prevPosts: PostThumbnailResponse[]) => PostThumbnailResponse[])
+  ) => void;
   setSearchQuery: (query: string) => void;
   setFilters: (filters: PostsState["filters"]) => void;
   removeTheme: (theme: string) => void;
@@ -23,7 +28,10 @@ const usePostsStore = create<PostsState>((set) => ({
     theme: [],
     district: [],
   },
-  setPosts: (posts) => set({ posts }),
+  setPosts: (posts) =>
+    set((state) => ({
+      posts: typeof posts === "function" ? posts(state.posts) : posts,
+    })),
   setSearchQuery: (query) => set({ searchQuery: query }),
   setFilters: (filters) => set({ filters }),
   removeTheme: (theme) =>
