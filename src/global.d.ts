@@ -1,13 +1,5 @@
 // 전역 타입 선언
 declare global {
-  interface Post {
-    title: string;
-    subTitles: string[];
-    likes: number;
-    comments: number;
-    author: string;
-    thumbnail: string;
-  }
   interface Item {
     id: number;
     type: string;

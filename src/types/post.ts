@@ -1,13 +1,26 @@
-import { ItemPostThumbnailResponse, ItemPostResponse } from "./item";
+import {
+  ItemPostThumbnailResponse,
+  ItemPostCreateUpdateRequest,
+  ItemPostResponse,
+} from "./item";
 
 export interface PostThumbnailResponse {
   writerNickname: string;
   postId: number;
   title: string;
-  imageUrl: string;
+  imageName: string;
   items: ItemPostThumbnailResponse[];
   commentNum: number;
   likeNum: number;
+}
+
+export interface PostCreateUpdateRequest {
+  title: string;
+  firstContent: string;
+  lastContent: string;
+  startDate: string;
+  endDate: string;
+  itemPosts: ItemPostCreateUpdateRequest[];
 }
 
 export interface PostDetailResponse {

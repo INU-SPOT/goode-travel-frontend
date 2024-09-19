@@ -32,7 +32,10 @@ export default function PostCard({ post }: PostCardProps) {
           <Author>by {post.writerNickname}</Author>
         </PostFooter>
       </PostContent>
-      <Thumbnail src={post.imageUrl} alt={`${post.title} 썸네일`} />
+      <Thumbnail
+        src={`${process.env.REACT_APP_IMAGE_URL}/${post.imageName}`}
+        alt={`${post.title} 썸네일`}
+      />
     </StyledPostCard>
   );
 }
