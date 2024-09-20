@@ -1,11 +1,13 @@
-self.addEventListener("install", function (e) {
-  console.log("fcm sw install..");
-  self.skipWaiting();
+self.addEventListener('install', function (e) {
+  console.log('fcm sw install..');
+  self.skipWaiting(); // 즉시 활성화
 });
 
-self.addEventListener("activate", function (e) {
-  console.log("fcm sw activate..");
+self.addEventListener('activate', function (e) {
+  console.log('fcm sw activate..');
+  return self.clients.claim(); // 활성화 후 즉시 제어권 가져오기
 });
+
 
 self.addEventListener("push", function (e) {
   console.log("push: ", e.data.json());
