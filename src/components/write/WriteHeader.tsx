@@ -3,34 +3,19 @@ import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
 import { useNavigate } from "react-router-dom";
 import { post_posts } from "../../services/post";
 import useWriteStore from "../../store/useWriteStore";
-import TemporarySave from "./TemporarySave";
 
-export default function WriteHeader() {
-  const storageKey = "writePageTemporarySaveData";
+export default function WriteHeader({
+  saveData,
+  resetWriteState,
+  storageKey,
+}: {
+  saveData: () => void;
+  resetWriteState: () => void;
+  storageKey: string;
+}) {
   const navigate = useNavigate();
-  const {
-    title,
-    firstContent,
-    lastContent,
-    startDate,
-    endDate,
-    itemPosts,
-    setTitle,
-    setFirstContent,
-    setLastContent,
-    setStartDate,
-    setEndDate,
-    clearItemPosts,
-  } = useWriteStore();
-
-  const resetWriteState = () => {
-    setTitle("");
-    setFirstContent("");
-    setLastContent("");
-    setStartDate("");
-    setEndDate("");
-    clearItemPosts();
-  };
+  const { title, firstContent, lastContent, startDate, endDate, itemPosts } =
+    useWriteStore();
 
   const handleSubmit = async () => {
     const postData = {
@@ -61,10 +46,7 @@ export default function WriteHeader() {
         <p>굳이? 커뮤니티 글 작성</p>
       </div>
       <div>
-        <TemporarySave
-          storageKey={storageKey}
-          resetWriteState={resetWriteState}
-        />
+        <button onClick={saveData}>임시 저장</button>
         <button onClick={handleSubmit}>완료</button>
       </div>
     </StyledHeader>
