@@ -4,13 +4,14 @@ export interface ItemPostThumbnailResponse {
 }
 
 export interface ItemPostImageRequest {
-  itemPostImageId: number;
+  itemPostImageId: number | null;
   imageName: string;
 }
 
 export interface ItemPostCreateUpdateRequest {
-  itemPostId: number;
+  itemPostId: number | null;
   itemId: number;
+  title: string; // 서버로 전송하지 않고, 사용자에게만 보이는 정보
   content: string;
   images: ItemPostImageRequest[];
 }

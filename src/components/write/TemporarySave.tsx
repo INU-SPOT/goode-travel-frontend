@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import useWriteStore from "../../store/useWriteStore";
+import { ItemPostCreateUpdateRequest } from "../../types/item";
+import { PostCreateUpdateRequest } from "../../types/post";
 
 export default function TemporarySave() {
   const [showPopup, setShowPopup] = useState(false);
@@ -14,7 +16,7 @@ export default function TemporarySave() {
     lastContent,
     startDate,
     endDate,
-    ItemPosts,
+    itemPosts,
     setTitle,
     setFirstContent,
     setLastContent,
@@ -30,8 +32,8 @@ export default function TemporarySave() {
       setTitle("");
       setFirstContent("");
       setLastContent("");
-      setStartDate(null);
-      setEndDate(null);
+      setStartDate("");
+      setEndDate("");
       clearItemPosts();
     };
 
@@ -46,9 +48,8 @@ export default function TemporarySave() {
         parsedData.lastContent ||
         parsedData.startDate ||
         parsedData.endDate ||
-        (parsedData.ItemPosts && parsedData.ItemPosts.length > 0)
+        (parsedData.itemPosts && parsedData.itemPosts.length > 0)
       );
-
       if (hasValidData) {
         const confirmRestore = window.confirm(
           "임시 저장된 데이터가 있습니다. 불러오시겠습니까?"
@@ -57,12 +58,12 @@ export default function TemporarySave() {
           setTitle(parsedData.title || "");
           setFirstContent(parsedData.firstContent || "");
           setLastContent(parsedData.lastContent || "");
-          setStartDate(
-            parsedData.startDate ? new Date(parsedData.startDate) : null
-          );
-          setEndDate(parsedData.endDate ? new Date(parsedData.endDate) : null);
+          setStartDate(parsedData.startDate || "");
+          setEndDate(parsedData.endDate || "");
           clearItemPosts();
-          parsedData.ItemPosts.forEach((item: any) => addItemPost(item));
+          parsedData.itemPosts.forEach((item: ItemPostCreateUpdateRequest) =>
+            addItemPost(item)
+          );
         } else {
           resetWriteState();
         }
@@ -85,14 +86,14 @@ export default function TemporarySave() {
 
   // 데이터 임시 저장
   const saveData = useCallback(
-    (dataToSave?: any) => {
+    (dataToSave?: PostCreateUpdateRequest) => {
       const data = dataToSave || {
         title,
         firstContent,
         lastContent,
         startDate,
         endDate,
-        ItemPosts,
+        itemPosts,
       };
       localStorage.setItem(storageKey, JSON.stringify(data));
 
@@ -103,7 +104,7 @@ export default function TemporarySave() {
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 2000); // 2초 후 팝업 사라짐
     },
-    [title, firstContent, lastContent, startDate, endDate, ItemPosts]
+    [title, firstContent, lastContent, startDate, endDate, itemPosts]
   );
 
   // 30초마다 localStorage에 자동 저장
@@ -116,7 +117,7 @@ export default function TemporarySave() {
           lastContent: useWriteStore.getState().lastContent,
           startDate: useWriteStore.getState().startDate,
           endDate: useWriteStore.getState().endDate,
-          ItemPosts: useWriteStore.getState().ItemPosts,
+          itemPosts: useWriteStore.getState().itemPosts,
         };
         saveData(latestState);
       }, 30000); // 30초마다 실행

@@ -3,61 +3,90 @@ import { ReactComponent as PlusIcon } from "../../assets/icons/plus-icon.svg";
 import { Sheet } from "react-modal-sheet";
 import { useEffect, useState } from "react";
 import useWriteStore from "../../store/useWriteStore";
+import { ItemPostCreateUpdateRequest } from "../../types/item";
 
 export default function AddItemButton() {
   const [isOpen, setIsOpen] = useState(false);
-  const { ItemPosts, addItemPost, removeItemPost } = useWriteStore();
-  const [localItems, setLocalItems] = useState<
-    { id: number; title: string; content: string }[]
+  const { itemPosts, addItemPost, removeItemPost } = useWriteStore();
+  const [localItemPosts, setLocalItemPosts] = useState<
+    ItemPostCreateUpdateRequest[]
   >([]);
 
   const dummyItems = [
-    { id: 1, title: "굳이? 성심당 가서 망고시루 먹기", content: "" },
-    { id: 2, title: "남선공원에서 산책하기", content: "" },
-    { id: 3, title: "대동하늘공원에서 일몰 보기", content: "" },
-    { id: 4, title: "KAIST 거위 구경하기", content: "" },
-    { id: 5, title: "오월드 가서 동물원 구경하기", content: "" },
-    { id: 6, title: "뿌리공원에서 나의 성씨 비석 찾기", content: "" },
+    {
+      itemId: 1,
+      title: "굳이? 성심당 가서 망고시루 먹기",
+      content: "",
+      images: [],
+    },
+    { itemId: 2, title: "남선공원에서 산책하기", content: "", images: [] },
+    { itemId: 3, title: "대동하늘공원에서 일몰 보기", content: "", images: [] },
+    { itemId: 4, title: "KAIST 거위 구경하기", content: "", images: [] },
+    {
+      itemId: 5,
+      title: "오월드 가서 동물원 구경하기",
+      content: "",
+      images: [],
+    },
+    {
+      itemId: 6,
+      title: "뿌리공원에서 나의 성씨 비석 찾기",
+      content: "",
+      images: [],
+    },
   ];
 
   // Sheet가 열릴 때: 전역 상태의 필터를 로컬 상태로 가져오기
   useEffect(() => {
     if (isOpen) {
-      setLocalItems([...ItemPosts]);
+      setLocalItemPosts([...itemPosts]);
     }
-  }, [isOpen, ItemPosts]);
+  }, [isOpen, itemPosts]);
 
   // 이미 추가된 항목인지 확인
-  const isItemAdded = (id: number) => {
-    return localItems.some((item) => item.id === id);
+  const isItemAdded = (itemId: number) => {
+    return localItemPosts.some((item) => item.itemId === itemId);
   };
 
   // 로컬 상태에서 아이템을 추가하거나 제거
   const handleToggleItem = (item: {
-    id: number;
+    itemId: number;
     title: string;
     content: string;
+    images: string[];
   }) => {
-    if (localItems.some((localItem) => localItem.id === item.id)) {
-      setLocalItems(localItems.filter((localItem) => localItem.id !== item.id)); // 이미 있으면 제거
+    const newItemPost: ItemPostCreateUpdateRequest = {
+      itemPostId: null, // 임시로 itemPostId null로 생성
+      itemId: item.itemId,
+      title: item.title,
+      content: item.content,
+      images: [],
+    };
+
+    if (localItemPosts.some((localItem) => localItem.itemId === item.itemId)) {
+      setLocalItemPosts(
+        localItemPosts.filter((localItem) => localItem.itemId !== item.itemId)
+      ); // 이미 있으면 제거
     } else {
-      setLocalItems([...localItems, item]); // 없으면 추가
+      setLocalItemPosts([...localItemPosts, newItemPost]); // 없으면 추가
     }
   };
 
-  // 적용 버튼: 로컬 상태의 아이템을 전역 상태로 set
+  // 적용 버튼: 로컬 상태의 ItemPost를 전역 상태로 set
   const handleConfirm = () => {
     // 로컬 상태에 있는 아이템은 추가
-    localItems.forEach((item) => {
-      if (!ItemPosts.some((post) => post.id === item.id)) {
+    localItemPosts.forEach((item) => {
+      if (!itemPosts.some((post) => post.itemId === item.itemId)) {
         addItemPost(item);
       }
     });
 
-    // 전역 상태에 있고, 로컬 상태에 없는 아이템은 제거
-    ItemPosts.forEach((post) => {
-      if (!localItems.some((localItem) => localItem.id === post.id)) {
-        removeItemPost(post.id);
+    // 전역 상태에 있고, 로컬 상태에 없는 ItemPost는 제거
+    itemPosts.forEach((post) => {
+      if (
+        !localItemPosts.some((localItem) => localItem.itemId === post.itemId)
+      ) {
+        removeItemPost(post.itemId);
       }
     });
 
@@ -76,10 +105,10 @@ export default function AddItemButton() {
           <Sheet.Content>
             <ContentWrapper>
               {dummyItems.map((item) => {
-                const isAdded = isItemAdded(item.id);
+                const isAdded = isItemAdded(item.itemId);
                 return (
                   <StyledItemButton
-                    key={item.id}
+                    key={item.itemId}
                     onClick={() => handleToggleItem(item)}
                     $isAdded={isAdded}
                   >
@@ -87,9 +116,9 @@ export default function AddItemButton() {
                   </StyledItemButton>
                 );
               })}
-              {localItems.length > 0 && (
+              {localItemPosts.length > 0 && (
                 <ConfirmButton onClick={handleConfirm}>
-                  {localItems.length}개 추가!
+                  {localItemPosts.length}개 추가!
                 </ConfirmButton>
               )}
             </ContentWrapper>
