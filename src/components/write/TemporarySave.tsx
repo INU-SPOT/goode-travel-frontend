@@ -4,11 +4,18 @@ import useWriteStore from "../../store/useWriteStore";
 import { ItemPostCreateUpdateRequest } from "../../types/item";
 import { PostCreateUpdateRequest } from "../../types/post";
 
-export default function TemporarySave() {
+interface TemporarySaveProps {
+  storageKey: string;
+  resetWriteState: () => void;
+}
+
+export default function TemporarySave({
+  storageKey,
+  resetWriteState,
+}: TemporarySaveProps) {
   const [showPopup, setShowPopup] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
-  const storageKey = "writePageTemporarySaveData";
 
   const {
     title,
@@ -28,15 +35,6 @@ export default function TemporarySave() {
 
   // 페이지가 로드될 때 localStorage에서 데이터를 확인
   useEffect(() => {
-    const resetWriteState = () => {
-      setTitle("");
-      setFirstContent("");
-      setLastContent("");
-      setStartDate("");
-      setEndDate("");
-      clearItemPosts();
-    };
-
     const savedData = localStorage.getItem(storageKey);
     if (savedData) {
       const parsedData = JSON.parse(savedData);
@@ -75,6 +73,8 @@ export default function TemporarySave() {
     }
     setIsLoaded(true);
   }, [
+    resetWriteState,
+    storageKey,
     setTitle,
     setFirstContent,
     setLastContent,
@@ -104,7 +104,15 @@ export default function TemporarySave() {
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 2000); // 2초 후 팝업 사라짐
     },
-    [title, firstContent, lastContent, startDate, endDate, itemPosts]
+    [
+      storageKey,
+      title,
+      firstContent,
+      lastContent,
+      startDate,
+      endDate,
+      itemPosts,
+    ]
   );
 
   // 30초마다 localStorage에 자동 저장
