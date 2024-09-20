@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+// import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
@@ -6,8 +6,8 @@ import reportWebVitals from "./reportWebVitals";
 import GlobalStyle from "./globalStyles";
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import axios from "axios";
-import axiosInstance from "./services/axiosInstance";
+// import axios from "axios";
+// import axiosInstance from "./services/axiosInstance";
 
 // Firebase 설정
 const firebaseConfig = {
