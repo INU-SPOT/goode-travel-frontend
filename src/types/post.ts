@@ -26,15 +26,17 @@ export interface PostCreateUpdateRequest {
 export interface PostDetailResponse {
   writerId: number;
   writerNickname: string;
-  writerImageUrl: string;
+  writerImageName: string;
   postId: number;
   title: string;
   firstContent: string;
   lastContent: string;
+  createDate: string;
   startDate: string;
   endDate: string;
   visitNum: string;
   likeNum: number;
+  commentNum: number;
   isPushLike: boolean;
   isOwner: boolean;
   itemPosts: ItemPostResponse[];

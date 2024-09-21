@@ -15,8 +15,20 @@ export const post_posts = async (postData: PostCreateUpdateRequest) => {
   return response.data;
 };
 
+// 조하요~ 누르기
+export const post_posts_good = async (postid: number) => {
+  const response = await axiosInstance.post(`v1/posts/${postid}/good`);
+  return response.data;
+};
+
 // 게시글 이미지 등록
 export const post_posts_image = async (formData: FormData) => {
   const response = await axiosInstance.post(`/v1/posts/image`, formData);
+  return response.data;
+};
+
+// 게시글 내용 조회하기
+export const get_posts_postid = async (postid: number) => {
+  const response = await axiosInstance.get(`v1/posts/${postid}`);
   return response.data;
 };
