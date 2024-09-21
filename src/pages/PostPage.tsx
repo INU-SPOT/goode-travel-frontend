@@ -44,8 +44,8 @@ export default function PostPage() {
       <PostHeader isOwner={postDetail.isOwner} />
       <Title title={postDetail.title} createDate={postDetail.createDate} />
       <Content content={postDetail.firstContent} />
-      <Content content={postDetail.lastContent} />
       <ItemsContainer itemPosts={postDetail.itemPosts} />
+      <Content content={postDetail.lastContent} />
       <DateRange
         startDate={postDetail.startDate}
         endDate={postDetail.endDate}
