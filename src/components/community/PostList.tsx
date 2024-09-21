@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import PostCard from "./PostCard";
+import { PostThumbnailResponse } from "../../types/post";
 
 interface PostListProps {
-  posts: Post[];
+  posts: PostThumbnailResponse[];
 }
 
 export default function PostList({ posts }: PostListProps) {

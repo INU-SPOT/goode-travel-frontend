@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import { ReactComponent as HeartIconSVG } from "../../assets/icons/heart-icon.svg";
 import { ReactComponent as CommentIconSVG } from "../../assets/icons/comment-icon.svg";
+import { PostThumbnailResponse } from "../../types/post";
 
 interface PostCardProps {
-  post: Post; // 글로벌 Post 타입 사용
+  post: PostThumbnailResponse;
 }
 
 export default function PostCard({ post }: PostCardProps) {
@@ -12,26 +13,29 @@ export default function PostCard({ post }: PostCardProps) {
       <PostContent>
         <TitleWrapper>
           <Title>{post.title}</Title>
-          {post.subTitles &&
-            post.subTitles.map((subtitle, index) => (
-              <Subtitle key={index}>- {subtitle}</Subtitle>
+          {post.items &&
+            post.items.map((item, index) => (
+              <Subtitle key={index}>- {item.itemTitle}</Subtitle>
             ))}
         </TitleWrapper>
         <PostFooter>
           <IconsWrapper>
             <IconWrapper>
               <HeartIcon />
-              <Count>{post.likes}</Count>
+              <Count>{post.likeNum}</Count>
             </IconWrapper>
             <IconWrapper>
               <CommentIcon />
-              <Count>{post.comments}</Count>
+              <Count>{post.commentNum}</Count>
             </IconWrapper>
           </IconsWrapper>
-          <Author>by {post.author}</Author>
+          <Author>by {post.writerNickname}</Author>
         </PostFooter>
       </PostContent>
-      <Thumbnail src={post.thumbnail} alt={`${post.title} 썸네일`} />
+      <Thumbnail
+        src={`${process.env.REACT_APP_IMAGE_URL}/${post.imageName}`}
+        alt={`${post.title} 썸네일`}
+      />
     </StyledPostCard>
   );
 }

@@ -6,6 +6,11 @@ import "react-calendar/dist/Calendar.css";
 import { TileClassNameFunc } from "react-calendar";
 import useWriteStore from "../../store/useWriteStore";
 
+// 날짜를 YYYY-MM-DD 형식으로 변환하는 함수 (Date -> string)
+const formatDate = (date: Date | null): string | null => {
+  return date ? date.toISOString().split("T")[0] : null;
+};
+
 type DatePiece = Date | null;
 type TmpDate = DatePiece | [DatePiece, DatePiece];
 
@@ -13,8 +18,12 @@ export default function DateRangePicker() {
   const { startDate, endDate, setStartDate, setEndDate } = useWriteStore();
   const [isOpen, setIsOpen] = useState(false);
 
-  const [localStartDate, setLocalStartDate] = useState<Date | null>(startDate);
-  const [localEndDate, setLocalEndDate] = useState<Date | null>(endDate);
+  const [localStartDate, setLocalStartDate] = useState<Date | null>(
+    startDate ? new Date(startDate) : null
+  );
+  const [localEndDate, setLocalEndDate] = useState<Date | null>(
+    endDate ? new Date(endDate) : null
+  );
   const [tmpDate, setTmpDate] = useState<TmpDate>(null);
   const [selectedDate, setSelectedDate] = useState<TmpDate>(null);
 
@@ -41,8 +50,8 @@ export default function DateRangePicker() {
 
   // 적용 버튼: 로컬 상태의 Date를 전역 상태로 set
   const handleConfirm = () => {
-    setStartDate(localStartDate);
-    setEndDate(localEndDate);
+    setStartDate(formatDate(localStartDate) || "");
+    setEndDate(formatDate(localEndDate) || "");
     setIsOpen(false);
   };
 
@@ -73,7 +82,7 @@ export default function DateRangePicker() {
     <>
       <DateDisplay onClick={() => setIsOpen(true)}>
         {startDate && endDate
-          ? `${startDate.toLocaleDateString()} ~ ${endDate.toLocaleDateString()}`
+          ? `${startDate} ~ ${endDate}`
           : "언제 다녀오셨나요?"}
       </DateDisplay>
       <StyledSheet isOpen={isOpen} onClose={() => setIsOpen(false)}>
