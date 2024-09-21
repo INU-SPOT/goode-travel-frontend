@@ -58,6 +58,7 @@ export default function PostPage() {
         />
         <Utility
           postId={postDetail.postId}
+          title={postDetail.title}
           likeNum={postDetail.likeNum}
           isPushLike={postDetail.isPushLike}
           commentNum={postDetail.commentNum}

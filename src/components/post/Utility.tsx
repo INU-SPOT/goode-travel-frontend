@@ -8,11 +8,13 @@ import { post_posts_good } from "../../services/post";
 
 export default function Utility({
   postId,
+  title,
   likeNum,
   isPushLike,
   commentNum,
 }: {
   postId: number;
+  title: string;
   likeNum: number;
   isPushLike: boolean;
   commentNum: number;
@@ -40,8 +42,8 @@ export default function Utility({
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Check out this post!",
-          text: "This is a great post you should read.",
+          title: "⭐️ 굳이? 여행가자! ⭐️",
+          text: title,
           url: window.location.href,
         });
         console.log("Successfully shared!");
