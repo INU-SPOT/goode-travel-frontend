@@ -20,6 +20,7 @@ export default function Utility({
   const [likes, setLikes] = useState(likeNum);
   const [isLiked, setIsLiked] = useState(isPushLike);
   const [isRequesting, setIsRequesting] = useState(false);
+
   const handleLikeClick = async () => {
     if (isRequesting) return;
 
@@ -35,10 +36,27 @@ export default function Utility({
     }
   };
 
+  const handleShareClick = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Check out this post!",
+          text: "This is a great post you should read.",
+          url: window.location.href,
+        });
+        console.log("Successfully shared!");
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    } else {
+      alert("Sharing is not supported in this browser.");
+    }
+  };
+
   return (
     <Container>
       <div>
-        <ShareIcon />
+        <ShareIcon onClick={handleShareClick} />
         <ReportIcon
           onClick={() => {
             /* TODO: postId 이용 신고 기능 추가 */
