@@ -5,6 +5,7 @@ import { ReactComponent as ReportIconSVG } from "../../assets/icons/report-icon.
 import { ReactComponent as HeartIconSVG } from "../../assets/icons/heart-icon.svg";
 import { ReactComponent as CommentIconSVG } from "../../assets/icons/comment-icon.svg";
 import { post_posts_good } from "../../services/post";
+import { useNavigate } from "react-router-dom";
 
 export default function Utility({
   postId,
@@ -19,11 +20,20 @@ export default function Utility({
   isPushLike: boolean;
   commentNum: number;
 }) {
+  const navigate = useNavigate();
   const [likes, setLikes] = useState(likeNum);
   const [isLiked, setIsLiked] = useState(isPushLike);
   const [isRequesting, setIsRequesting] = useState(false);
 
   const handleLikeClick = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (!accessToken) {
+      alert("로그인이 필요합니다!");
+      navigate("/login");
+      return;
+    }
+
     if (isRequesting) return;
 
     setIsRequesting(true);
@@ -103,11 +113,13 @@ const Container = styled.div`
 const ShareIcon = styled(ShareIconSVG)`
   width: 24px;
   height: 24px;
+  cursor: pointer;
 `;
 
 const ReportIcon = styled(ReportIconSVG)`
   width: 24px;
   height: 24px;
+  cursor: pointer;
 `;
 
 const Text = styled.span`
