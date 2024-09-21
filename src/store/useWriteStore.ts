@@ -1,33 +1,29 @@
 import { create } from "zustand";
+import { PostCreateUpdateRequest } from "../types/post";
+import {
+  ItemPostCreateUpdateRequest,
+  ItemPostImageRequest,
+} from "../types/item";
 
-interface ItemPostSummary
-  extends Pick<ItemPost, "id" | "title" | "content" | "postImages"> {}
-
-interface WriteState {
-  title: string;
-  firstContent: string;
-  lastContent: string;
-  startDate: Date | null;
-  endDate: Date | null;
-  ItemPosts: ItemPostSummary[];
+interface WriteState extends PostCreateUpdateRequest {
   setTitle: (title: string) => void;
   setFirstContent: (content: string) => void;
   setLastContent: (content: string) => void;
-  setStartDate: (date: Date | null) => void;
-  setEndDate: (date: Date | null) => void;
-  addItemPost: (newItem: ItemPostSummary) => void;
+  setStartDate: (date: string) => void;
+  setEndDate: (date: string) => void;
+  addItemPost: (newItem: ItemPostCreateUpdateRequest) => void;
   updateContent: (id: number, content: string) => void;
-  updatePostImages: (id: number, images: string[]) => void; // 새로운 함수
+  updatePostImages: (id: number, images: ItemPostImageRequest[]) => void;
   removeItemPost: (id: number) => void;
   reorderItems: (startIndex: number, endIndex: number) => void;
   clearItemPosts: () => void;
 }
 
 const reorder = (
-  list: ItemPostSummary[],
+  list: ItemPostCreateUpdateRequest[],
   startIndex: number,
   endIndex: number
-): ItemPostSummary[] => {
+): ItemPostCreateUpdateRequest[] => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -38,37 +34,37 @@ const useWriteStore = create<WriteState>((set) => ({
   title: "",
   firstContent: "",
   lastContent: "",
-  startDate: null,
-  endDate: null,
-  ItemPosts: [],
+  startDate: "",
+  endDate: "",
+  itemPosts: [],
   setTitle: (title) => set(() => ({ title })),
   setFirstContent: (content) => set(() => ({ firstContent: content })),
   setLastContent: (content) => set(() => ({ lastContent: content })),
   setStartDate: (date) => set(() => ({ startDate: date })),
   setEndDate: (date) => set(() => ({ endDate: date })),
   addItemPost: (newItem) =>
-    set((state) => ({ ItemPosts: [...state.ItemPosts, newItem] })),
+    set((state) => ({ itemPosts: [...state.itemPosts, newItem] })),
   updateContent: (id, content) =>
     set((state) => ({
-      ItemPosts: state.ItemPosts.map((item) =>
-        item.id === id ? { ...item, content } : item
+      itemPosts: state.itemPosts.map((item) =>
+        item.itemId === id ? { ...item, content } : item
       ),
     })),
   updatePostImages: (id, images) =>
     set((state) => ({
-      ItemPosts: state.ItemPosts.map((item) =>
-        item.id === id ? { ...item, postImages: images } : item
+      itemPosts: state.itemPosts.map((item) =>
+        item.itemId === id ? { ...item, images } : item
       ),
     })),
   removeItemPost: (id) =>
     set((state) => ({
-      ItemPosts: state.ItemPosts.filter((item) => item.id !== id),
+      itemPosts: state.itemPosts.filter((item) => item.itemId !== id),
     })),
   reorderItems: (startIndex, endIndex) =>
     set((state) => ({
-      ItemPosts: reorder(state.ItemPosts, startIndex, endIndex),
+      itemPosts: reorder(state.itemPosts, startIndex, endIndex),
     })),
-  clearItemPosts: () => set(() => ({ ItemPosts: [] })),
+  clearItemPosts: () => set(() => ({ itemPosts: [] })),
 }));
 
 export default useWriteStore;

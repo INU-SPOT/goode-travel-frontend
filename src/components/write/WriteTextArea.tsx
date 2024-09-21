@@ -3,10 +3,13 @@ import useWriteStore from "../../store/useWriteStore";
 
 interface WriteTextAreaProps {
   placeholder: string;
-  id?: number; // ItemPost의 경우 id가 필요
+  itemId?: number; // ItemPost의 경우 id가 필요
 }
 
-export default function WriteTextArea({ placeholder, id }: WriteTextAreaProps) {
+export default function WriteTextArea({
+  placeholder,
+  itemId,
+}: WriteTextAreaProps) {
   // placeholder에 따라 content와 setContent를 결정
   const { content, setContent } = useWriteStore((state) => {
     if (placeholder === "전반적인 여행에 대해 소개해 주세요.") {
@@ -21,11 +24,12 @@ export default function WriteTextArea({ placeholder, id }: WriteTextAreaProps) {
         setContent: (newContent: string) => state.setLastContent(newContent),
       };
     }
-    if (id !== undefined) {
-      const item = state.ItemPosts.find((item) => item.id === id);
+    if (itemId !== undefined) {
+      const item = state.itemPosts.find((item) => item.itemId === itemId);
       return {
         content: item ? item.content : "",
-        setContent: (newContent: string) => state.updateContent(id, newContent),
+        setContent: (newContent: string) =>
+          state.updateContent(itemId, newContent),
       };
     }
     return { content: "", setContent: () => {} }; // 기본값
