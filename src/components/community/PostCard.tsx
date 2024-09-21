@@ -2,14 +2,16 @@ import styled from "styled-components";
 import { ReactComponent as HeartIconSVG } from "../../assets/icons/heart-icon.svg";
 import { ReactComponent as CommentIconSVG } from "../../assets/icons/comment-icon.svg";
 import { PostThumbnailResponse } from "../../types/post";
+import { useNavigate } from "react-router-dom";
 
 interface PostCardProps {
   post: PostThumbnailResponse;
 }
 
 export default function PostCard({ post }: PostCardProps) {
+  const navigate = useNavigate();
   return (
-    <StyledPostCard>
+    <StyledPostCard onClick={() => navigate(`/post/${post.postId}`)}>
       <PostContent>
         <TitleWrapper>
           <Title>{post.title}</Title>
