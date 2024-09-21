@@ -8,7 +8,7 @@ export default function PostHeader({ isOwner }: { isOwner: boolean }) {
   return (
     <StyledHeader>
       <div>
-        <StyledXIcon onClick={() => navigate(-1)} />
+        <StyledXIcon onClick={() => navigate("/community")} />
       </div>
       <div>
         {isOwner && (
