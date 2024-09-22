@@ -4,13 +4,19 @@ import { ReplyCommentResponse } from "../../types/comment";
 
 export default function ReplyContainer({
   replyComments,
+  fetchCommentDetail,
 }: {
   replyComments: ReplyCommentResponse[];
+  fetchCommentDetail: () => void;
 }) {
   return (
     <ReplyWrapper>
       {replyComments.map((reply) => (
-        <ReplyComment key={reply.replyCommentId} reply={reply} />
+        <ReplyComment
+          key={reply.replyCommentId}
+          reply={reply}
+          fetchCommentDetail={fetchCommentDetail}
+        />
       ))}
     </ReplyWrapper>
   );

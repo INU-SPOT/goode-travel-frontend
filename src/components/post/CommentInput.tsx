@@ -1,14 +1,27 @@
 import styled from "styled-components";
 import ArrowUpIcon from "../../assets/icons/arrow-up-icon.svg";
 import { useState } from "react";
-import { post_posts_comments } from "../../services/comment";
+import {
+  post_posts_comments,
+  post_posts_replycomments,
+} from "../../services/comment";
 import { useNavigate } from "react-router-dom";
 
 export default function CommentInput({
   postId,
+  replyTo,
+  setReplyTo,
   onCommentSubmit,
 }: {
   postId: number;
+  replyTo: { nickname: string | null; commentId: number | null };
+  setReplyTo: ({
+    nickname,
+    commentId,
+  }: {
+    nickname: string | null;
+    commentId: number | null;
+  }) => void;
   onCommentSubmit: () => void;
 }) {
   const navigate = useNavigate();
@@ -22,7 +35,14 @@ export default function CommentInput({
     setIsSubmitting(true);
 
     try {
-      await post_posts_comments(postId, content);
+      if (replyTo.commentId) {
+        // 답글 모드일 때 답글 등록
+        await post_posts_replycomments(replyTo.commentId, content);
+        setReplyTo({ nickname: null, commentId: null });
+      } else {
+        // 일반 댓글 등록
+        await post_posts_comments(postId, content);
+      }
       setContent(""); // 입력 필드 비우기
       onCommentSubmit(); // 콜백 호출로 댓글 목록 갱신
     } catch (error) {
@@ -34,6 +54,16 @@ export default function CommentInput({
 
   return (
     <StyledCommentInput>
+      {replyTo.nickname && (
+        <ReplyInfo>
+          {replyTo.nickname}님에게 답글 남기는 중
+          <button
+            onClick={() => setReplyTo({ nickname: null, commentId: null })}
+          >
+            취소
+          </button>
+        </ReplyInfo>
+      )}
       <div>
         {accessToken ? (
           <>
@@ -68,7 +98,8 @@ const StyledCommentInput = styled.div`
   min-height: 68px;
   background-color: white;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   z-index: 1000;
 
   div {
@@ -119,5 +150,19 @@ const StyledCommentInput = styled.div`
       font-size: 14px;
       text-decoration: underline;
     }
+  }
+`;
+
+const ReplyInfo = styled.span`
+  width: 90%;
+  max-width: 432px;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+  button {
+    background: none;
+    border: none;
+    color: #ff0000;
+    font-size: 14px;
   }
 `;

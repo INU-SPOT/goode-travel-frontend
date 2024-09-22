@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import { CommentDetailResponse } from "../../types/comment";
 import { get_posts_comments } from "../../services/comment";
@@ -11,8 +11,15 @@ export default function CommentsContainer({ postId }: { postId: number }) {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [replyTo, setReplyTo] = useState<{
+    nickname: string | null;
+    commentId: number | null;
+  }>({
+    nickname: null,
+    commentId: null,
+  });
 
-  const fetchCommentDetail = async () => {
+  const fetchCommentDetail = useCallback(async () => {
     try {
       setLoading(true);
       const response = await get_posts_comments(postId);
@@ -22,13 +29,13 @@ export default function CommentsContainer({ postId }: { postId: number }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [postId]);
 
   useEffect(() => {
     if (postId) {
       fetchCommentDetail();
     }
-  }, [postId]);
+  }, [postId, fetchCommentDetail]);
 
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>{error}</h1>;
@@ -37,9 +44,19 @@ export default function CommentsContainer({ postId }: { postId: number }) {
   return (
     <Container>
       {comments.map((comment) => (
-        <Comment key={comment.commentId} comment={comment} />
+        <Comment
+          key={comment.commentId}
+          comment={comment}
+          fetchCommentDetail={fetchCommentDetail}
+          setReplyTo={setReplyTo} // 답글 대상 설정
+        />
       ))}
-      <CommentInput postId={postId} onCommentSubmit={fetchCommentDetail} />
+      <CommentInput
+        postId={postId}
+        replyTo={replyTo}
+        setReplyTo={setReplyTo} // 답글 대상 해제
+        onCommentSubmit={fetchCommentDetail}
+      />
     </Container>
   );
 }
@@ -50,4 +67,5 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  margin-bottom: 12px; // '답글 달 남기는 중' 공간
 `;
