@@ -13,11 +13,9 @@ export default function CommunityPage() {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [isResetting, setIsResetting] = useState(false);
 
   // searchQuery 또는 filters가 변경될 때 페이지 초기화 및 게시물 로드
   useEffect(() => {
-    setIsResetting(true);
     setPage(0);
     setHasMore(true);
     setPosts([]);
@@ -41,16 +39,16 @@ export default function CommunityPage() {
         console.error("Failed to fetch posts:", error);
       } finally {
         setLoading(false);
-        setIsResetting(false);
       }
     };
 
     loadPosts();
-  }, [searchQuery, filters]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, filters, setPosts]);
 
   // 페이지 변경 시 게시물 데이터 가져오기
   useEffect(() => {
-    if (page === 0 || isResetting) return; // 페이지가 0이거나 초기화 중이면 건너뜀
+    if (page === 0) return;
 
     const loadPosts = async () => {
       setLoading(true);
@@ -77,7 +75,8 @@ export default function CommunityPage() {
     };
 
     if (hasMore) loadPosts();
-  }, [page]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, setPosts, hasMore]);
 
   const [setLastElement] = useInfiniteScroll({
     hasMore,
