@@ -13,27 +13,62 @@ export default function CommunityPage() {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [isResetting, setIsResetting] = useState(false);
 
-  // searchQuery 또는 filters가 변경될 때 페이지 초기화
+  // searchQuery 또는 filters가 변경될 때 페이지 초기화 및 게시물 로드
   useEffect(() => {
+    setIsResetting(true);
     setPage(0);
     setHasMore(true);
+    setPosts([]);
+
+    // 페이지 초기화 후 로딩
+    const loadPosts = async () => {
+      setLoading(true);
+      try {
+        const response = await get_posts(
+          0,
+          7,
+          filters.district,
+          filters.theme,
+          searchQuery
+        );
+        if (response.data.data.length === 0) {
+          setHasMore(false);
+        }
+        setPosts(response.data.data);
+      } catch (error) {
+        console.error("Failed to fetch posts:", error);
+      } finally {
+        setLoading(false);
+        setIsResetting(false);
+      }
+    };
+
+    loadPosts();
   }, [searchQuery, filters]);
 
   // 페이지 변경 시 게시물 데이터 가져오기
   useEffect(() => {
+    if (page === 0 || isResetting) return; // 페이지가 0이거나 초기화 중이면 건너뜀
+
     const loadPosts = async () => {
       setLoading(true);
       try {
-        const response = await get_posts(page, 7);
+        const response = await get_posts(
+          page,
+          7,
+          filters.district,
+          filters.theme,
+          searchQuery
+        );
         if (response.data.data.length === 0) {
           setHasMore(false);
         }
-        setPosts((prevPosts: PostThumbnailResponse[]) =>
-          page === 0
-            ? response.data.data
-            : [...prevPosts, ...response.data.data]
-        );
+        setPosts((prevPosts: PostThumbnailResponse[]) => [
+          ...prevPosts,
+          ...response.data.data,
+        ]);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
       } finally {
@@ -42,7 +77,7 @@ export default function CommunityPage() {
     };
 
     if (hasMore) loadPosts();
-  }, [page, hasMore, setPosts]);
+  }, [page]);
 
   const [setLastElement] = useInfiniteScroll({
     hasMore,

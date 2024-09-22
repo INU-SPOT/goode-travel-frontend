@@ -43,27 +43,24 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
 
   // 시/군/구 선택
   const handleDistrictSelect = (district: string) => {
-    const fullDistrict = `${selectedCity} ${district}`;
-
     setSelectedDistricts((prevDistricts) => {
-      // '전체'가 선택된 경우: 현재 광역시/도의 기존 선택들을 모두 제거하고 '전체'만 추가
+      // '전체'가 선택된 경우: 현재 광역시/도의 기존 선택들을 모두 제거하고 광역시/도 이름만 추가
       if (district === "전체") {
-        // 같은 광역시/도 내의 기존 선택을 모두 제거하고 '전체'만 추가
         const updatedDistricts = prevDistricts.filter(
-          (d) => !d.startsWith(selectedCity)
+          (d) => !districts[selectedCity].includes(d)
         );
-        return [...updatedDistricts, fullDistrict];
+        return [...updatedDistricts, selectedCity];
       } else {
         // 같은 광역시/도 내에서 선택을 관리
-        const isAlreadySelected = prevDistricts.includes(fullDistrict);
+        const isAlreadySelected = prevDistricts.includes(district);
 
         if (isAlreadySelected) {
           // 이미 선택된 시/군/구를 클릭하면 제거
-          return prevDistricts.filter((d) => d !== fullDistrict);
+          return prevDistricts.filter((d) => d !== district);
         } else {
           // 만약 '전체'가 이전에 선택되어 있다면, 그것을 제거하고 새 선택을 추가
           const updatedDistricts = prevDistricts.filter(
-            (d) => d !== `${selectedCity} 전체`
+            (d) => d !== selectedCity
           );
 
           // 최대 maxCount개까지만 선택 가능
@@ -74,7 +71,7 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
             return prevDistricts; // maxCount개 이상 선택된 경우, 더 이상 추가하지 않음
           }
 
-          return [...updatedDistricts, fullDistrict];
+          return [...updatedDistricts, district];
         }
       }
     });
@@ -144,9 +141,7 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
                   <FilterButton
                     key="전체"
                     onClick={() => handleDistrictSelect("전체")}
-                    selected={selectedDistricts.includes(
-                      `${selectedCity} 전체`
-                    )}
+                    selected={selectedDistricts.includes(`${selectedCity}`)}
                     disabled={selectedDistricts.length >= maxCount}
                   >
                     전체
@@ -155,14 +150,10 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
                     <FilterButton
                       key={district}
                       onClick={() => handleDistrictSelect(district)}
-                      selected={selectedDistricts.includes(
-                        `${selectedCity} ${district}`
-                      )}
+                      selected={selectedDistricts.includes(`${district}`)}
                       disabled={
                         selectedDistricts.length >= maxCount &&
-                        !selectedDistricts.includes(
-                          `${selectedCity} ${district}`
-                        )
+                        !selectedDistricts.includes(`${district}`)
                       }
                     >
                       {district}

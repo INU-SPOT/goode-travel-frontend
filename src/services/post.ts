@@ -2,10 +2,29 @@ import axiosInstance from "./axiosInstance";
 import { PostCreateUpdateRequest } from "../types/post";
 
 // 게시글 목록(썸네일) 불러오기 + 전체 게시글 검색 기능 **페이징**
-export const get_posts = async (page: number, size: number) => {
-  const response = await axiosInstance.get(
-    `/v1/posts?page=${page}&size=${size}`
-  );
+export const get_posts = async (
+  page: number,
+  size: number,
+  localGovernments?: string[],
+  categories?: string[],
+  keyword?: string
+) => {
+  const params = new URLSearchParams();
+  if (localGovernments && localGovernments.length > 0) {
+    localGovernments.forEach((government) =>
+      params.append("localGovernments", government)
+    );
+  }
+  if (categories && categories.length > 0) {
+    categories.forEach((category) => params.append("categories", category));
+  }
+  if (keyword && keyword.trim() !== "") {
+    params.append("keyword", keyword);
+  }
+  params.append("page", page.toString());
+  params.append("size", size.toString());
+
+  const response = await axiosInstance.get(`/v1/posts?${params.toString()}`);
   return response.data;
 };
 
