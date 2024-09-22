@@ -41,7 +41,7 @@ export default function CommentDropDown({
   };
 
   const handleDelete = async () => {
-    if (confirm("정말 삭제하시겠습니까?")) {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
       try {
         if (type === "comment") {
           await delete_posts_comments(id);
@@ -61,7 +61,7 @@ export default function CommentDropDown({
       alert("로그인이 필요합니다. 로그인 후 다시 시도해 주세요.");
       return;
     }
-    if (confirm("이 내용을 신고하시겠습니까?")) {
+    if (window.confirm("이 내용을 신고하시겠습니까?")) {
       try {
         if (type === "comment") {
           await post_posts_report_comments(id);
