@@ -104,7 +104,7 @@ const Wrapper = styled.div`
 const DropdownMenu = styled.div`
   position: absolute;
   top: 0;
-  right: 32px;
+  right: 44px;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0px 2px 8px 0px #0000001a;
