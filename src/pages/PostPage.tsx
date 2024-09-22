@@ -10,6 +10,7 @@ import ItemsContainer from "../components/post/ItemsContainer";
 import DateRange from "../components/post/DateRange";
 import Writer from "../components/post/Writer";
 import Utility from "../components/post/Utility";
+import CommentsContainer from "../components/post/CommentsContainer";
 
 export default function PostPage() {
   const { id } = useParams<{ id: string }>();
@@ -40,33 +41,43 @@ export default function PostPage() {
   if (!postDetail) return <h1>No post found</h1>;
 
   return (
-    <PostContainer>
-      <PostHeader isOwner={postDetail.isOwner} />
-      <Title title={postDetail.title} createDate={postDetail.createDate} />
-      <Content content={postDetail.firstContent} />
-      <ItemsContainer itemPosts={postDetail.itemPosts} />
-      <Content content={postDetail.lastContent} />
-      <DateRange
-        startDate={postDetail.startDate}
-        endDate={postDetail.endDate}
-      />
-      <PostMeta>
-        <Writer
-          writerId={postDetail.writerId}
-          writerNickname={postDetail.writerNickname}
-          writerImageName={postDetail.writerImageName}
+    <PostPageContainer>
+      <PostContainer>
+        <PostHeader isOwner={postDetail.isOwner} />
+        <Title title={postDetail.title} createDate={postDetail.createDate} />
+        <Content content={postDetail.firstContent} />
+        <ItemsContainer itemPosts={postDetail.itemPosts} />
+        <Content content={postDetail.lastContent} />
+        <DateRange
+          startDate={postDetail.startDate}
+          endDate={postDetail.endDate}
         />
-        <Utility
-          postId={postDetail.postId}
-          title={postDetail.title}
-          likeNum={postDetail.likeNum}
-          isPushLike={postDetail.isPushLike}
-          commentNum={postDetail.commentNum}
-        />
-      </PostMeta>
-    </PostContainer>
+        <PostMeta>
+          <Writer
+            writerId={postDetail.writerId}
+            writerNickname={postDetail.writerNickname}
+            writerImageName={postDetail.writerImageName}
+          />
+          <Utility
+            postId={postDetail.postId}
+            title={postDetail.title}
+            likeNum={postDetail.likeNum}
+            isPushLike={postDetail.isPushLike}
+            commentNum={postDetail.commentNum}
+          />
+        </PostMeta>
+      </PostContainer>
+      <Line />
+      <CommentsContainer postId={postDetail.postId} />
+    </PostPageContainer>
   );
 }
+
+const PostPageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
 
 const PostContainer = styled.div`
   width: 100%;
@@ -80,4 +91,10 @@ const PostMeta = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+`;
+
+const Line = styled.div`
+  height: 2px;
+  width: 100%;
+  background-color: #e0e0e0;
 `;
