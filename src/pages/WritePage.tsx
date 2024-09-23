@@ -28,7 +28,6 @@ export default function WritePage() {
 
   // 수정 모드일 때 게시글 데이터 불러오기, 글 작성일 때 임시 저장 게시글 데이터 불러오기
   useEffect(() => {
-    console.log("?");
     if (id) {
       const fetchPostDetail = async () => {
         try {
@@ -42,7 +41,6 @@ export default function WritePage() {
       fetchPostDetail();
     } else {
       checkSavedData();
-      console.log("!");
     }
   }, [id, loadPostData, checkSavedData]);
 
