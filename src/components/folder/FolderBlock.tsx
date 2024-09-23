@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { FolderListResponse, FolderDetailResponse } from "../../types/folder"; // 타입 import
+import { FolderListResponse, FolderDetailResponse } from "../../types/folder";
 import {
   get_folders_folderid,
   put_folders_plan_itempostid,
-} from "../../services/folder"; // API 함수들
+} from "../../services/folder";
 
 interface FolderBlockProps {
   folder: FolderListResponse;
@@ -63,32 +63,31 @@ const FolderBlock: React.FC<FolderBlockProps> = ({ folder }) => {
       </CompletionRate>
       {folderDetail &&
         folderDetail.itemFolders && // folderDetail 및 itemFolders가 존재하는지 확인
-        folderDetail.itemFolders.map(
-          (item) =>
-            item.itemType === "PLAN" && (
-              <PlanItem key={item.itemFolderId}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={item.isFinished}
-                    onChange={() => handleCheckboxChange(item.itemFolderId)} // itemFolderId 기반으로 변경
-                  />
-                  {item.title}
-                </label>
-              </PlanItem>
-            )
-        )}
+        folderDetail.itemFolders.map((item) => (
+          <PlanItem key={item.itemFolderId}>
+            {item.itemType === "PLAN" ? (
+              <label>
+                <input
+                  type="checkbox"
+                  checked={item.isFinished}
+                  onChange={() => handleCheckboxChange(item.itemFolderId)} // itemFolderId 기반으로 변경
+                />
+                {item.title}
+              </label>
+            ) : (
+              <span>{item.title}</span> // PLAN이 아닌 경우 제목만 표시
+            )}
+          </PlanItem>
+        ))}
     </BlockContainer>
   );
 };
 
 const BlockContainer = styled.div`
-  width: 30%;
-  margin-bottom: 20px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+  width: 100%;
+  padding: 18px;
+  border-radius: 13px;
+  background-color: #e2e2e2;
   text-align: center;
 `;
 
@@ -99,8 +98,8 @@ const FolderImage = styled.img`
 `;
 
 const FolderTitle = styled.h3`
-  font-size: 18px;
-  margin: 10px 0;
+  font-size: 17px;
+  margin: 5px 0;
 `;
 
 const CompletionRate = styled.p`
@@ -109,7 +108,8 @@ const CompletionRate = styled.p`
 `;
 
 const PlanItem = styled.div`
-  margin: 10px 0;
+  font-size: 12px;
+  margin: 5px 0;
 `;
 
 export default FolderBlock;
