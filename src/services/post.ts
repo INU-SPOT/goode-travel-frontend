@@ -32,3 +32,12 @@ export const get_posts_postid = async (postid: number) => {
   const response = await axiosInstance.get(`v1/posts/${postid}`);
   return response.data;
 };
+
+// 게시글 수정하기
+export const patch_posts = async (
+  postid: number,
+  postData: PostCreateUpdateRequest
+) => {
+  const resposne = await axiosInstance.patch(`v1/posts/${postid}`, postData);
+  return resposne.data;
+};

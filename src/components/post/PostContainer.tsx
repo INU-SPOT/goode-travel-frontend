@@ -39,7 +39,7 @@ export default function PostContainer({ postId }: { postId: number }) {
 
   return (
     <Container>
-      <PostHeader isOwner={postDetail.isOwner} />
+      <PostHeader postId={postDetail.postId} isOwner={postDetail.isOwner} />
       <Title title={postDetail.title} createDate={postDetail.createDate} />
       <Content content={postDetail.firstContent} />
       <ItemsContainer itemPosts={postDetail.itemPosts} />

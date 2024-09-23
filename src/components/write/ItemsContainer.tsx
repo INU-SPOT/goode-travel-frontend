@@ -64,7 +64,7 @@ export default function ItemsContainer() {
               <SortableItem
                 key={item.itemId}
                 id={item.itemId}
-                title={item.title}
+                title={item.itemTitle}
               />
             ))}
         </Container>
