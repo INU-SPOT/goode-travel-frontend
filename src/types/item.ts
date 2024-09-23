@@ -30,3 +30,29 @@ export interface ItemPostResponse {
   content: string;
   images: ItemPostImageResponse[];
 }
+
+export interface ItemFolderCreateRequest {
+  folderId: number;
+  itemId: number;
+  emoji: string;
+}
+
+export interface ItemFolderUpdateRequest {
+  itemFolderId: number;
+  title: string;
+  emoji: string;
+  localGovernmentId: string;
+  address: string;
+}
+
+export interface ItemFolderResponse {
+  itemId: number;
+  itemFolderId: number;
+  isOfficial: boolean;
+  itemType: string;
+  title: string;
+  image: string;
+  address: string;
+  finishDate: string;
+  isFinished: boolean;
+}
