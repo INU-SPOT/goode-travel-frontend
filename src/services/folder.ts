@@ -18,8 +18,8 @@ export const post_folders_plan = async (itemData: ItemFolderCreateRequest) => {
 };
 
 // 계획이 끝난 여부 변환하기
-export const put_folders_plan_itempostid = async (itempostid: number) => {
-  const response = await axiosInstance.put(`/v1/folders/plan/${itempostid}`);
+export const put_folders_plan_itempostid = async (itemfolderid: number) => {
+  const response = await axiosInstance.put(`/v1/folders/plan/${itemfolderid}`);
   return response.data;
 };
 
@@ -38,7 +38,7 @@ export const post_folders = async (folderData: FolderCreateRequest) => {
 // 폴더 세부정보 제공
 export const get_folders_folderid = async (folderId: number) => {
   const response = await axiosInstance.get(`/v1/folders/${folderId}`);
-  return response.data;
+  return response.data.data;
 };
 
 // 폴더 삭제
@@ -57,7 +57,7 @@ export const patch_folders = async (
     `/v1/folders/${folderId}`,
     folderData
   );
-  return response.data;
+  return response.data.data;
 };
 
 // 폴더 안의 계획 삭제
