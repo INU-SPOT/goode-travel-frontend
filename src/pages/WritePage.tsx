@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import WriteHeader from "../components/write/WriteHeader";
 import TitleInput from "../components/write/TitleInput";
@@ -7,22 +8,41 @@ import ItemsContainer from "../components/write/ItemsContainer";
 import AddItemButton from "../components/write/AddItemButton";
 import DateRangePicker from "../components/write/DateRangePicker";
 import WriteTips from "../components/write/WriteTips";
+import { get_posts_postid } from "../services/post";
+import useWriteStore from "../store/useWriteStore";
 import { useTemporarySave } from "../hooks/useTemporarySave";
 
 export default function WritePage() {
+  const { id } = useParams<{ id: string }>(); // edit/:id에서 ID를 받아옴
+  const { loadPostData, resetWriteState } = useWriteStore();
   const storageKey = "writePageTemporarySaveData";
-  const {
-    isLoaded,
-    checkSavedData,
-    resetWriteState,
-    saveData,
-    showPopup,
-    currentTime,
-  } = useTemporarySave(storageKey);
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const { checkSavedData, saveData, showPopup, currentTime } = useTemporarySave(
+    storageKey,
+    !Boolean(id),
+    isLoaded,
+    setIsLoaded
+  );
+
+  // 수정 모드일 때 게시글 데이터 불러오기, 글 작성일 때 임시 저장 게시글 데이터 불러오기
   useEffect(() => {
-    checkSavedData();
-  }, [checkSavedData]);
+    if (id) {
+      const fetchPostDetail = async () => {
+        try {
+          const response = await get_posts_postid(Number(id));
+          loadPostData(response.data);
+          setIsLoaded(true);
+        } catch (error) {
+          console.error("게시글 데이터를 불러오는데 실패했습니다.", error);
+        }
+      };
+      fetchPostDetail();
+    } else {
+      checkSavedData();
+    }
+  }, [id, loadPostData, checkSavedData]);
 
   if (!isLoaded) {
     return <p>Loading...</p>;
@@ -31,9 +51,11 @@ export default function WritePage() {
   return (
     <WriteContainer>
       <WriteHeader
-        saveData={saveData}
+        saveData={Boolean(id) ? undefined : saveData}
         resetWriteState={resetWriteState}
         storageKey={storageKey}
+        isEditMode={Boolean(id)}
+        postId={id ? Number(id) : undefined}
       />
       <TitleInput />
       <WriteTextArea placeholder="전반적인 여행에 대해 소개해 주세요." />

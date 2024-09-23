@@ -15,22 +15,27 @@ export default function AddItemButton() {
   const dummyItems = [
     {
       itemId: 1,
-      title: "굳이? 성심당 가서 망고시루 먹기",
+      itemTitle: "굳이? 성심당 가서 망고시루 먹기",
       content: "",
       images: [],
     },
-    { itemId: 2, title: "남선공원에서 산책하기", content: "", images: [] },
-    { itemId: 3, title: "대동하늘공원에서 일몰 보기", content: "", images: [] },
-    { itemId: 4, title: "KAIST 거위 구경하기", content: "", images: [] },
+    { itemId: 2, itemTitle: "남선공원에서 산책하기", content: "", images: [] },
+    {
+      itemId: 3,
+      itemTitle: "대동하늘공원에서 일몰 보기",
+      content: "",
+      images: [],
+    },
+    { itemId: 4, itemTitle: "KAIST 거위 구경하기", content: "", images: [] },
     {
       itemId: 5,
-      title: "오월드 가서 동물원 구경하기",
+      itemTitle: "오월드 가서 동물원 구경하기",
       content: "",
       images: [],
     },
     {
       itemId: 6,
-      title: "뿌리공원에서 나의 성씨 비석 찾기",
+      itemTitle: "뿌리공원에서 나의 성씨 비석 찾기",
       content: "",
       images: [],
     },
@@ -51,14 +56,14 @@ export default function AddItemButton() {
   // 로컬 상태에서 아이템을 추가하거나 제거
   const handleToggleItem = (item: {
     itemId: number;
-    title: string;
+    itemTitle: string;
     content: string;
     images: string[];
   }) => {
     const newItemPost: ItemPostCreateUpdateRequest = {
       itemPostId: null, // 임시로 itemPostId null로 생성
       itemId: item.itemId,
-      title: item.title,
+      itemTitle: item.itemTitle,
       content: item.content,
       images: [],
     };
@@ -112,7 +117,7 @@ export default function AddItemButton() {
                     onClick={() => handleToggleItem(item)}
                     $isAdded={isAdded}
                   >
-                    {item.title}
+                    {item.itemTitle}
                   </StyledItemButton>
                 );
               })}

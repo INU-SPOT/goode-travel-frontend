@@ -3,10 +3,15 @@ import useWriteStore from "../store/useWriteStore";
 import { PostCreateUpdateRequest } from "../types/post";
 import { ItemPostCreateUpdateRequest } from "../types/item";
 
-export function useTemporarySave(storageKey: string) {
-  const [isLoaded, setIsLoaded] = useState(false);
+export function useTemporarySave(
+  storageKey: string,
+  shouldUseTemporarySave: boolean,
+  isLoaded: boolean, // 외부에서 주입된 isLoaded 상태
+  setIsLoaded: (loaded: boolean) => void // 외부에서 주입된 setIsLoaded 함수
+) {
   const [showPopup, setShowPopup] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
+  const { resetWriteState } = useWriteStore();
   const {
     title,
     firstContent,
@@ -23,24 +28,10 @@ export function useTemporarySave(storageKey: string) {
     clearItemPosts,
   } = useWriteStore();
 
-  const resetWriteState = useCallback(() => {
-    setTitle("");
-    setFirstContent("");
-    setLastContent("");
-    setStartDate("");
-    setEndDate("");
-    clearItemPosts();
-  }, [
-    setTitle,
-    setFirstContent,
-    setLastContent,
-    setStartDate,
-    setEndDate,
-    clearItemPosts,
-  ]);
-
   // localStorage에서 데이터를 확인
   const checkSavedData = useCallback(() => {
+    if (!shouldUseTemporarySave) return;
+
     const savedData = localStorage.getItem(storageKey);
     if (savedData) {
       const parsedData = JSON.parse(savedData);
@@ -77,9 +68,10 @@ export function useTemporarySave(storageKey: string) {
     } else {
       resetWriteState();
     }
-    setIsLoaded(true);
+    setIsLoaded(true); // 외부에서 주입된 setIsLoaded 호출
   }, [
     storageKey,
+    shouldUseTemporarySave,
     resetWriteState,
     setTitle,
     setFirstContent,
@@ -88,11 +80,13 @@ export function useTemporarySave(storageKey: string) {
     setEndDate,
     addItemPost,
     clearItemPosts,
+    setIsLoaded,
   ]);
 
   // 데이터 임시 저장
   const saveData = useCallback(() => {
-    console.log("saveData");
+    if (!shouldUseTemporarySave) return; // 임시 저장 사용 여부에 따라 무시
+
     const data: PostCreateUpdateRequest = {
       title,
       firstContent,
@@ -110,6 +104,7 @@ export function useTemporarySave(storageKey: string) {
     setTimeout(() => setShowPopup(false), 2000); // 2초 후 팝업 사라짐
   }, [
     storageKey,
+    shouldUseTemporarySave,
     title,
     firstContent,
     lastContent,
@@ -120,17 +115,16 @@ export function useTemporarySave(storageKey: string) {
 
   // 30초마다 자동 저장
   useEffect(() => {
-    if (isLoaded) {
+    if (isLoaded && shouldUseTemporarySave) {
       const interval = setInterval(() => {
         saveData();
-      }, 10000);
+      }, 30000); // 30초
 
       return () => clearInterval(interval); // 컴포넌트가 언마운트되면 인터벌 제거
     }
-  }, [isLoaded, saveData]);
+  }, [isLoaded, shouldUseTemporarySave, saveData]);
 
   return {
-    isLoaded,
     saveData,
     checkSavedData,
     resetWriteState,

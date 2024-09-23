@@ -2,7 +2,13 @@ import styled from "styled-components";
 import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
 import { useNavigate } from "react-router-dom";
 
-export default function PostHeader({ isOwner }: { isOwner: boolean }) {
+export default function PostHeader({
+  postId,
+  isOwner,
+}: {
+  postId: number;
+  isOwner: boolean;
+}) {
   const navigate = useNavigate();
 
   return (
@@ -15,7 +21,7 @@ export default function PostHeader({ isOwner }: { isOwner: boolean }) {
           <>
             <button
               onClick={() => {
-                /* TODO: id 이용 이동 기능 */
+                navigate(`/edit/${postId}`);
               }}
             >
               수정
