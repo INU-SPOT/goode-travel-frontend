@@ -15,24 +15,21 @@ import { useTemporarySave } from "../hooks/useTemporarySave";
 export default function WritePage() {
   const { id } = useParams<{ id: string }>(); // edit/:id에서 ID를 받아옴
   const { loadPostData, resetWriteState } = useWriteStore();
-  const isEditMode = Boolean(id); // id가 있으면 수정 모드
-  const shouldUseTemporarySave = !isEditMode; // 임시 저장을 사용할지 여부를 결정
   const storageKey = "writePageTemporarySaveData";
 
-  // 수정 모드일 때는 로딩 상태를 직접 관리
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const {
-    isLoaded: isTempSaveLoaded,
-    checkSavedData,
-    saveData,
-    showPopup,
-    currentTime,
-  } = useTemporarySave(storageKey, shouldUseTemporarySave);
+  const { checkSavedData, saveData, showPopup, currentTime } = useTemporarySave(
+    storageKey,
+    !Boolean(id),
+    isLoaded,
+    setIsLoaded
+  );
 
-  // 수정 모드일 때 게시글 데이터 불러오기
+  // 수정 모드일 때 게시글 데이터 불러오기, 글 작성일 때 임시 저장 게시글 데이터 불러오기
   useEffect(() => {
-    if (isEditMode) {
+    console.log("?");
+    if (id) {
       const fetchPostDetail = async () => {
         try {
           const response = await get_posts_postid(Number(id));
@@ -45,16 +42,9 @@ export default function WritePage() {
       fetchPostDetail();
     } else {
       checkSavedData();
-      setIsLoaded(isTempSaveLoaded); // 새로운 글 작성 모드일 때는 임시 저장의 로딩 상태 사용
+      console.log("!");
     }
-  }, [
-    id,
-    isEditMode,
-    loadPostData,
-    resetWriteState,
-    checkSavedData,
-    isTempSaveLoaded,
-  ]);
+  }, [id, loadPostData, checkSavedData]);
 
   if (!isLoaded) {
     return <p>Loading...</p>;
@@ -63,11 +53,11 @@ export default function WritePage() {
   return (
     <WriteContainer>
       <WriteHeader
-        saveData={shouldUseTemporarySave ? saveData : undefined}
+        saveData={Boolean(id) ? undefined : saveData}
         resetWriteState={resetWriteState}
         storageKey={storageKey}
-        isEditMode={isEditMode}
-        postId={isEditMode ? Number(id) : undefined}
+        isEditMode={Boolean(id)}
+        postId={id ? Number(id) : undefined}
       />
       <TitleInput />
       <WriteTextArea placeholder="전반적인 여행에 대해 소개해 주세요." />
@@ -76,7 +66,7 @@ export default function WritePage() {
       <WriteTextArea placeholder="글을 마무리하는 인사말을 적어주세요." />
       <DateRangePicker />
       <WriteTips />
-      {shouldUseTemporarySave && showPopup && (
+      {showPopup && (
         <Popup>
           <div>{currentTime}</div>
           <div>임시 저장되었습니다.</div>

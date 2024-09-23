@@ -5,9 +5,10 @@ import { ItemPostCreateUpdateRequest } from "../types/item";
 
 export function useTemporarySave(
   storageKey: string,
-  shouldUseTemporarySave: boolean
+  shouldUseTemporarySave: boolean,
+  isLoaded: boolean, // 외부에서 주입된 isLoaded 상태
+  setIsLoaded: (loaded: boolean) => void // 외부에서 주입된 setIsLoaded 함수
 ) {
-  const [isLoaded, setIsLoaded] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
   const { resetWriteState } = useWriteStore();
@@ -67,7 +68,7 @@ export function useTemporarySave(
     } else {
       resetWriteState();
     }
-    setIsLoaded(true);
+    setIsLoaded(true); // 외부에서 주입된 setIsLoaded 호출
   }, [
     storageKey,
     shouldUseTemporarySave,
@@ -79,6 +80,7 @@ export function useTemporarySave(
     setEndDate,
     addItemPost,
     clearItemPosts,
+    setIsLoaded,
   ]);
 
   // 데이터 임시 저장
@@ -123,7 +125,6 @@ export function useTemporarySave(
   }, [isLoaded, shouldUseTemporarySave, saveData]);
 
   return {
-    isLoaded,
     saveData,
     checkSavedData,
     resetWriteState,
