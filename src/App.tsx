@@ -27,6 +27,7 @@ function App() {
         </Route>
         <Route path="login" element={<LoginPage />} />
         <Route path="write" element={<WritePage />} />
+        <Route path="edit/:id" element={<WritePage />} />
         <Route path="post/:id" element={<PostPage />} />
       </Routes>
     </Router>
