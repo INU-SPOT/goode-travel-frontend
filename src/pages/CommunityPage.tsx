@@ -27,7 +27,8 @@ export default function CommunityPage() {
         const response = await get_posts(
           0,
           7,
-          filters.district,
+          filters.metropolitanGovernments.map((city) => city.id),
+          filters.localGovernments.map((city) => city.id),
           filters.theme,
           searchQuery
         );
@@ -56,7 +57,8 @@ export default function CommunityPage() {
         const response = await get_posts(
           page,
           7,
-          filters.district,
+          filters.metropolitanGovernments.map((city) => city.id),
+          filters.localGovernments.map((city) => city.id),
           filters.theme,
           searchQuery
         );

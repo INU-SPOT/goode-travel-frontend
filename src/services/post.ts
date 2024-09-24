@@ -5,14 +5,20 @@ import { PostCreateUpdateRequest } from "../types/post";
 export const get_posts = async (
   page: number,
   size: number,
-  localGovernments?: string[],
+  metropolitanGovernments?: number[],
+  localGovernments?: number[],
   categories?: string[],
   keyword?: string
 ) => {
   const params = new URLSearchParams();
+  if (metropolitanGovernments && metropolitanGovernments.length > 0) {
+    metropolitanGovernments.forEach((governmentId) =>
+      params.append("metropolitanGovernments", governmentId.toString())
+    );
+  }
   if (localGovernments && localGovernments.length > 0) {
     localGovernments.forEach((government) =>
-      params.append("localGovernments", government)
+      params.append("localGovernments", government.toString())
     );
   }
   if (categories && categories.length > 0) {
