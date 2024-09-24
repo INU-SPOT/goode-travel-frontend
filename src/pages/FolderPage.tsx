@@ -4,7 +4,7 @@ import { get_folders, post_folders } from "../services/folder";
 import { FolderListResponse, FolderCreateRequest } from "../types/folder";
 import FolderBlock from "../components/folder/FolderBlock";
 import { COLOR } from "../utils/color";
-import PlusIcon from "../assets/icons/plus-icon.svg"; // Plus 아이콘
+import PlusIcon from "../assets/icons/plus-icon.svg";
 
 export default function FolderPage() {
   const [folders, setFolders] = useState<FolderListResponse[]>([]);
@@ -41,6 +41,7 @@ export default function FolderPage() {
 
   useEffect(() => {
     fetchFolders();
+    console.log("폴더 재렌더링");
   }, []);
 
   return (
@@ -75,7 +76,7 @@ export default function FolderPage() {
               <FolderBlock key={folder.folderId} folder={folder} />
             ))
           ) : (
-            <p>No folders available</p>
+            <p>폴더가 없습니다.</p>
           )}
         </FolderContainer>
       )}
@@ -113,8 +114,8 @@ const PlusIconButton = styled.button`
   cursor: pointer;
 
   img {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
   }
 `;
 
@@ -152,8 +153,8 @@ const ConfirmButton = styled.button`
   font-size: 18px;
   font-weight: bold;
   color: #000000;
-  height: 55px;
-  width: 130px;
+  height: 56px;
+  width: 128px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -165,8 +166,8 @@ const CancelButton = styled.button`
   font-size: 18px;
   font-weight: bold;
   color: #000000;
-  height: 55px;
-  width: 130px;
+  height: 56px;
+  width: 128px;
   border: none;
   border-radius: 10px;
   cursor: pointer;

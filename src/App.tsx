@@ -10,6 +10,7 @@ import RandomGoodePage from "./pages/RandomGoodePage";
 import WritePage from "./pages/WritePage";
 import PostPage from "./pages/PostPage";
 import FolderPage from "./pages/FolderPage";
+import FolderDetail from "./components/folder/FolderDetail";
 
 function App() {
   useAuth();
@@ -29,6 +30,7 @@ function App() {
         <Route path="write" element={<WritePage />} />
         <Route path="edit/:id" element={<WritePage />} />
         <Route path="post/:id" element={<PostPage />} />
+        <Route path="save/:folderId" element={<FolderDetail />} />
       </Routes>
     </Router>
   );

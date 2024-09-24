@@ -1,115 +1,101 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import { FolderListResponse, FolderDetailResponse } from "../../types/folder";
-import {
-  get_folders_folderid,
-  put_folders_plan_itempostid,
-} from "../../services/folder";
+import { get_folders_folderid } from "../../services/folder";
+import image35 from "../../assets/images/image35.png";
 
 interface FolderBlockProps {
   folder: FolderListResponse;
 }
 
-const FolderBlock: React.FC<FolderBlockProps> = ({ folder }) => {
-  const [completionRate, setCompletionRate] = useState<number | undefined>(
-    undefined
-  );
-  const [folderDetail, setFolderDetail] = useState<FolderDetailResponse | null>(
-    null
-  );
-
-  // PLAN 완료도 계산
-  const fetchCompletionRate = async () => {
-    try {
-      const folderDetail: FolderDetailResponse = await get_folders_folderid(
-        folder.folderId
-      );
-      setFolderDetail(folderDetail);
-      const planItems = folderDetail.itemFolders.filter(
-        (item) => item.itemType === "PLAN"
-      );
-      const completedPlans = planItems.filter((item) => item.isFinished).length;
-      const completionRate =
-        planItems.length > 0 ? (completedPlans / planItems.length) * 100 : 0;
-      setCompletionRate(completionRate);
-    } catch (error) {
-      console.error(
-        `Error fetching folder details for folderId ${folder.folderId}:`,
-        error
-      );
-    }
-  };
+export default function FolderBlock({ folder }: FolderBlockProps) {
+  const [completionRate, setCompletionRate] = useState<number>(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchCompletionRate = async () => {
+      try {
+        const folderDetail: FolderDetailResponse = await get_folders_folderid(
+          folder.folderId
+        );
+        const planItems = folderDetail.itemFolders.filter(
+          (item) => item.itemType === "PLAN"
+        );
+        const completedPlans = planItems.filter(
+          (item) => item.isFinished
+        ).length;
+        const completionRate =
+          planItems.length > 0 ? (completedPlans / planItems.length) * 100 : 0;
+        setCompletionRate(completionRate);
+      } catch (error) {
+        console.error(`Error fetching folder details: ${error}`);
+      }
+    };
+
     fetchCompletionRate();
   }, [folder.folderId]);
 
-  // 체크박스 변경 핸들러 (itemFolderId 기반)
-  const handleCheckboxChange = async (itemFolderId: number) => {
-    try {
-      await put_folders_plan_itempostid(itemFolderId); // itemFolderId로 업데이트
-      fetchCompletionRate(); // 완료도 재계산
-    } catch (error) {
-      console.error("Error updating item status:", error);
-    }
+  const handleNavigate = () => {
+    navigate(`/save/${folder.folderId}`);
   };
 
   return (
-    <BlockContainer>
-      <FolderImage src={folder.image} alt={folder.title} />
-      <FolderTitle>{folder.title}</FolderTitle>
-      <CompletionRate>
-        {completionRate !== undefined ? `${completionRate}%` : "Loading..."}
-      </CompletionRate>
-      {folderDetail &&
-        folderDetail.itemFolders && // folderDetail 및 itemFolders가 존재하는지 확인
-        folderDetail.itemFolders.map((item) => (
-          <PlanItem key={item.itemFolderId}>
-            {item.itemType === "PLAN" ? (
-              <label>
-                <input
-                  type="checkbox"
-                  checked={item.isFinished}
-                  onChange={() => handleCheckboxChange(item.itemFolderId)} // itemFolderId 기반으로 변경
-                />
-                {item.title}
-              </label>
-            ) : (
-              <span>{item.title}</span> // PLAN이 아닌 경우 제목만 표시
-            )}
-          </PlanItem>
-        ))}
+    <BlockContainer onClick={handleNavigate}>
+      <FolderImageContainer image={folder.image}>
+        {!folder.image && <Placeholder />}
+      </FolderImageContainer>
+      <Footer>
+        <FolderTitle>{folder.title}</FolderTitle>
+        <CompletionRate>
+          {completionRate !== undefined ? `${completionRate}%` : "Loading..."}
+        </CompletionRate>
+      </Footer>
     </BlockContainer>
   );
-};
+}
 
 const BlockContainer = styled.div`
   width: 100%;
-  padding: 18px;
+  padding: 0;
   border-radius: 13px;
-  background-color: #e2e2e2;
-  text-align: center;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
 `;
 
-const FolderImage = styled.img`
+const FolderImageContainer = styled.div<{ image: string | null }>`
   width: 100%;
-  height: auto;
-  border-radius: 4px;
+  padding-top: 100%; /* 1:1 비율로 설정 */
+  background-color: ${({ image }) => (image ? "transparent" : "#25292E")};
+  background-image: ${({ image }) => (image ? `url(${image})` : "none")};
+  background-size: cover;
+  background-position: center;
+  border-radius: 13px;
+`;
+
+const Placeholder = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: #25292e;
+`;
+
+const Footer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 5px;
 `;
 
 const FolderTitle = styled.h3`
-  font-size: 17px;
-  margin: 5px 0;
+  font-size: 16px;
+  margin: 0;
+  color: #333;
+  flex-grow: 1;
 `;
 
 const CompletionRate = styled.p`
   font-size: 14px;
   color: #555;
+  margin: 0;
+  text-align: right;
 `;
-
-const PlanItem = styled.div`
-  font-size: 12px;
-  margin: 5px 0;
-`;
-
-export default FolderBlock;

@@ -46,13 +46,13 @@ export interface ItemFolderUpdateRequest {
 }
 
 export interface ItemFolderResponse {
-  itemId: number;
+  itemId?: number;
   itemFolderId: number;
-  isOfficial: boolean;
-  itemType: string;
+  isOfficial?: boolean;
+  itemType?: string;
   title: string;
   image: string;
-  address: string;
-  finishDate: string;
-  isFinished: boolean;
+  address?: string;
+  finishDate?: string;
+  isFinished?: boolean;
 }
