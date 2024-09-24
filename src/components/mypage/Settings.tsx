@@ -96,10 +96,9 @@ export default function Settings({
               onChange={(e) => setMetropolitanId(Number(e.target.value))}
             >
               {metropolitan_government.map((gov, index) => {
-                const [id, name] = Object.entries(gov)[0];
                 return (
-                  <option key={index} value={id}>
-                    {name}
+                  <option key={index} value={gov.id}>
+                    {gov.name}
                   </option>
                 );
               })}
