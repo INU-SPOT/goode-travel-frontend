@@ -111,7 +111,7 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
     setSelectedTheme([]);
     setSelectedCity(null);
     setSelectedMetropolitan([]);
-    setSelectedMetropolitan([]);
+    setSelectedLocal([]);
   };
 
   // 필터 제거
