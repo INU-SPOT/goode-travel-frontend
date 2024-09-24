@@ -1,13 +1,15 @@
 // 커뮤니티 페이지 글 목록을 관리
 import { create } from "zustand";
 import { PostThumbnailResponse } from "../types/post";
+import { City } from "../types/common";
 
 interface PostsState {
   posts: PostThumbnailResponse[];
   searchQuery: string;
   filters: {
     theme: string[];
-    district: string[];
+    metropolitanGovernments: City[];
+    localGovernments: City[];
   };
   setPosts: (
     posts:
@@ -17,7 +19,8 @@ interface PostsState {
   setSearchQuery: (query: string) => void;
   setFilters: (filters: PostsState["filters"]) => void;
   removeTheme: (theme: string) => void;
-  removeDistrict: (district: string) => void;
+  removeMetropolitanGovernment: (id: City) => void;
+  removeLocalGovernment: (id: City) => void;
   clearSearchQuery: () => void;
 }
 
@@ -26,7 +29,8 @@ const usePostsStore = create<PostsState>((set) => ({
   searchQuery: "",
   filters: {
     theme: [],
-    district: [],
+    metropolitanGovernments: [], // 초기값 빈 배열
+    localGovernments: [], // 초기값 빈 배열
   },
   setPosts: (posts) =>
     set((state) => ({
@@ -41,11 +45,22 @@ const usePostsStore = create<PostsState>((set) => ({
         theme: state.filters.theme.filter((t) => t !== theme),
       },
     })),
-  removeDistrict: (district) =>
+  removeMetropolitanGovernment: (city) =>
     set((state) => ({
       filters: {
         ...state.filters,
-        district: state.filters.district.filter((d) => d !== district),
+        metropolitanGovernments: state.filters.metropolitanGovernments.filter(
+          (mCity) => mCity !== city
+        ),
+      },
+    })),
+  removeLocalGovernment: (city) =>
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        localGovernments: state.filters.localGovernments.filter(
+          (lCity) => lCity !== city
+        ),
       },
     })),
   clearSearchQuery: () => set({ searchQuery: "" }),

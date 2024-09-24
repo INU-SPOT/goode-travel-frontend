@@ -14,26 +14,61 @@ export default function CommunityPage() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  // searchQuery 또는 filters가 변경될 때 페이지 초기화
+  // searchQuery 또는 filters가 변경될 때 페이지 초기화 및 게시물 로드
   useEffect(() => {
     setPage(0);
     setHasMore(true);
-  }, [searchQuery, filters]);
+    setPosts([]);
 
-  // 페이지 변경 시 게시물 데이터 가져오기
-  useEffect(() => {
+    // 페이지 초기화 후 로딩
     const loadPosts = async () => {
       setLoading(true);
       try {
-        const response = await get_posts(page, 7);
+        const response = await get_posts(
+          0,
+          7,
+          filters.metropolitanGovernments.map((city) => city.id),
+          filters.localGovernments.map((city) => city.id),
+          filters.theme,
+          searchQuery
+        );
         if (response.data.data.length === 0) {
           setHasMore(false);
         }
-        setPosts((prevPosts: PostThumbnailResponse[]) =>
-          page === 0
-            ? response.data.data
-            : [...prevPosts, ...response.data.data]
+        setPosts(response.data.data);
+      } catch (error) {
+        console.error("Failed to fetch posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, filters, setPosts]);
+
+  // 페이지 변경 시 게시물 데이터 가져오기
+  useEffect(() => {
+    if (page === 0) return;
+
+    const loadPosts = async () => {
+      setLoading(true);
+      try {
+        const response = await get_posts(
+          page,
+          7,
+          filters.metropolitanGovernments.map((city) => city.id),
+          filters.localGovernments.map((city) => city.id),
+          filters.theme,
+          searchQuery
         );
+        if (response.data.data.length === 0) {
+          setHasMore(false);
+        }
+        setPosts((prevPosts: PostThumbnailResponse[]) => [
+          ...prevPosts,
+          ...response.data.data,
+        ]);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
       } finally {
@@ -42,7 +77,8 @@ export default function CommunityPage() {
     };
 
     if (hasMore) loadPosts();
-  }, [page, hasMore, setPosts]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, setPosts, hasMore]);
 
   const [setLastElement] = useInfiniteScroll({
     hasMore,

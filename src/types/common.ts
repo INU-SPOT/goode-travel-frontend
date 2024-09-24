@@ -11,3 +11,9 @@ export interface CommonPagingResponse<T> {
   totalPages: number;
   data: T[];
 }
+
+export interface City {
+  id: number;
+  name: string;
+  fullname: string;
+}
