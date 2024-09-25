@@ -40,6 +40,7 @@ export default function UserInfiniteScroll({
   // 페이지 변경 또는 첫 렌더링 시 데이터 로드
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   return (
