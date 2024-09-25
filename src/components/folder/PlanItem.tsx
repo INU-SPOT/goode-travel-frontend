@@ -15,7 +15,12 @@ export default function PlanItem({
   isFinished,
   folderId,
   onDelete, // 삭제 후 부모 컴포넌트에서 데이터를 다시 가져오기 위한 콜백 함수
-}: ItemFolderResponse & { folderId: number; onDelete: (id: number) => void }) {
+  onEdit, // 수정 기능을 위한 콜백 함수 추가
+}: ItemFolderResponse & {
+  folderId: number;
+  onDelete: (id: number) => void;
+  onEdit: (item: ItemFolderResponse) => void; // onEdit 추가
+}) {
   const [finished, setFinished] = useState(!!isFinished);
   const [finishDate, setFinishDate] = useState(initialFinishDate);
 
@@ -52,6 +57,18 @@ export default function PlanItem({
     }
   };
 
+  // 수정 버튼 클릭 시 onEdit 호출
+  const handleEdit = () => {
+    onEdit({
+      image,
+      title,
+      itemFolderId,
+      finishDate: initialFinishDate,
+      address,
+      isFinished,
+    });
+  };
+
   return (
     <PlanItemContainer>
       <ItemImage>{image}</ItemImage>
@@ -60,7 +77,8 @@ export default function PlanItem({
         <Title isFinished={finished}>{title}</Title>
         <ButtonGroup>
           <button>{address}</button>
-          <button>수정</button>
+          <button onClick={handleEdit}>수정</button>{" "}
+          {/* 수정 버튼 클릭 시 handleEdit 호출 */}
           <button onClick={handleDelete}>삭제</button>
         </ButtonGroup>
       </ItemDetails>

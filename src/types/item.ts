@@ -48,7 +48,7 @@ export interface ItemFolderUpdateRequest {
   itemFolderId: number;
   title: string;
   emoji: string;
-  localGovernmentId: string;
+  localGovernmentId: number;
   address: string;
 }
 

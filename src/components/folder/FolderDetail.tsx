@@ -1,127 +1,12 @@
-// import { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import styled from "styled-components";
-// import {
-//   delete_folders_plan,
-//   get_folders_folderid,
-// } from "../../services/folder";
-// import { FolderDetailResponse } from "../../types/folder";
-// import { COLOR } from "../../utils/color";
-// import PlanItem from "./PlanItem";
-// import GoodeItem from "./GoodeItem";
-// import PlusIcon from "../../assets/icons/plus-icon.svg";
-
-// export default function FolderDetail() {
-//   const { folderId } = useParams<{ folderId: string }>();
-//   const [folderDetail, setFolderDetail] = useState<FolderDetailResponse | null>(
-//     null
-//   );
-
-//   const fetchFolderDetail = async () => {
-//     try {
-//       const detail = await get_folders_folderid(Number(folderId));
-//       setFolderDetail(detail);
-//       console.log(detail);
-//     } catch (error) {
-//       console.error("Error fetching folder details:", error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchFolderDetail();
-//   }, [folderId]);
-
-//   if (!folderDetail) return <p>Loading...</p>;
-
-//   const handleDelete = async () => {
-//     // 아이템 삭제 시 폴더 내부 데이터를 다시 가져옵니다
-//     fetchFolderDetail();
-//   };
-
-//   return (
-//     <>
-//       <StyledHeader>
-//         저장된 폴더
-//         <PlusIconButton onClick={() => {}}>
-//           {" "}
-//           {/* 이모지는 하나만 넣게 제한하기 */}
-//           <img src={PlusIcon} alt="Add Folder" />
-//         </PlusIconButton>
-//       </StyledHeader>
-//       <DetailContainer>
-//         <Text>{folderDetail.title}</Text>
-//         {folderDetail.itemFolders.map((item) =>
-//           item.itemType === "PLAN" ? (
-//             <PlanItem
-//               key={item.itemFolderId}
-//               image={item.image}
-//               title={item.title}
-//               itemFolderId={item.itemFolderId}
-//               finishDate={item.finishDate}
-//               isFinished={item.isFinished}
-//               folderId={folderDetail.folderId}
-//               onDelete={handleDelete} // 삭제 후 리렌더링을 위한 콜백 전달
-//             />
-//           ) : (
-//             <GoodeItem
-//               key={item.itemFolderId}
-//               image={item.image}
-//               title={item.title}
-//               itemFolderId={item.itemFolderId}
-//               address={item.address}
-//               folderId={folderDetail.folderId}
-//               onDelete={handleDelete}
-//             />
-//           )
-//         )}
-//       </DetailContainer>
-//     </>
-//   );
-// }
-
-// // 스타일 정의
-// const DetailContainer = styled.div`
-//   padding: 0 20px;
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-// `;
-
-// const StyledHeader = styled.header`
-//   width: 100%;
-//   height: 72px;
-//   font-size: 28px;
-//   font-weight: bold;
-//   display: flex;
-//   align-items: center;
-//   justify-content: space-between;
-//   background-color: ${COLOR.blue};
-//   padding: 0 24px;
-//   margin-bottom: 24px;
-//   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
-// `;
-
-// const PlusIconButton = styled.button`
-//   background: none;
-//   border: none;
-//   cursor: pointer;
-
-//   img {
-//     width: 22px;
-//     height: 22px;
-//   }
-// `;
-
-// const Text = styled.div`
-//   font-size: 22px;
-//   font-weight: bold;
-//   margin-bottom: 18px;
-// `;
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { post_items } from "../../services/items";
-import { get_folders_folderid, post_folders_plan } from "../../services/folder";
+import {
+  get_folders_folderid,
+  post_folders_plan,
+  put_folders_plan,
+} from "../../services/folder";
 import { FolderDetailResponse } from "../../types/folder";
 import { COLOR } from "../../utils/color";
 import PlanItem from "./PlanItem";
@@ -136,6 +21,7 @@ import {
 import {
   ItemCreateUpdateRequest,
   ItemFolderCreateRequest,
+  ItemFolderUpdateRequest,
 } from "../../types/item";
 
 export default function FolderDetail() {
@@ -144,11 +30,14 @@ export default function FolderDetail() {
     null
   );
   const [isAdding, setIsAdding] = useState(false); // 새로운 PlanItem 추가 모드
+  const [isEditing, setIsEditing] = useState(false); // 수정 모드
+  const [editingItemId, setEditingItemId] = useState<number | null>(null); // 수정 중인 아이템 ID
   const [newTitle, setNewTitle] = useState(""); // 새로운 PlanItem 제목
   const [selectedEmoji, setSelectedEmoji] = useState(""); // 이모지 선택
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false); // 이모지 피커 열기 상태
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [selectedLocal, setSelectedLocal] = useState<City | null>(null);
+  const [existingEmoji, setExistingEmoji] = useState(""); // 기존 이모지 유지
 
   const fetchFolderDetail = async () => {
     try {
@@ -172,40 +61,82 @@ export default function FolderDetail() {
         return;
       }
 
-      if (newTitle == "") {
+      if (newTitle === "") {
         alert("계획의 이름을 입력해주세요.");
         return;
       }
 
+      const finalEmoji = selectedEmoji || existingEmoji || "❓"; // 선택된 이모지가 없으면 기본 이모지로 "❓" 사용
+
       const itemData: ItemCreateUpdateRequest = {
         type: "PLAN",
         title: newTitle,
-        imageUrl: selectedEmoji,
+        imageUrl: finalEmoji,
         localGovernmentId: selectedLocal ? selectedLocal.id : selectedCity!.id,
       };
 
-      // API를 호출하여 아이템을 생성
-      const itemResponse = await post_items(itemData);
-      const newItemId = itemResponse.data;
+      if (isEditing && editingItemId !== null) {
+        // 수정 모드에서 아이템 수정
+        const updatedData: ItemFolderUpdateRequest = {
+          itemFolderId: editingItemId,
+          title: newTitle,
+          emoji: finalEmoji,
+          localGovernmentId: selectedLocal
+            ? selectedLocal.id
+            : selectedCity!.id,
+          address: selectedLocal ? selectedLocal.name : selectedCity!.fullname,
+        };
+        await put_folders_plan(updatedData);
+      } else {
+        // 새 아이템 생성
+        const itemResponse = await post_items(itemData);
+        const newItemId = itemResponse.data;
 
-      // 폴더에 생성된 아이템을 추가
-      const folderPlanData: ItemFolderCreateRequest = {
-        folderId: Number(folderId),
-        itemId: newItemId,
-        emoji: selectedEmoji,
-      };
+        const folderPlanData: ItemFolderCreateRequest = {
+          folderId: Number(folderId),
+          itemId: newItemId,
+          emoji: finalEmoji,
+        };
 
-      await post_folders_plan(folderPlanData);
+        await post_folders_plan(folderPlanData);
+      }
 
       fetchFolderDetail();
-      setIsAdding(false);
-      setNewTitle("");
-      setSelectedEmoji("");
-      setSelectedCity(null);
-      setSelectedLocal(null);
+      resetForm();
     } catch (error) {
-      console.error("Error adding item:", error);
+      console.error("Error adding or editing item:", error);
     }
+  };
+
+  const handleEdit = (item: any) => {
+    setIsAdding(true);
+    setIsEditing(true);
+    setEditingItemId(item.itemFolderId);
+    setNewTitle(item.title);
+    setSelectedEmoji(item.image || "❓");
+    setExistingEmoji(item.image);
+
+    const selectedCity = metropolitan_government.find(
+      (city) => city.id === item.localGovernmentId
+    );
+    setSelectedCity(selectedCity || null);
+
+    const selectedLocal = local_government
+      .find((gov) => gov.metropolitanId === selectedCity?.id)
+      ?.districts.find((district) => district.id === item.localGovernmentId);
+
+    setSelectedLocal(selectedLocal || null);
+  };
+
+  const resetForm = () => {
+    setIsAdding(false);
+    setIsEditing(false);
+    setNewTitle("");
+    setSelectedEmoji("");
+    setSelectedCity(null);
+    setSelectedLocal(null);
+    setEditingItemId(null);
+    setExistingEmoji("");
   };
 
   const handleEmojiSelect = (emoji: any) => {
@@ -226,7 +157,15 @@ export default function FolderDetail() {
     <>
       <StyledHeader>
         저장된 폴더
-        <PlusIconButton onClick={() => setIsAdding(!isAdding)}>
+        <PlusIconButton
+          onClick={() => {
+            if (isAdding) {
+              resetForm(); // 페이지 닫기
+            } else {
+              setIsAdding(true); // 새로운 계획 생성 페이지 열기
+            }
+          }}
+        >
           <img src={PlusIcon} alt="Add Plan Item" />
         </PlusIconButton>
       </StyledHeader>
@@ -286,7 +225,9 @@ export default function FolderDetail() {
               </>
             )}
 
-            <ConfirmButton onClick={handleAddItem}>생성 완료</ConfirmButton>
+            <ConfirmButton onClick={handleAddItem}>
+              {isEditing ? "수정 완료" : "생성 완료"}
+            </ConfirmButton>
           </AddPlanItemContainer>
         ) : (
           folderDetail.itemFolders.map((item) =>
@@ -300,6 +241,7 @@ export default function FolderDetail() {
                 finishDate={item.finishDate}
                 isFinished={item.isFinished}
                 folderId={folderDetail.folderId}
+                onEdit={() => handleEdit(item)} // 수정 버튼 클릭 시 수정 로직 실행
                 onDelete={fetchFolderDetail}
               />
             ) : (
