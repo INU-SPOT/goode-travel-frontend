@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { FolderListResponse, FolderDetailResponse } from "../../types/folder";
+import { FolderListResponse } from "../../types/folder";
 import { get_folders_folderid } from "../../services/folder";
-import image35 from "../../assets/images/image35.png";
+import { FolderDetailResponse } from "../../types/folder";
+import { useNavigate } from "react-router-dom";
 
 interface FolderBlockProps {
   folder: FolderListResponse;
+  onDelete: (folderId: number) => void;
 }
 
-export default function FolderBlock({ folder }: FolderBlockProps) {
+export default function FolderBlock({ folder, onDelete }: FolderBlockProps) {
   const [completionRate, setCompletionRate] = useState<number>(0);
   const navigate = useNavigate();
+  const [longPressTriggered, setLongPressTriggered] = useState(false);
+  const [pressTimer, setPressTimer] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const fetchCompletionRate = async () => {
@@ -27,7 +30,7 @@ export default function FolderBlock({ folder }: FolderBlockProps) {
         ).length;
         const completionRate =
           planItems.length > 0 ? (completedPlans / planItems.length) * 100 : 0;
-        setCompletionRate(parseFloat(completionRate.toFixed(1)));
+        setCompletionRate(parseFloat(completionRate.toFixed(1))); // 소수점 한자리까지 표시
       } catch (error) {
         console.error(`Error fetching folder details: ${error}`);
       }
@@ -37,11 +40,39 @@ export default function FolderBlock({ folder }: FolderBlockProps) {
   }, [folder.folderId]);
 
   const handleNavigate = () => {
-    navigate(`/save/${folder.folderId}`);
+    if (!longPressTriggered) {
+      navigate(`/save/${folder.folderId}`);
+    }
+    setLongPressTriggered(false); // 리셋
+  };
+
+  const startLongPress = () => {
+    setPressTimer(
+      setTimeout(() => {
+        setLongPressTriggered(true);
+        if (window.confirm(`${folder.title} 폴더를 삭제하시겠습니까?`)) {
+          onDelete(folder.folderId);
+        }
+      }, 800) // 800ms 후에 롱 프레스 트리거
+    );
+  };
+
+  const cancelLongPress = () => {
+    if (pressTimer) {
+      clearTimeout(pressTimer);
+    }
+    setLongPressTriggered(false);
   };
 
   return (
-    <BlockContainer onClick={handleNavigate}>
+    <BlockContainer
+      onClick={handleNavigate}
+      onTouchStart={startLongPress} // 터치 시작
+      onTouchEnd={cancelLongPress} // 터치 종료
+      onMouseDown={startLongPress} // 마우스 클릭 시작 (롱프레스 시작)
+      onMouseUp={cancelLongPress} // 마우스 클릭 종료 (롱프레스 취소)
+      onMouseLeave={cancelLongPress} // 마우스 영역 벗어날 때도 취소
+    >
       <FolderImageContainer image={folder.image}>
         {!folder.image && <Placeholder />}
       </FolderImageContainer>
@@ -55,6 +86,7 @@ export default function FolderBlock({ folder }: FolderBlockProps) {
   );
 }
 
+// 스타일 정의
 const BlockContainer = styled.div`
   width: 100%;
   padding: 0;

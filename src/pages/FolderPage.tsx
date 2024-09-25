@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { get_folders, post_folders } from "../services/folder";
+import { delete_folders, get_folders, post_folders } from "../services/folder";
 import { FolderListResponse, FolderCreateRequest } from "../types/folder";
 import FolderBlock from "../components/folder/FolderBlock";
 import { COLOR } from "../utils/color";
@@ -21,6 +21,15 @@ export default function FolderPage() {
       setFolders(foldersArray);
     } catch (error) {
       console.error("Error fetching folders:", error);
+    }
+  };
+
+  const handleDeleteFolder = async (folderId: number) => {
+    try {
+      await delete_folders(folderId);
+      fetchFolders(); // 폴더 목록 새로고침
+    } catch (error) {
+      console.error("Error deleting folder:", error);
     }
   };
 
@@ -83,7 +92,11 @@ export default function FolderPage() {
         <FolderContainer>
           {folders.length > 0 ? (
             folders.map((folder) => (
-              <FolderBlock key={folder.folderId} folder={folder} />
+              <FolderBlock
+                key={folder.folderId}
+                folder={folder}
+                onDelete={handleDeleteFolder}
+              />
             ))
           ) : (
             <p>폴더가 없습니다.</p>
@@ -93,8 +106,6 @@ export default function FolderPage() {
     </>
   );
 }
-
-// 스타일링 부분
 
 const FolderContainer = styled.div`
   height: 100%;
