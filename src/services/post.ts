@@ -66,3 +66,25 @@ export const patch_posts = async (
   const resposne = await axiosInstance.patch(`v1/posts/${postid}`, postData);
   return resposne.data;
 };
+
+// 유저가 쓴 글 불러오기 **페이징**
+export const get_users_posts = async (page: number, size: number) => {
+  const params = new URLSearchParams();
+  params.append("page", page.toString());
+  params.append("size", size.toString());
+  const response = await axiosInstance.get(
+    `/v1/users/posts?${params.toString()}`
+  );
+  return response.data;
+};
+
+// 유저가 좋아요 누른 글 불러오기 **페이징**
+export const get_users_posts_like = async (page: number, size: number) => {
+  const params = new URLSearchParams();
+  params.append("page", page.toString());
+  params.append("size", size.toString());
+  const response = await axiosInstance.get(
+    `/v1/users/posts/like?${params.toString()}`
+  );
+  return response.data;
+};

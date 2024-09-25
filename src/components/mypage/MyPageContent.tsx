@@ -4,6 +4,7 @@ import { ReactComponent as GearIcon } from "../../assets/icons/gear-icon.svg";
 import { UserInfoResponse } from "../../types/user";
 import { get_users } from "../../services/user";
 import Settings from "./Settings";
+import UserActivities from "./UserActivities";
 
 export default function MyPageContent() {
   const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
@@ -33,21 +34,24 @@ export default function MyPageContent() {
               loadUser={loadUser}
             />
           ) : (
-            <Profile>
-              <div>
-                <img
-                  src={`${process.env.REACT_APP_IMAGE_URL}/${userInfo.profileImageName}`}
-                  alt={`${userInfo.nickName} 프로필`}
-                />
-                <span>
-                  <h3 className="nickname">{userInfo.nickName}님</h3>
-                  <h3 className="metropolitan-government-name">
-                    {userInfo.metropolitanGovernmentName}
-                  </h3>
-                </span>
-              </div>
-              <GearIcon onClick={() => setShowSettings(true)} />
-            </Profile>
+            <>
+              <Profile>
+                <div>
+                  <img
+                    src={`${process.env.REACT_APP_IMAGE_URL}/${userInfo.profileImageName}`}
+                    alt={`${userInfo.nickName} 프로필`}
+                  />
+                  <span>
+                    <h3 className="nickname">{userInfo.nickName}님</h3>
+                    <h3 className="metropolitan-government-name">
+                      {userInfo.metropolitanGovernmentName}
+                    </h3>
+                  </span>
+                </div>
+                <GearIcon onClick={() => setShowSettings(true)} />
+              </Profile>
+              <UserActivities />
+            </>
           )}
         </>
       )}
