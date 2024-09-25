@@ -11,6 +11,7 @@ export default function PlanItem({
   title,
   itemFolderId,
   finishDate: initialFinishDate,
+  address,
   isFinished,
   folderId,
   onDelete, // 삭제 후 부모 컴포넌트에서 데이터를 다시 가져오기 위한 콜백 함수
@@ -58,6 +59,7 @@ export default function PlanItem({
         {finished && <FinishDate>{finishDate}</FinishDate>}
         <Title isFinished={finished}>{title}</Title>
         <ButtonGroup>
+          <button>{address}</button>
           <button>수정</button>
           <button onClick={handleDelete}>삭제</button>
         </ButtonGroup>

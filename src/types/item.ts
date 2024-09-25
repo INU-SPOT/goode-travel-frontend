@@ -1,3 +1,10 @@
+export interface ItemCreateUpdateRequest {
+  type: string;
+  title: string;
+  imageUrl: string;
+  localGovernmentId: number;
+}
+
 export interface ItemPostThumbnailResponse {
   itemType: number;
   itemTitle: string;
@@ -52,7 +59,7 @@ export interface ItemFolderResponse {
   itemType?: string;
   title: string;
   image: string;
-  address?: string;
+  address: string;
   finishDate?: string;
   isFinished?: boolean;
 }

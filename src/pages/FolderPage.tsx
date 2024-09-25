@@ -24,6 +24,16 @@ export default function FolderPage() {
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length <= 22) {
+      setNewFolderName(value);
+    } else {
+      alert("폴더명은 22자 이내로 작성해주세요.");
+      return;
+    }
+  };
+
   // 폴더 추가 API 호출
   const handleAddFolder = async () => {
     try {
@@ -60,7 +70,7 @@ export default function FolderPage() {
             type="text"
             placeholder="폴더명을 입력하세요."
             value={newFolderName}
-            onChange={(e) => setNewFolderName(e.target.value)}
+            onChange={handleInputChange}
           />
           <ButtonContainer>
             <ConfirmButton onClick={handleAddFolder}>확인</ConfirmButton>

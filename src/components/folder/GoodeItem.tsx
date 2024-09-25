@@ -7,6 +7,7 @@ export default function GoodeItem({
   image,
   title,
   itemFolderId,
+  address,
   folderId, // GoodeItem도 folderId를 받아야 합니다
   onDelete, // 삭제 후 부모 컴포넌트에서 데이터를 다시 가져오기 위한 콜백 함수
 }: ItemFolderResponse & { folderId: number; onDelete: (id: number) => void }) {
@@ -33,6 +34,7 @@ export default function GoodeItem({
       <ItemDetails>
         <Title>{title}</Title>
         <ButtonGroup>
+          <button>{address}</button>
           <button onClick={handleDelete} disabled={isDeleting}>
             {isDeleting ? "삭제 중..." : "삭제"}
           </button>

@@ -27,7 +27,7 @@ export default function FolderBlock({ folder }: FolderBlockProps) {
         ).length;
         const completionRate =
           planItems.length > 0 ? (completedPlans / planItems.length) * 100 : 0;
-        setCompletionRate(completionRate);
+        setCompletionRate(parseFloat(completionRate.toFixed(1)));
       } catch (error) {
         console.error(`Error fetching folder details: ${error}`);
       }
