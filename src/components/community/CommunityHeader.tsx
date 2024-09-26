@@ -12,6 +12,16 @@ export default function CommunityHeader() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const navigate = useNavigate();
 
+  const handleWriteClick = () => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      alert("로그인이 필요합니다!");
+      navigate("/login");
+    } else {
+      navigate("/write");
+    }
+  };
+
   return (
     <>
       <StyledHeader>
@@ -23,7 +33,7 @@ export default function CommunityHeader() {
           <IconButton onClick={() => setIsFilterOpen(true)}>
             <StyledIcon as={FilterIcon} />
           </IconButton>
-          <IconButton onClick={() => navigate("/write")}>
+          <IconButton onClick={handleWriteClick}>
             <StyledIcon as={PencilIcon} />
           </IconButton>
         </IconGroup>

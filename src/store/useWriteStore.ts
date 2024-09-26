@@ -17,6 +17,8 @@ interface WriteState extends PostCreateUpdateRequest {
   removeItemPost: (id: number) => void;
   reorderItems: (startIndex: number, endIndex: number) => void;
   clearItemPosts: () => void;
+  resetWriteState: () => void;
+  loadPostData: (data: PostCreateUpdateRequest) => void;
 }
 
 const reorder = (
@@ -65,6 +67,24 @@ const useWriteStore = create<WriteState>((set) => ({
       itemPosts: reorder(state.itemPosts, startIndex, endIndex),
     })),
   clearItemPosts: () => set(() => ({ itemPosts: [] })),
+  resetWriteState: () =>
+    set(() => ({
+      title: "",
+      firstContent: "",
+      lastContent: "",
+      startDate: "",
+      endDate: "",
+      itemPosts: [],
+    })),
+  loadPostData: (data) =>
+    set(() => ({
+      title: data.title,
+      firstContent: data.firstContent,
+      lastContent: data.lastContent,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      itemPosts: data.itemPosts,
+    })),
 }));
 
 export default useWriteStore;

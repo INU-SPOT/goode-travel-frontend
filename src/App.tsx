@@ -8,6 +8,7 @@ import useAuth from "./hooks/useAuth";
 import ScrollDetector from "./components/ScrollDetector";
 import RandomGoodePage from "./pages/RandomGoodePage";
 import WritePage from "./pages/WritePage";
+import PostPage from "./pages/PostPage";
 
 function App() {
   useAuth();
@@ -24,6 +25,8 @@ function App() {
         </Route>
         <Route path="login" element={<LoginPage />} />
         <Route path="write" element={<WritePage />} />
+        <Route path="edit/:id" element={<WritePage />} />
+        <Route path="post/:id" element={<PostPage />} />
       </Routes>
     </Router>
   );

@@ -2,12 +2,14 @@ import styled from "styled-components";
 import { ReactComponent as SearchIcon } from "../../assets/icons/search-icon.svg";
 import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
 import usePostsStore from "../../store/usePostsStore";
+import { City } from "../../types/common";
 
 interface FilterSummaryProps {
   searchQuery: string;
   filters: {
     theme: string[];
-    district: string[];
+    metropolitanGovernments: City[];
+    localGovernments: City[];
   };
 }
 
@@ -15,31 +17,47 @@ export default function FilterSummary({
   searchQuery,
   filters,
 }: FilterSummaryProps) {
-  const { removeTheme, removeDistrict, clearSearchQuery } = usePostsStore();
-
-  const itemsToDisplay = [
-    ...(searchQuery ? [searchQuery] : []),
-    ...filters.theme,
-    ...filters.district,
-  ];
+  const {
+    removeTheme,
+    removeMetropolitanGovernment,
+    removeLocalGovernment,
+    clearSearchQuery,
+  } = usePostsStore();
 
   return (
     <StyledFilterSummary>
-      {itemsToDisplay.map((item, index) => (
-        <FilterItem key={index}>
-          {index === 0 && searchQuery ? <StyledSearchIcon /> : "#"}
-          {item}
+      {searchQuery && (
+        <FilterItem>
+          <StyledSearchIcon /> {searchQuery}
           <RemoveButton
             onClick={() => {
-              if (index === 0 && searchQuery) {
-                clearSearchQuery();
-              } else if (filters.theme.includes(item)) {
-                removeTheme(item);
-              } else if (filters.district.includes(item)) {
-                removeDistrict(item);
-              }
+              clearSearchQuery();
             }}
           >
+            <StyledXIcon />
+          </RemoveButton>
+        </FilterItem>
+      )}
+      {filters.theme.map((item, index) => (
+        <FilterItem key={index}>
+          # {item}
+          <RemoveButton onClick={() => removeTheme(item)}>
+            <StyledXIcon />
+          </RemoveButton>
+        </FilterItem>
+      ))}
+      {filters.metropolitanGovernments.map((item) => (
+        <FilterItem key={item.id}>
+          # {item.fullname}
+          <RemoveButton onClick={() => removeMetropolitanGovernment(item)}>
+            <StyledXIcon />
+          </RemoveButton>
+        </FilterItem>
+      ))}
+      {filters.localGovernments.map((item) => (
+        <FilterItem key={item.id}>
+          # {item.fullname}
+          <RemoveButton onClick={() => removeLocalGovernment(item)}>
             <StyledXIcon />
           </RemoveButton>
         </FilterItem>
