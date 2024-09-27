@@ -58,6 +58,12 @@ export const get_posts_postid = async (postid: number) => {
   return response.data;
 };
 
+// 게시글 삭제하기
+export const delete_posts_postid = async (postid: number) => {
+  const response = await axiosInstance.delete(`v1/posts/${postid}`);
+  return response.data;
+};
+
 // 게시글 수정하기
 export const patch_posts = async (
   postid: number,
