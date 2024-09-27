@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
 import { useNavigate } from "react-router-dom";
+import { delete_posts_postid } from "../../services/post";
 
 export default function PostHeader({
   postId,
@@ -10,6 +11,22 @@ export default function PostHeader({
   isOwner: boolean;
 }) {
   const navigate = useNavigate();
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm(
+      "정말로 이 게시글을 삭제하시겠습니까?"
+    );
+    if (confirmDelete) {
+      try {
+        await delete_posts_postid(postId);
+        alert("게시글이 삭제되었습니다.");
+        navigate(-1); // 이전 페이지로 이동
+      } catch (error) {
+        console.error("게시글 삭제 중 오류 발생:", error);
+        alert("게시글 삭제에 실패했습니다. 다시 시도해주세요.");
+      }
+    }
+  };
 
   return (
     <StyledHeader>
@@ -28,7 +45,7 @@ export default function PostHeader({
             </button>
             <button
               onClick={() => {
-                /* TODO: id 이용 이동 기능 */
+                handleDelete();
               }}
               className="delete"
             >
