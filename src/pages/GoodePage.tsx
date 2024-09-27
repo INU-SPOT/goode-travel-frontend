@@ -1,8 +1,10 @@
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import GoodeHeader from "../components/goode/GoodeHeader";
 import FilterSummary from "../components/community/FilterSummary";
 import useGoodesStore from "../store/uesGoodesStore";
 import GoodeInfiniteScrollComponent from "../components/goode/GoodeInfiniteScrollComponent";
+import GoodeSheet from "../components/goode/GoodeSheet";
 
 export default function GoodePage() {
   const {
@@ -15,6 +17,11 @@ export default function GoodePage() {
     removeLocalGovernment,
     clearSearchQuery,
   } = useGoodesStore();
+
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const itemId = params.get("itemId");
+
   return (
     <GoodeContainer>
       <GoodeHeader
@@ -34,6 +41,7 @@ export default function GoodePage() {
         searchQuery={searchQuery}
         filters={filters}
       />
+      <GoodeSheet itemId={itemId} />
     </GoodeContainer>
   );
 }

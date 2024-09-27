@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { ItemsResponse } from "../../types/item";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { local_government } from "../../data/districts";
 import useGoodesStore from "../../store/uesGoodesStore";
 import { City } from "../../types/common";
@@ -11,6 +11,8 @@ interface GoodeCardProps {
 
 export default function GoodeCard({ goode }: GoodeCardProps) {
   const { filters, setFilters } = useGoodesStore();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleAddLocalGovernment = () => {
     // local_government 배열에서 goode의 localGovernmentName을 찾아서 일치하는 객체 반환
@@ -44,20 +46,27 @@ export default function GoodeCard({ goode }: GoodeCardProps) {
     }
   };
 
-  const navigate = useNavigate();
+  const handleNavigateWithQuery = () => {
+    const newUrl = `${location.pathname}?itemId=${goode.itemId}`;
+    navigate(newUrl);
+  };
 
   return (
     <GoodeItemContainer>
-      <ItemImage src={goode.imageUrl} alt={goode.title} />
+      <ItemImage
+        src={goode.imageUrl}
+        alt={goode.title}
+        onClick={handleNavigateWithQuery}
+      />
       <ItemDetails>
-        <Title>{goode.title}</Title>
+        <Title onClick={handleNavigateWithQuery}>{goode.title}</Title>
         <ButtonGroup>
           <button onClick={handleAddLocalGovernment}>
             {`${goode.metropolitanGovernmentName} ${goode.localGovernmentName}`}
           </button>
         </ButtonGroup>
       </ItemDetails>
-      <Flag>{">"}</Flag>
+      <Flag onClick={handleNavigateWithQuery}>{">"}</Flag>
     </GoodeItemContainer>
   );
 }
