@@ -39,7 +39,8 @@ async function requestPermissionAndSendToken() {
 
     if (token) {
       // 토큰을 서버로 전송
-      await axiosInstance.post("/v1/fcm", { token });
+      console.log(token);
+      await axiosInstance.post(`/v1/fcm`, token);
     } else {
       console.log("Failed to retrieve FCM Token");
     }
