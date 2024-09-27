@@ -43,7 +43,7 @@ export default function FolderBlock({ folder, onDelete }: FolderBlockProps) {
     if (!longPressTriggered) {
       navigate(`/save/${folder.folderId}`);
     }
-    setLongPressTriggered(false); // 리셋
+    setLongPressTriggered(false);
   };
 
   const startLongPress = () => {
@@ -53,7 +53,7 @@ export default function FolderBlock({ folder, onDelete }: FolderBlockProps) {
         if (window.confirm(`${folder.title} 폴더를 삭제하시겠습니까?`)) {
           onDelete(folder.folderId);
         }
-      }, 800) // 800ms 후에 롱 프레스 트리거
+      }, 800)
     );
   };
 
@@ -98,7 +98,7 @@ const BlockContainer = styled.div`
 
 const FolderImageContainer = styled.div<{ image: string | null }>`
   width: 100%;
-  padding-top: 100%; /* 1:1 비율로 설정 */
+  padding-top: 100%;
   background-color: ${({ image }) => (image ? "transparent" : "#25292E")};
   background-image: ${({ image }) => (image ? `url(${image})` : "none")};
   background-size: cover;

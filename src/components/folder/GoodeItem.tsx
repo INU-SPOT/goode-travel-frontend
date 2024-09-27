@@ -48,7 +48,6 @@ const GoodeItemContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* background-color: aliceblue; */
   height: 65px;
   width: 100%;
   margin-bottom: 18px;

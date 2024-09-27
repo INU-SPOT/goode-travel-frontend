@@ -5,8 +5,8 @@ export interface FolderCreateRequest {
 }
 
 export interface FolderUpdateRequest {
-  title: string;
-  sequence: number;
+  title: string | null;
+  sequence: number[] | null;
 }
 
 export interface FolderListResponse {

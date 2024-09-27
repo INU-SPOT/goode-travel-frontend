@@ -2,6 +2,7 @@ export interface ItemCreateUpdateRequest {
   type: string;
   title: string;
   imageUrl: string;
+  address?: string;
   localGovernmentId: number;
 }
 
@@ -62,4 +63,5 @@ export interface ItemFolderResponse {
   address: string;
   finishDate?: string;
   isFinished?: boolean;
+  localGovernmentId: number;
 }

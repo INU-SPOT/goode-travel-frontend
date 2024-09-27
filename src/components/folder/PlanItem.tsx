@@ -7,6 +7,10 @@ import {
   delete_folders_plan,
 } from "../../services/folder";
 import { useEffect, useState } from "react";
+import {
+  local_government,
+  metropolitan_government,
+} from "../../data/districts";
 
 interface PlanItemProps extends ItemFolderResponse {
   folderId: number;
@@ -20,6 +24,7 @@ export default function PlanItem({
   itemFolderId,
   finishDate: initialFinishDate,
   address,
+  localGovernmentId,
   isFinished,
   folderId,
   onDelete,
@@ -29,6 +34,27 @@ export default function PlanItem({
   const [finishDate, setFinishDate] = useState<string | undefined>(
     initialFinishDate
   );
+  const [regionName, setRegionName] = useState<string>("");
+
+  // 지역구 이름 찾기 로직
+  useEffect(() => {
+    if (localGovernmentId) {
+      const region = local_government.find((lg) =>
+        lg.districts.some((d) => d.id === localGovernmentId)
+      );
+      const district = region?.districts.find(
+        (d) => d.id === localGovernmentId
+      );
+      const metropolitan = metropolitan_government.find(
+        (mg) => mg.id === region?.metropolitanId
+      );
+      if (metropolitan && district) {
+        setRegionName(`${metropolitan.name} ${district.name}`);
+      } else {
+        setRegionName("지역 정보 없음");
+      }
+    }
+  }, [localGovernmentId]);
 
   useEffect(() => {
     setFinished(!!isFinished);
@@ -72,9 +98,8 @@ export default function PlanItem({
         {finished && <FinishDate>{finishDate}</FinishDate>}
         <Title isFinished={finished}>{title}</Title>
         <ButtonGroup>
-          <button>{address}</button>
+          <button>{address || regionName}</button>
           <button onClick={onEdit}>수정</button>{" "}
-          {/* 수정 버튼 클릭 시 onEdit 호출 */}
           <button onClick={handleDelete}>삭제</button>
         </ButtonGroup>
       </ItemDetails>
@@ -89,7 +114,6 @@ export default function PlanItem({
   );
 }
 
-// 스타일 정의
 const PlanItemContainer = styled.div`
   display: flex;
   justify-content: space-between;

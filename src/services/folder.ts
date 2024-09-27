@@ -1,4 +1,4 @@
-import { FolderCreateRequest } from "../types/folder";
+import { FolderCreateRequest, FolderUpdateRequest } from "../types/folder";
 import {
   ItemFolderCreateRequest,
   ItemFolderUpdateRequest,
@@ -49,9 +49,8 @@ export const delete_folders = async (folderId: number) => {
 
 // 폴더 제목, 계획 순서 수정
 export const patch_folders = async (
-  itemID: number,
   folderId: number,
-  folderData: FolderCreateRequest
+  folderData: FolderUpdateRequest
 ) => {
   const response = await axiosInstance.patch(
     `/v1/folders/${folderId}`,

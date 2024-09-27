@@ -1,5 +1,3 @@
-// src/components/FolderDetail/CreateFolderItem.tsx
-
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import Picker from "@emoji-mart/react";
@@ -18,24 +16,28 @@ import { post_folders_plan, put_folders_plan } from "../../services/folder";
 import { COLOR } from "../../utils/color";
 import { ItemFolderResponse } from "../../types/item";
 
+type ExtendedItemFolderResponse = ItemFolderResponse & {
+  localGovernmentId?: number;
+};
+
 interface CreateFolderItemProps {
   folderId: number;
-  editingItem?: ItemFolderResponse;
+  editingItem?: ExtendedItemFolderResponse;
   onComplete: () => void;
   resetForm: () => void;
 }
 
-const CreateFolderItem: React.FC<CreateFolderItemProps> = ({
+export default function CreateFolderItem({
   folderId,
   editingItem,
   onComplete,
   resetForm,
-}) => {
+}: CreateFolderItemProps) {
   const [newTitle, setNewTitle] = useState<string>(editingItem?.title || "");
+  const [address, setAddress] = useState<string>(editingItem?.address || "");
   const [selectedEmoji, setSelectedEmoji] = useState<string>(
     editingItem?.image || ""
   );
-
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState<boolean>(false);
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [selectedLocal, setSelectedLocal] = useState<City | null>(null);
@@ -44,11 +46,24 @@ const CreateFolderItem: React.FC<CreateFolderItemProps> = ({
   useEffect(() => {
     if (editingItem) {
       setNewTitle(editingItem.title);
+      setAddress(editingItem.address || "");
       setSelectedEmoji(editingItem.image || "");
-      setSelectedCity(null);
-      setSelectedLocal(null);
+
+      // localGovernmentId를 기반으로 selectedCity 및 selectedLocal 설정
+      const city = metropolitan_government.find((c) =>
+        local_government
+          .find((lg) => lg.metropolitanId === c.id)
+          ?.districts.some((d) => d.id === editingItem.localGovernmentId)
+      );
+      const local = local_government
+        .find((gov) => gov.metropolitanId === (city?.id || 0))
+        ?.districts.find((d) => d.id === editingItem.localGovernmentId);
+
+      setSelectedCity(city || null);
+      setSelectedLocal(local || null);
     } else {
       setNewTitle("");
+      setAddress("");
       setSelectedEmoji("");
       setSelectedCity(null);
       setSelectedLocal(null);
@@ -73,11 +88,11 @@ const CreateFolderItem: React.FC<CreateFolderItemProps> = ({
       title: newTitle.trim(),
       imageUrl: finalEmoji,
       localGovernmentId: selectedLocal ? selectedLocal.id : selectedCity!.id,
+      address: address.trim(),
     };
 
     try {
       if (editingItem) {
-        // Update mode
         const updatedData: ItemFolderUpdateRequest = {
           itemFolderId: editingItem.itemFolderId,
           title: newTitle.trim(),
@@ -85,11 +100,10 @@ const CreateFolderItem: React.FC<CreateFolderItemProps> = ({
           localGovernmentId: selectedLocal
             ? selectedLocal.id
             : selectedCity!.id,
-          address: "", // Empty string as requested
+          address: address.trim(),
         };
         await put_folders_plan(updatedData);
       } else {
-        // Creation mode
         const itemResponse = await post_items(itemData);
         const newItemId = itemResponse.data;
 
@@ -101,10 +115,9 @@ const CreateFolderItem: React.FC<CreateFolderItemProps> = ({
         await post_folders_plan(folderPlanData);
       }
 
-      onComplete(); // Notify parent component
-      resetForm(); // Reset form
+      onComplete();
+      resetForm();
     } catch (error) {
-      console.error("Error adding or updating item:", error);
       alert("계획을 저장하는 중 오류가 발생했습니다.");
     }
   };
@@ -142,6 +155,13 @@ const CreateFolderItem: React.FC<CreateFolderItemProps> = ({
         />
       </EmojiButtonContainer>
 
+      <AddressInput
+        type="text"
+        placeholder="주소를 입력해주세요! (선택 사항)"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+      />
+
       <h3>#광역시/도 선택</h3>
       <FiltersWrapper>
         {metropolitan_government.map((city) => (
@@ -174,14 +194,10 @@ const CreateFolderItem: React.FC<CreateFolderItemProps> = ({
         </>
       )}
 
-      <ConfirmButton onClick={handleAddOrUpdateItem}>
-        {editingItem ? "수정 완료" : "생성 완료"}
-      </ConfirmButton>
+      <ConfirmButton onClick={handleAddOrUpdateItem}>완료</ConfirmButton>
     </AddPlanItemContainer>
   );
-};
-
-// 스타일 정의
+}
 
 const AddPlanItemContainer = styled.div`
   display: flex;
@@ -203,18 +219,27 @@ const EmojiButton = styled.button`
   border: none;
   cursor: pointer;
   font-size: 35px;
-  margin-right: 10px;
+  margin-right: 10px; /* Reduce margin for better alignment */
 `;
 
 const PickerWrapper = styled.div`
   position: absolute;
   z-index: 1000;
-  top: 50px; /* 필요에 따라 조정 */
+  top: 50px;
 `;
 
 const TitleInput = styled.input`
   width: 260px;
   padding: 8px;
+  font-size: 16px;
+  border: none;
+  border-bottom: 1px solid #000000;
+`;
+
+const AddressInput = styled.input`
+  width: 260px;
+  padding: 8px;
+  margin-top: 10px;
   font-size: 16px;
   border: none;
   border-bottom: 1px solid #000000;
@@ -251,5 +276,3 @@ const ConfirmButton = styled.button`
   cursor: pointer;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
 `;
-
-export default CreateFolderItem;
