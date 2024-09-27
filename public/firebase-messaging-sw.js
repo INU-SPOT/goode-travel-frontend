@@ -1,15 +1,12 @@
 self.addEventListener('install', function (e) {
-  console.log('fcm sw install..');
   self.skipWaiting(); // 즉시 활성화
 });
 
 self.addEventListener('activate', function (e) {
-  console.log('fcm sw activate..');
   return self.clients.claim();
 });
 
 self.addEventListener("push", function (e) {
-  console.log("push: ", e.data.json());
   if (!e.data.json()) return;
 
   const resultData = e.data.json();
@@ -21,14 +18,11 @@ self.addEventListener("push", function (e) {
     data: { postId: resultData.data.postId },
     ...resultData.notification,
   };
-  console.log("push: ", { resultData, notificationTitle, notificationOptions });
 
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-self.addEventListener("notificationclick", function (event) {
-  console.log("notification click");
-  
+self.addEventListener("notificationclick", function (event) {  
   const postId = event.notification.data.postId;
   
   const url = `/post/${postId}`;

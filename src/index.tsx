@@ -6,8 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import GlobalStyle from "./globalStyles";
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
-// import axios from "axios";
-// import axiosInstance from "./services/axiosInstance";
+import axiosInstance from "./services/axiosInstance";
 
 // Firebase 설정
 const firebaseConfig = {
@@ -39,11 +38,8 @@ async function requestPermissionAndSendToken() {
     });
 
     if (token) {
-      console.log("FCM Token:", token);
-
       // 토큰을 서버로 전송
-      // await axiosInstance.post("/v1/fcm", { token });
-      // console.log("Token sent to the server successfully");
+      await axiosInstance.post("/v1/fcm", { token });
     } else {
       console.log("Failed to retrieve FCM Token");
     }
