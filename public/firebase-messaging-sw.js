@@ -1,38 +1,3 @@
-// self.addEventListener('install', function (e) {
-//   console.log('fcm sw install..');
-//   self.skipWaiting(); // 즉시 활성화
-// });
-
-// self.addEventListener('activate', function (e) {
-//   console.log('fcm sw activate..');
-//   return self.clients.claim(); // 활성화 후 즉시 제어권 가져오기
-// });
-
-
-// self.addEventListener("push", function (e) {
-//   console.log("push: ", e.data.json());
-//   if (!e.data.json()) return;
-
-//   const resultData = e.data.json().notification;
-//   const notificationTitle = resultData.title;
-//   const notificationOptions = {
-//     body: resultData.body,
-//     icon: resultData.image,
-//     tag: resultData.tag,
-//     ...resultData,
-//   };
-//   console.log("push: ", { resultData, notificationTitle, notificationOptions });
-
-//   self.registration.showNotification(notificationTitle, notificationOptions);
-// });
-
-// self.addEventListener("notificationclick", function (event) {
-//   console.log("notification click");
-//   const url = "/";
-//   event.notification.close();
-//   event.waitUntil(clients.openWindow(url));
-// });
-
 self.addEventListener('install', function (e) {
   console.log('fcm sw install..');
   self.skipWaiting(); // 즉시 활성화
@@ -40,7 +5,7 @@ self.addEventListener('install', function (e) {
 
 self.addEventListener('activate', function (e) {
   console.log('fcm sw activate..');
-  return self.clients.claim(); // 활성화 후 즉시 제어권 가져오기
+  return self.clients.claim();
 });
 
 self.addEventListener("push", function (e) {
@@ -64,10 +29,8 @@ self.addEventListener("push", function (e) {
 self.addEventListener("notificationclick", function (event) {
   console.log("notification click");
   
-  // Retrieve postId from the notification data
   const postId = event.notification.data.postId;
   
-  // Construct the URL using the postId
   const url = `/post/${postId}`;
 
   event.notification.close();
