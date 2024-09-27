@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -51,23 +51,23 @@ export default function FolderDetail() {
     })
   );
 
-  // 폴더 상세 정보 가져오기
-  const fetchFolderDetail = async () => {
+  // 폴더 상세 정보 가져오기 (useCallback으로 메모이제이션)
+  const fetchFolderDetail = useCallback(async () => {
     try {
       const detail = await get_folders_folderid(Number(folderId));
       setFolderDetail(detail);
-      console.log(detail);
       setOriginalTitle(detail.title);
       setEditedTitle(detail.title);
       setItemOrder(detail.itemFolders.map((item: any) => item.itemFolderId));
     } catch (error) {
       console.error("Error fetching folder details:", error);
     }
-  };
+  }, [folderId]);
 
+  // folderId가 변경될 때만 fetchFolderDetail 호출
   useEffect(() => {
     fetchFolderDetail();
-  }, [folderId]);
+  }, [fetchFolderDetail]);
 
   if (!folderDetail) return <p>Loading...</p>;
 
