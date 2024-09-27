@@ -1,25 +1,25 @@
 import styled from "styled-components";
 import { ReactComponent as SearchIcon } from "../../assets/icons/search-icon.svg";
 import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
-import usePostsStore from "../../store/usePostsStore";
-import { Filters } from "../../types/common";
+import { City, Filters } from "../../types/common";
 
 interface FilterSummaryProps {
-  searchQuery?: string;
+  searchQuery: string;
   filters: Filters;
+  removeTheme: (theme: string) => void;
+  removeMetropolitanGovernment: (id: City) => void;
+  removeLocalGovernment: (id: City) => void;
+  clearSearchQuery: () => void;
 }
 
 export default function FilterSummary({
   searchQuery,
   filters,
+  removeTheme,
+  removeMetropolitanGovernment,
+  removeLocalGovernment,
+  clearSearchQuery,
 }: FilterSummaryProps) {
-  const {
-    removeTheme,
-    removeMetropolitanGovernment,
-    removeLocalGovernment,
-    clearSearchQuery,
-  } = usePostsStore();
-
   return (
     <StyledFilterSummary>
       {searchQuery && (

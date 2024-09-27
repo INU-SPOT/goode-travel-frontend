@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { get_posts } from "../../services/post";
 import { PostThumbnailResponse } from "../../types/post";
-import PostList from "../../components/community/PostList";
+import PostList from "./PostList";
 import { Filters } from "../../types/common";
 import usePostsStore from "../../store/usePostsStore";
 
