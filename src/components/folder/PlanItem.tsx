@@ -1,3 +1,5 @@
+// src/components/FolderDetail/PlanItem.tsx
+
 import styled from "styled-components";
 import { ItemFolderResponse } from "../../types/item";
 import {
@@ -5,6 +7,12 @@ import {
   delete_folders_plan,
 } from "../../services/folder";
 import { useEffect, useState } from "react";
+
+interface PlanItemProps extends ItemFolderResponse {
+  folderId: number;
+  onDelete: (id: number) => void;
+  onEdit: () => void;
+}
 
 export default function PlanItem({
   image,
@@ -14,15 +22,13 @@ export default function PlanItem({
   address,
   isFinished,
   folderId,
-  onDelete, // 삭제 후 부모 컴포넌트에서 데이터를 다시 가져오기 위한 콜백 함수
-  onEdit, // 수정 기능을 위한 콜백 함수 추가
-}: ItemFolderResponse & {
-  folderId: number;
-  onDelete: (id: number) => void;
-  onEdit: (item: ItemFolderResponse) => void; // onEdit 추가
-}) {
-  const [finished, setFinished] = useState(!!isFinished);
-  const [finishDate, setFinishDate] = useState(initialFinishDate);
+  onDelete,
+  onEdit,
+}: PlanItemProps) {
+  const [finished, setFinished] = useState<boolean>(!!isFinished);
+  const [finishDate, setFinishDate] = useState<string | undefined>(
+    initialFinishDate
+  );
 
   useEffect(() => {
     setFinished(!!isFinished);
@@ -42,6 +48,7 @@ export default function PlanItem({
       }
     } catch (error) {
       console.error("Error updating completion status:", error);
+      alert("완료 상태를 업데이트하는 중 오류가 발생했습니다.");
     }
   };
 
@@ -53,20 +60,9 @@ export default function PlanItem({
         onDelete(itemFolderId); // 삭제 후 부모 컴포넌트에서 아이템을 다시 가져오기 위해 콜백 호출
       } catch (error) {
         console.error("Error deleting item:", error);
+        alert("아이템을 삭제하는 중 오류가 발생했습니다.");
       }
     }
-  };
-
-  // 수정 버튼 클릭 시 onEdit 호출
-  const handleEdit = () => {
-    onEdit({
-      image,
-      title,
-      itemFolderId,
-      finishDate: initialFinishDate,
-      address,
-      isFinished,
-    });
   };
 
   return (
@@ -77,8 +73,8 @@ export default function PlanItem({
         <Title isFinished={finished}>{title}</Title>
         <ButtonGroup>
           <button>{address}</button>
-          <button onClick={handleEdit}>수정</button>{" "}
-          {/* 수정 버튼 클릭 시 handleEdit 호출 */}
+          <button onClick={onEdit}>수정</button>{" "}
+          {/* 수정 버튼 클릭 시 onEdit 호출 */}
           <button onClick={handleDelete}>삭제</button>
         </ButtonGroup>
       </ItemDetails>
