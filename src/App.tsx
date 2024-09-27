@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import HomePage from "./pages/HomePage";
+import GoodePage from "./pages/GoodePage";
 import CommunityPage from "./pages/CommunityPage";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="goode" element={<GoodePage />} />
           <Route path="community" element={<CommunityPage />} />
           <Route path="mypage" element={<MyPage />} />
           <Route path="random-goode" element={<RandomGoodePage />} />

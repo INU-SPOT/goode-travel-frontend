@@ -30,3 +30,21 @@ export interface ItemPostResponse {
   content: string;
   images: ItemPostImageResponse[];
 }
+
+// 굳이 리스트에서 사용
+export interface ItemsResponse {
+  itemId: number;
+  metropolitanGovernmentName: string;
+  localGovernmentName: string;
+  title: string;
+  imageUrl: string;
+}
+
+// 굳이 상세 정보에서 사용
+export interface ItemResponse {
+  title: string;
+  imageUrl: string;
+  address: string;
+  description: string;
+  localGovernmentName: string;
+}

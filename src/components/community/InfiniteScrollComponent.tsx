@@ -3,16 +3,12 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { get_posts } from "../../services/post";
 import { PostThumbnailResponse } from "../../types/post";
 import PostList from "../../components/community/PostList";
-import { City } from "../../types/common";
+import { Filters } from "../../types/common";
 import usePostsStore from "../../store/usePostsStore";
 
 interface InfiniteScrollComponentProps {
   searchQuery: string;
-  filters: {
-    theme: string[];
-    metropolitanGovernments: City[];
-    localGovernments: City[];
-  };
+  filters: Filters;
 }
 
 export default function InfiniteScrollComponent({

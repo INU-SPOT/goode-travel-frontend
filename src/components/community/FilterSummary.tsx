@@ -2,15 +2,11 @@ import styled from "styled-components";
 import { ReactComponent as SearchIcon } from "../../assets/icons/search-icon.svg";
 import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
 import usePostsStore from "../../store/usePostsStore";
-import { City } from "../../types/common";
+import { Filters } from "../../types/common";
 
 interface FilterSummaryProps {
-  searchQuery: string;
-  filters: {
-    theme: string[];
-    metropolitanGovernments: City[];
-    localGovernments: City[];
-  };
+  searchQuery?: string;
+  filters: Filters;
 }
 
 export default function FilterSummary({
