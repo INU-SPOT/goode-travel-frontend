@@ -1,15 +1,23 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { ReactComponent as SearchIcon } from "../../assets/icons/search-icon.svg";
 import { ReactComponent as FilterIcon } from "../../assets/icons/filter-icon.svg";
+import SearchSheet from "../community/SearchSheet";
 import FilterSheet from "../community/FilterSheet";
 import { Filters } from "../../types/common";
 
 interface GoodeHeaderProps {
+  setSearchQuery: (query: string) => void;
   filters: Filters;
   setFilters: (filters: Filters) => void;
 }
 
-export default function GoodeHeader({ filters, setFilters }: GoodeHeaderProps) {
+export default function GoodeHeader({
+  setSearchQuery,
+  filters,
+  setFilters,
+}: GoodeHeaderProps) {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   return (
@@ -17,11 +25,20 @@ export default function GoodeHeader({ filters, setFilters }: GoodeHeaderProps) {
       <StyledHeader>
         <h2>굳이?</h2>
         <IconGroup>
+          <IconButton onClick={() => setIsSearchOpen(true)}>
+            <StyledIcon as={SearchIcon} />
+          </IconButton>
           <IconButton onClick={() => setIsFilterOpen(true)}>
             <StyledIcon as={FilterIcon} />
           </IconButton>
         </IconGroup>
       </StyledHeader>
+
+      <SearchSheet
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        setSearchQuery={setSearchQuery}
+      />
 
       <FilterSheet
         isOpen={isFilterOpen}

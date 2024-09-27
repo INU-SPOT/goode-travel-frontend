@@ -5,18 +5,22 @@ import { City, Filters } from "../types/common";
 
 interface GoodesState {
   goodes: ItemsResponse[];
+  searchQuery: string;
   filters: Filters;
   setGoodes: (
     goodes: ItemsResponse[] | ((prevPosts: ItemsResponse[]) => ItemsResponse[])
   ) => void;
+  setSearchQuery: (query: string) => void;
   setFilters: (filters: Filters) => void;
   removeTheme: (theme: string) => void;
   removeMetropolitanGovernment: (id: City) => void;
   removeLocalGovernment: (id: City) => void;
+  clearSearchQuery: () => void;
 }
 
 const useGoodesStore = create<GoodesState>((set) => ({
   goodes: [],
+  searchQuery: "",
   filters: {
     theme: [],
     metropolitanGovernments: [], // 초기값 빈 배열
@@ -26,6 +30,7 @@ const useGoodesStore = create<GoodesState>((set) => ({
     set((state) => ({
       goodes: typeof goodes === "function" ? goodes(state.goodes) : goodes,
     })),
+  setSearchQuery: (query) => set({ searchQuery: query }),
   setFilters: (filters) => set({ filters }),
   removeTheme: (theme) =>
     set((state) => ({
@@ -52,6 +57,7 @@ const useGoodesStore = create<GoodesState>((set) => ({
         ),
       },
     })),
+  clearSearchQuery: () => set({ searchQuery: "" }),
 }));
 
 export default useGoodesStore;

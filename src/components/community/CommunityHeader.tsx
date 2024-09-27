@@ -9,11 +9,13 @@ import { useNavigate } from "react-router-dom";
 import { Filters } from "../../types/common";
 
 interface CommunityHeaderProps {
+  setSearchQuery: (query: string) => void;
   filters: Filters;
   setFilters: (filters: Filters) => void;
 }
 
 export default function CommunityHeader({
+  setSearchQuery,
   filters,
   setFilters,
 }: CommunityHeaderProps) {
@@ -51,6 +53,7 @@ export default function CommunityHeader({
       <SearchSheet
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
+        setSearchQuery={setSearchQuery}
       />
       <FilterSheet
         isOpen={isFilterOpen}

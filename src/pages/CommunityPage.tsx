@@ -5,11 +5,15 @@ import InfiniteScrollComponent from "../components/community/InfiniteScrollCompo
 import usePostsStore from "../store/usePostsStore";
 
 export default function CommunityPage() {
-  const { searchQuery, filters, setFilters } = usePostsStore();
+  const { searchQuery, setSearchQuery, filters, setFilters } = usePostsStore();
 
   return (
     <CommunityContainer>
-      <CommunityHeader filters={filters} setFilters={setFilters} />
+      <CommunityHeader
+        setSearchQuery={setSearchQuery}
+        filters={filters}
+        setFilters={setFilters}
+      />
       <FilterSummary searchQuery={searchQuery} filters={filters} />
       <InfiniteScrollComponent searchQuery={searchQuery} filters={filters} />
     </CommunityContainer>

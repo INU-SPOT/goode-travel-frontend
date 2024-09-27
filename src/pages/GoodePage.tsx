@@ -4,11 +4,15 @@ import FilterSummary from "../components/community/FilterSummary";
 import useGoodesStore from "../store/uesGoodesStore";
 
 export default function GoodePage() {
-  const { filters, setFilters } = useGoodesStore();
+  const { searchQuery, setSearchQuery, filters, setFilters } = useGoodesStore();
   return (
     <GoodeContainer>
-      <GoodeHeader filters={filters} setFilters={setFilters} />
-      <FilterSummary filters={filters} />
+      <GoodeHeader
+        setSearchQuery={setSearchQuery}
+        filters={filters}
+        setFilters={setFilters}
+      />
+      <FilterSummary searchQuery={searchQuery} filters={filters} />
     </GoodeContainer>
   );
 }
