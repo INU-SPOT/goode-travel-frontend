@@ -1,65 +1,57 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import axiosInstance from "../../services/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
-// 임시 알림 데이터
-const mockNotifications = [
-  {
-    id: 1,
-    type: "A님이 내 게시물에 댓글을 달았습니다.",
-    message: "아 ㅋㅋ 이거 왜 이렇게 생김",
-    time: "2024-09-10 12:00",
-  },
-  {
-    id: 2,
-    type: "B님이 당신의 게시글을 좋아합니다.",
-    message: "인천 여행기",
-    time: "2024-09-10 10:45",
-  },
-  {
-    id: 3,
-    type: "C님이 내 댓글에 대댓글을 달았습니다.",
-    message: "아 이거 ㄹㅇ ㅇㅈ",
-    time: "2024-09-10 10:00",
-  },
-];
-
-// const fetchNotifications = async () => {
-//   const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/`);
-//   if (!response.ok) {
-//     throw new Error("Failed to fetch notifications");
-//   }
-//   const data = await response.json();
-//   return data;
-// };
-
+// Notification data interface
 interface NotificationData {
   id: number;
-  type: string;
+  postId: number;
+  title: string;
   message: string;
-  time: string;
-  onClick?: () => void;
+  notificationTime: string;
+  isConfirm: boolean;
 }
 
 export default function NotificationBlock() {
   const [notifications, setNotifications] = useState<NotificationData[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // API가 없으므로 임시 데이터를 사용
     const loadNotifications = async () => {
       try {
-        // const data = await fetchNotifications();
-        // setNotifications((prevNotifications) => [...data, ...prevNotifications]);
-
-        // 임시 데이터로 대체
-        setNotifications(mockNotifications);
+        const response = await axiosInstance.get("/v1/notification");
+        const notifications = response.data.data;
+        const sortedNotifications = notifications.sort(
+          (a: NotificationData, b: NotificationData) =>
+            Number(a.isConfirm) - Number(b.isConfirm)
+        );
+        setNotifications(sortedNotifications);
       } catch (err) {
-        setError("알림을 불러오는 중 오류가 발생했습니다.");
+        setError("알림이 없습니다.");
       }
     };
 
     loadNotifications();
   }, []);
+
+  const handleNotificationClick = async (notification: NotificationData) => {
+    try {
+      // 확인 여부 변경
+      await axiosInstance.patch(`/v1/notification/confirm/${notification.id}`);
+      // 알림 확인 상태 변경
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((n) =>
+          n.id === notification.id ? { ...n, isConfirm: true } : n
+        )
+      );
+      // post 페이지로 이동
+      navigate(`/post/${notification.postId}`);
+    } catch (err) {
+      console.error("Error confirming notification", err);
+    }
+  };
 
   if (error) {
     return <ErrorText>{error}</ErrorText>;
@@ -70,10 +62,19 @@ export default function NotificationBlock() {
       <Text>알림</Text>
       {notifications.length > 0 ? (
         notifications.map((notification) => (
-          <NotificationItem key={notification.id}>
-            <NotificationType>{notification.type}</NotificationType>
-            <NotificationMessage>"{notification.message}"</NotificationMessage>
-            <NotificationTime>{notification.time}</NotificationTime>
+          <NotificationItem
+            key={notification.id}
+            onClick={() => handleNotificationClick(notification)}
+          >
+            <NotificationType isConfirm={notification.isConfirm}>
+              {notification.title}
+            </NotificationType>
+            <NotificationMessage isConfirm={notification.isConfirm}>
+              "{notification.message}"
+            </NotificationMessage>
+            <NotificationTime>
+              {new Date(notification.notificationTime).toLocaleString()}
+            </NotificationTime>
           </NotificationItem>
         ))
       ) : (
@@ -101,18 +102,21 @@ const NotificationItem = styled.div`
   padding: 14px 0;
   border-bottom: 1px solid #cccccc;
   margin: 0;
+  cursor: pointer;
 `;
 
-const NotificationType = styled.div`
+const NotificationType = styled.div<{ isConfirm: boolean }>`
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 8px;
+  color: ${(props) =>
+    props.isConfirm ? "#cccccc" : "#000000"}; /* 확인 여부에 따른 색상 변경 */
 `;
 
-const NotificationMessage = styled.div`
+const NotificationMessage = styled.div<{ isConfirm: boolean }>`
   font-size: 15px;
   margin-bottom: 8px;
-  color: #808080;
+  color: ${(props) => (props.isConfirm ? "#cccccc" : "#808080")};
 `;
 
 const NotificationTime = styled.div`
@@ -126,6 +130,5 @@ const LoadingText = styled.div`
 
 const ErrorText = styled.div`
   font-size: 14px;
-  color: red;
   margin-top: 10px;
 `;
