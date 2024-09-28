@@ -155,13 +155,6 @@ export default function CreateFolderItem({
         />
       </EmojiButtonContainer>
 
-      <AddressInput
-        type="text"
-        placeholder="주소를 입력해주세요! (선택 사항)"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
-      />
-
       <h3>#광역시/도 선택</h3>
       <FiltersWrapper>
         {metropolitan_government.map((city) => (
@@ -193,6 +186,13 @@ export default function CreateFolderItem({
           </FiltersWrapper>
         </>
       )}
+
+      <AddressInput
+        type="text"
+        placeholder="상세주소를 입력해주세요! (선택 사항)"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+      />
 
       <ConfirmButton onClick={handleAddOrUpdateItem}>완료</ConfirmButton>
     </AddPlanItemContainer>
@@ -239,7 +239,7 @@ const TitleInput = styled.input`
 const AddressInput = styled.input`
   width: 260px;
   padding: 8px;
-  margin-top: 10px;
+  margin: 10px 0;
   font-size: 16px;
   border: none;
   border-bottom: 1px solid #000000;

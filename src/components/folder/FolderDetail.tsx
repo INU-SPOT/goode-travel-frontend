@@ -236,7 +236,6 @@ export default function FolderDetail() {
   return (
     <>
       <StyledHeader>
-        <BackButton onClick={() => navigate(-1)}>{"<"}</BackButton>
         저장된 폴더
         <PlusIconButton
           onClick={() => {
@@ -254,6 +253,7 @@ export default function FolderDetail() {
 
       <DetailContainer>
         <TitleContainer>
+          <BackButton onClick={() => navigate(-1)}>{"<"}</BackButton>
           {isEditing ? (
             <TitleInput
               type="text"
@@ -366,16 +366,17 @@ const StyledHeader = styled.header`
   padding: 0 24px;
   margin-bottom: 24px;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
+  position: relative;
 `;
 
 const BackButton = styled.button`
   background: none;
   border: none;
-  margin-left: -25px;
   font-size: 22px;
   color: #000000;
   cursor: pointer;
   position: absolute;
+  left: 24px; /* 화면 좌측으로 배치 */
 `;
 
 const PlusIconButton = styled.button`
@@ -394,8 +395,8 @@ const TitleContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
   margin-bottom: 18px;
+  justify-content: center;
   position: relative;
 `;
 
