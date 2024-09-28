@@ -6,6 +6,9 @@ import FolderPlusIcon from "../../assets/icons/folder-plus-icon.svg";
 import { Sheet } from "react-modal-sheet";
 import { get_items_itemId } from "../../services/item";
 import { ItemResponse } from "../../types/item";
+import usePostsStore from "../../store/usePostsStore";
+import { local_government } from "../../data/districts";
+import { City, Filters } from "../../types/common";
 
 interface GoodeSheetProps {
   itemId: string | null;
@@ -16,6 +19,7 @@ export default function ItemSheet({ itemId }: GoodeSheetProps) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [goode, setGoode] = useState<ItemResponse | null>(null);
+  const { setSearchQuery, setFilters } = usePostsStore();
 
   // itemId가 있으면 시트 열기
   useEffect(() => {
@@ -59,6 +63,42 @@ export default function ItemSheet({ itemId }: GoodeSheetProps) {
     }
   };
 
+  // goode.localGovernmentName으로 City 객체 찾기
+  const findCityByFullname = (
+    localGovernmentName: string
+  ): City | undefined => {
+    for (const region of local_government) {
+      const city = region.districts.find(
+        (district) => district.name === localGovernmentName
+      );
+      if (city) {
+        return city;
+      }
+    }
+    return undefined;
+  };
+
+  // 커뮤니티로 이동
+  const handleCommunityClick = async () => {
+    if (goode) {
+      setIsOpen(false);
+      setSearchQuery(goode.title);
+
+      const city = findCityByFullname(goode.localGovernmentName);
+      if (city) {
+        const filters: Filters = {
+          theme: [],
+          metropolitanGovernments: [],
+          localGovernments: [city],
+        };
+        setFilters(filters);
+      } else {
+        console.error("City not found for", goode.localGovernmentName);
+      }
+      navigate("/community", { replace: true });
+    }
+  };
+
   return (
     <StyledSheet isOpen={isOpen} onClose={handleClose}>
       <Sheet.Container>
@@ -91,7 +131,9 @@ export default function ItemSheet({ itemId }: GoodeSheetProps) {
               <h3>주변 여행지가 궁금하다면?</h3>
               <CourseCommunityWrapper>
                 <span className="course">관광코스</span>
-                <span className="community">커뮤니티</span>
+                <span className="community" onClick={handleCommunityClick}>
+                  커뮤니티
+                </span>
               </CourseCommunityWrapper>
             </ContentWrapper>
           )}
