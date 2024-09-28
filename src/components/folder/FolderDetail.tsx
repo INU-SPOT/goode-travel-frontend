@@ -233,6 +233,17 @@ export default function FolderDetail() {
     setEditingItem(item);
   };
 
+  // handleBackButtonClick 함수: 뒤로가기 버튼 조작
+  const handleBackButtonClick = () => {
+    if (isEditing) {
+      setIsEditing(false); // 편집 모드를 취소
+    } else if (isAdding) {
+      resetForm(); // 추가 모드를 취소
+    } else {
+      navigate(-1); // 폴더 상세 페이지에서 나가기
+    }
+  };
+
   return (
     <>
       <StyledHeader>
@@ -253,7 +264,7 @@ export default function FolderDetail() {
 
       <DetailContainer>
         <TitleContainer>
-          <BackButton onClick={() => navigate(-1)}>{"<"}</BackButton>
+          <BackButton onClick={handleBackButtonClick}>{"<"}</BackButton>
           {isEditing ? (
             <TitleInput
               type="text"
