@@ -38,6 +38,7 @@ async function requestPermissionAndSendToken() {
     });
 
     if (token) {
+      localStorage.setItem("fcmToken", token);
       // 토큰을 서버로 전송
       await axiosInstance.post(`/v1/fcm`, { fcmToken: token });
     } else {

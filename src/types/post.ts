@@ -41,3 +41,12 @@ export interface PostDetailResponse {
   isOwner: boolean;
   itemPosts: ItemPostResponse[];
 }
+
+export interface TopPostResponse {
+  topType: string;
+  writerNickname: string;
+  postId: number;
+  title: string;
+  items: ItemPostThumbnailResponse[];
+  topNum: number;
+}
