@@ -77,6 +77,7 @@ axiosInstance.interceptors.response.use(
         if (token) {
           // 서버로 새로운 FCM 토큰 전송
           await axiosInstance.post(`/v1/fcm`, { fcmToken: token });
+          console.log("토큰 재전송 성공");
 
           // 기존 요청 다시 시도
           return axiosInstance(originalRequest);
