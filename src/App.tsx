@@ -16,15 +16,18 @@ import RandomGoodePage from "./pages/RandomGoodePage";
 import WritePage from "./pages/WritePage";
 import PostPage from "./pages/PostPage";
 import GoodeSheet from "./components/goode/GoodeSheet";
+import CourseSheet from "./components/goode/CourseSheet";
 
 function QueryContent() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const itemId = params.get("itemId");
+  const courseId = params.get("courseId");
 
   return (
     <>
       <GoodeSheet itemId={itemId} />
+      <CourseSheet courseId={courseId} />
     </>
   );
 }

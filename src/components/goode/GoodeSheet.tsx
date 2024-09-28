@@ -78,6 +78,14 @@ export default function ItemSheet({ itemId }: GoodeSheetProps) {
     return undefined;
   };
 
+  // 코스 보기
+  const handleCourseClick = async () => {
+    const params = new URLSearchParams(location.search);
+    params.set("courseId", itemId || "");
+    const newUrl = `${location.pathname}?${params.toString()}`;
+    navigate(newUrl);
+  };
+
   // 커뮤니티로 이동
   const handleCommunityClick = async () => {
     if (goode) {
@@ -130,7 +138,9 @@ export default function ItemSheet({ itemId }: GoodeSheetProps) {
               <Description>{goode.description}</Description>
               <h3>주변 여행지가 궁금하다면?</h3>
               <CourseCommunityWrapper>
-                <span className="course">관광코스</span>
+                <span className="course" onClick={handleCourseClick}>
+                  관광코스
+                </span>
                 <span className="community" onClick={handleCommunityClick}>
                   커뮤니티
                 </span>
