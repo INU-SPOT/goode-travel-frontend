@@ -54,7 +54,11 @@ export default function GoodeCard({ goode }: GoodeCardProps) {
   return (
     <GoodeItemContainer>
       <ItemImage
-        src={goode.imageUrl}
+        src={
+          goode.imageUrl
+            ? goode.imageUrl
+            : `${process.env.REACT_APP_IMAGE_URL}/frog.jpeg` // TODO: imageURL이 공백일 때, 로고 보이도록 하기
+        }
         alt={goode.title}
         onClick={handleNavigateWithQuery}
       />
@@ -79,8 +83,10 @@ const GoodeItemContainer = styled.div`
 `;
 
 const ItemImage = styled.img`
-  height: 68px;
-  width: 68px;
+  min-height: 68px;
+  max-height: 68px;
+  min-width: 68px;
+  max-width: 68px;
   border-radius: 50%;
   margin-right: 12px;
 `;
