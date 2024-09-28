@@ -60,7 +60,6 @@ export default function FolderPage() {
 
   useEffect(() => {
     fetchFolders();
-    console.log("폴더 재렌더링");
   }, []);
 
   return (

@@ -98,8 +98,9 @@ export default function PlanItem({
         {finished && <FinishDate>{finishDate}</FinishDate>}
         <Title isFinished={finished}>{title}</Title>
         <ButtonGroup>
-          <button>{address || regionName}</button>
-          <button onClick={onEdit}>수정</button>{" "}
+          <button>{regionName}</button>
+          {address && <button>{address}</button>}
+          <button onClick={onEdit}>수정</button>
           <button onClick={handleDelete}>삭제</button>
         </ButtonGroup>
       </ItemDetails>
@@ -161,7 +162,7 @@ const ButtonGroup = styled.div`
   justify-content: flex-start;
 
   button {
-    margin-right: 10px;
+    margin-right: 8px;
     padding: 0;
     color: #b2b2b2;
     font-size: 13px;
