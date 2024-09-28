@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import {
   DndContext,
@@ -39,6 +39,7 @@ export default function FolderDetail() {
   const [editingItem, setEditingItem] = useState<ItemFolderResponse | null>(
     null
   ); // 편집할 항목
+  const navigate = useNavigate();
 
   // 드래그 센서 설정: 터치와 마우스 모두 사용
   const sensors = useSensors(
@@ -235,6 +236,7 @@ export default function FolderDetail() {
   return (
     <>
       <StyledHeader>
+        <BackButton onClick={() => navigate(-1)}>{"<"}</BackButton>
         저장된 폴더
         <PlusIconButton
           onClick={() => {
@@ -364,6 +366,16 @@ const StyledHeader = styled.header`
   padding: 0 24px;
   margin-bottom: 24px;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
+`;
+
+const BackButton = styled.button`
+  background: none;
+  border: none;
+  margin-left: -25px;
+  font-size: 22px;
+  color: #000000;
+  cursor: pointer;
+  position: absolute;
 `;
 
 const PlusIconButton = styled.button`
