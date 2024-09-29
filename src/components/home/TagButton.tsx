@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import usePostsStore from "../../store/usePostsStore";
+import useGoodesStore from "../../store/uesGoodesStore";
 
 interface TagButtonProps {
   text: string;
@@ -9,7 +9,7 @@ interface TagButtonProps {
 
 export default function TagButton({ text }: TagButtonProps) {
   const navigate = useNavigate();
-  const setFilters = usePostsStore((state) => state.setFilters);
+  const { setFilters } = useGoodesStore();
 
   const handleClick = () => {
     if (text === "전체") {
