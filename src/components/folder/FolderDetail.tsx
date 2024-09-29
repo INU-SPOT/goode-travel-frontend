@@ -332,6 +332,7 @@ export default function FolderDetail() {
                   itemFolderId={item.itemFolderId}
                   address={item.address}
                   localGovernmentId={item.localGovernmentId}
+                  metropolitanGovernmentId={item.metropolitanGovernmentId}
                   finishDate={item.finishDate}
                   isFinished={item.isFinished}
                   folderId={folderDetail.folderId}
@@ -346,6 +347,7 @@ export default function FolderDetail() {
                   itemFolderId={item.itemFolderId}
                   address={item.address}
                   localGovernmentId={item.localGovernmentId}
+                  metropolitanGovernmentId={item.metropolitanGovernmentId}
                   folderId={folderDetail.folderId}
                   onDelete={fetchFolderDetail}
                 />

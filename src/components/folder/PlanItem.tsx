@@ -7,10 +7,7 @@ import {
   delete_folders_plan,
 } from "../../services/folder";
 import { useEffect, useState } from "react";
-import {
-  local_government,
-  metropolitan_government,
-} from "../../data/districts";
+import { local_government } from "../../data/districts";
 
 interface PlanItemProps extends ItemFolderResponse {
   folderId: number;
@@ -24,6 +21,7 @@ export default function PlanItem({
   itemFolderId,
   finishDate: initialFinishDate,
   address,
+  metropolitanGovernmentId,
   localGovernmentId,
   isFinished,
   folderId,
@@ -34,27 +32,13 @@ export default function PlanItem({
   const [finishDate, setFinishDate] = useState<string | undefined>(
     initialFinishDate
   );
-  const [regionName, setRegionName] = useState<string>("");
 
   // 지역구 이름 찾기 로직
-  useEffect(() => {
-    if (localGovernmentId) {
-      const region = local_government.find((lg) =>
-        lg.districts.some((d) => d.id === localGovernmentId)
-      );
-      const district = region?.districts.find(
-        (d) => d.id === localGovernmentId
-      );
-      const metropolitan = metropolitan_government.find(
-        (mg) => mg.id === region?.metropolitanId
-      );
-      if (metropolitan && district) {
-        setRegionName(`${metropolitan.name} ${district.name}`);
-      } else {
-        setRegionName("지역 정보 없음");
-      }
-    }
-  }, [localGovernmentId]);
+  const region = local_government.find(
+    (lg) => lg.metropolitanId === metropolitanGovernmentId
+  );
+  const district = region?.districts.find((d) => d.id === localGovernmentId);
+  const regionName = district ? district.fullname : "";
 
   useEffect(() => {
     setFinished(!!isFinished);
