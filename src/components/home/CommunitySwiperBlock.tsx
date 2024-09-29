@@ -100,7 +100,7 @@ function CommunityBlock({ post, onClick, isVisit }: CommunityBlockProps) {
         ))}
       </DetailList>
       <Recommendations>
-        {isVisit ? `조회수 ${topNum}개` : `좋아요 ${topNum}개`}
+        {isVisit ? `조회수 ${topNum}` : `좋아요 ${topNum}`}
       </Recommendations>
     </BlockWrapper>
   );
