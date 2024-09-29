@@ -144,36 +144,36 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
-async function requestPermissionAndSendToken() {
-  try {
-    const permission = await Notification.requestPermission();
-    if (permission === "denied") {
-      console.log("Notification permission denied");
-      return;
-    }
-    console.log("Notification permission granted");
+// async function requestPermissionAndSendToken() {
+//   try {
+//     const permission = await Notification.requestPermission();
+//     if (permission === "denied") {
+//       console.log("Notification permission denied");
+//       return;
+//     }
+//     console.log("Notification permission granted");
 
-    // 정상적인 FCM 토큰 발급 (전송하지 않음)
-    const token = await getToken(messaging, {
-      vapidKey: process.env.REACT_APP_FCM_VAPID_KEY,
-      serviceWorkerRegistration: await navigator.serviceWorker.ready,
-    });
+//     // 정상적인 FCM 토큰 발급 (전송하지 않음)
+//     const token = await getToken(messaging, {
+//       vapidKey: process.env.REACT_APP_FCM_VAPID_KEY,
+//       serviceWorkerRegistration: await navigator.serviceWorker.ready,
+//     });
 
-    if (token) {
-      console.log("정상적인 FCM 토큰 발급 완료:", token);
-      localStorage.setItem("fcmToken", token);
-    } else {
-      console.log("정상적인 FCM 토큰 발급 실패");
-    }
+//     if (token) {
+//       console.log("정상적인 FCM 토큰 발급 완료:", token);
+//       localStorage.setItem("fcmToken", token);
+//     } else {
+//       console.log("정상적인 FCM 토큰 발급 실패");
+//     }
 
-    // Foreground 메시지 처리
-    onMessage(messaging, (payload) => {
-      console.log("Message received: ", payload);
-    });
-  } catch (error) {
-    console.error("FCM 토큰 발급 중 오류 발생:", error);
-  }
-}
+//     // Foreground 메시지 처리
+//     onMessage(messaging, (payload) => {
+//       console.log("Message received: ", payload);
+//     });
+//   } catch (error) {
+//     console.error("FCM 토큰 발급 중 오류 발생:", error);
+//   }
+// }
 
 // 테스트용 잘못된 FCM 토큰 전송 및 재발급 테스트
 async function testInvalidToken() {
