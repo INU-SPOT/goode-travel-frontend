@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import CommunityHeader from "../components/community/CommunityHeader";
+import GoodeHeader from "../components/goode/GoodeHeader";
 import FilterSummary from "../components/community/FilterSummary";
-import InfiniteScrollComponent from "../components/community/InfiniteScrollComponent";
-import usePostsStore from "../store/usePostsStore";
+import useGoodesStore from "../store/uesGoodesStore";
+import GoodeInfiniteScrollComponent from "../components/goode/GoodeInfiniteScrollComponent";
 
-export default function CommunityPage() {
+export default function GoodePage() {
   const {
     searchQuery,
     setSearchQuery,
@@ -14,11 +14,11 @@ export default function CommunityPage() {
     removeMetropolitanGovernment,
     removeLocalGovernment,
     clearSearchQuery,
-  } = usePostsStore();
+  } = useGoodesStore();
 
   return (
-    <CommunityContainer>
-      <CommunityHeader
+    <GoodeContainer>
+      <GoodeHeader
         setSearchQuery={setSearchQuery}
         filters={filters}
         setFilters={setFilters}
@@ -31,12 +31,15 @@ export default function CommunityPage() {
         removeLocalGovernment={removeLocalGovernment}
         clearSearchQuery={clearSearchQuery}
       />
-      <InfiniteScrollComponent searchQuery={searchQuery} filters={filters} />
-    </CommunityContainer>
+      <GoodeInfiniteScrollComponent
+        searchQuery={searchQuery}
+        filters={filters}
+      />
+    </GoodeContainer>
   );
 }
 
-const CommunityContainer = styled.div`
+const GoodeContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;

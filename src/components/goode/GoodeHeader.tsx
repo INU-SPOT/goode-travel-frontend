@@ -2,50 +2,34 @@ import { useState } from "react";
 import styled from "styled-components";
 import { ReactComponent as SearchIcon } from "../../assets/icons/search-icon.svg";
 import { ReactComponent as FilterIcon } from "../../assets/icons/filter-icon.svg";
-import { ReactComponent as PencilIcon } from "../../assets/icons/pencil-icon.svg";
-import SearchSheet from "./SearchSheet";
-import FilterSheet from "./FilterSheet";
-import { useNavigate } from "react-router-dom";
+import SearchSheet from "../community/SearchSheet";
+import FilterSheet from "../community/FilterSheet";
 import { Filters } from "../../types/common";
 
-interface CommunityHeaderProps {
+interface GoodeHeaderProps {
   setSearchQuery: (query: string) => void;
   filters: Filters;
   setFilters: (filters: Filters) => void;
 }
 
-export default function CommunityHeader({
+export default function GoodeHeader({
   setSearchQuery,
   filters,
   setFilters,
-}: CommunityHeaderProps) {
+}: GoodeHeaderProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const handleWriteClick = () => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-      alert("로그인이 필요합니다!");
-      navigate("/login");
-    } else {
-      navigate("/write");
-    }
-  };
 
   return (
     <>
       <StyledHeader>
-        <h2>GOOD, 이 여행!</h2>
+        <h2>굳이?</h2>
         <IconGroup>
           <IconButton onClick={() => setIsSearchOpen(true)}>
             <StyledIcon as={SearchIcon} />
           </IconButton>
           <IconButton onClick={() => setIsFilterOpen(true)}>
             <StyledIcon as={FilterIcon} />
-          </IconButton>
-          <IconButton onClick={handleWriteClick}>
-            <StyledIcon as={PencilIcon} />
           </IconButton>
         </IconGroup>
       </StyledHeader>
@@ -55,6 +39,7 @@ export default function CommunityHeader({
         onClose={() => setIsSearchOpen(false)}
         setSearchQuery={setSearchQuery}
       />
+
       <FilterSheet
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}

@@ -1,21 +1,21 @@
 import { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { get_posts } from "../../services/post";
-import { PostThumbnailResponse } from "../../types/post";
-import PostList from "./PostList";
+import { get_items } from "../../services/item";
+import { ItemsResponse } from "../../types/item";
+import GoodeList from "./GoodeList";
 import { Filters } from "../../types/common";
-import usePostsStore from "../../store/usePostsStore";
+import useGoodesStore from "../../store/uesGoodesStore";
 
 interface InfiniteScrollComponentProps {
   searchQuery: string;
   filters: Filters;
 }
 
-export default function InfiniteScrollComponent({
+export default function GoodeInfiniteScrollComponent({
   searchQuery,
   filters,
 }: InfiniteScrollComponentProps) {
-  const { posts, setPosts } = usePostsStore();
+  const { goodes, setGoodes } = useGoodesStore();
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
@@ -23,16 +23,16 @@ export default function InfiniteScrollComponent({
   useEffect(() => {
     setPage(0);
     setHasMore(true);
-    setPosts([]);
-  }, [searchQuery, filters, setPosts]);
+    setGoodes([]);
+  }, [searchQuery, filters, setGoodes]);
 
   // 페이지 변경 시 데이터 로드
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await get_posts(
+        const response = await get_items(
           page,
-          7,
+          14,
           filters.metropolitanGovernments.map((city) => city.id),
           filters.localGovernments.map((city) => city.id),
           filters.theme,
@@ -41,7 +41,7 @@ export default function InfiniteScrollComponent({
 
         const { currentPage, totalPages, data: postData } = response.data;
         // 게시물 업데이트
-        setPosts((prevPosts: PostThumbnailResponse[]) =>
+        setGoodes((prevPosts: ItemsResponse[]) =>
           page === 0 ? postData : [...prevPosts, ...postData]
         );
 
@@ -60,7 +60,7 @@ export default function InfiniteScrollComponent({
 
   return (
     <InfiniteScroll
-      dataLength={posts.length}
+      dataLength={goodes.length}
       next={() => setPage((prevPage) => prevPage + 1)}
       hasMore={hasMore}
       loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
@@ -69,7 +69,7 @@ export default function InfiniteScrollComponent({
       }
       style={{ paddingTop: "12px", paddingBottom: "12px" }} // 인라인 스타일 추가
     >
-      <PostList posts={posts} />
+      <GoodeList goodes={goodes} />
     </InfiniteScroll>
   );
 }

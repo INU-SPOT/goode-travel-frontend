@@ -1,16 +1,19 @@
 import { useState } from "react";
 import { Sheet } from "react-modal-sheet";
-import usePostsStore from "../../store/usePostsStore";
 import styled from "styled-components";
 import { ReactComponent as SearchIcon } from "../../assets/icons/search-icon.svg";
 
 interface SearchSheetProps {
   isOpen: boolean;
   onClose: () => void;
+  setSearchQuery: (query: string) => void;
 }
 
-export default function SearchSheet({ isOpen, onClose }: SearchSheetProps) {
-  const setSearchQuery = usePostsStore((state) => state.setSearchQuery);
+export default function SearchSheet({
+  isOpen,
+  onClose,
+  setSearchQuery,
+}: SearchSheetProps) {
   const [inputValue, setInputValue] = useState("");
 
   const handleSearch = () => {

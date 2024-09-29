@@ -1,16 +1,14 @@
-// 커뮤니티 페이지 글 목록을 관리
+// 굳이 목록을 관리
 import { create } from "zustand";
-import { PostThumbnailResponse } from "../types/post";
+import { ItemsResponse } from "../types/item";
 import { City, Filters } from "../types/common";
 
-interface PostsState {
-  posts: PostThumbnailResponse[];
+interface GoodesState {
+  goodes: ItemsResponse[];
   searchQuery: string;
   filters: Filters;
-  setPosts: (
-    posts:
-      | PostThumbnailResponse[]
-      | ((prevPosts: PostThumbnailResponse[]) => PostThumbnailResponse[])
+  setGoodes: (
+    goodes: ItemsResponse[] | ((prevPosts: ItemsResponse[]) => ItemsResponse[])
   ) => void;
   setSearchQuery: (query: string) => void;
   setFilters: (filters: Filters) => void;
@@ -20,17 +18,17 @@ interface PostsState {
   clearSearchQuery: () => void;
 }
 
-const usePostsStore = create<PostsState>((set) => ({
-  posts: [],
+const useGoodesStore = create<GoodesState>((set) => ({
+  goodes: [],
   searchQuery: "",
   filters: {
     theme: [],
     metropolitanGovernments: [], // 초기값 빈 배열
     localGovernments: [], // 초기값 빈 배열
   },
-  setPosts: (posts) =>
+  setGoodes: (goodes) =>
     set((state) => ({
-      posts: typeof posts === "function" ? posts(state.posts) : posts,
+      goodes: typeof goodes === "function" ? goodes(state.goodes) : goodes,
     })),
   setSearchQuery: (query) => set({ searchQuery: query }),
   setFilters: (filters) => set({ filters }),
@@ -62,4 +60,4 @@ const usePostsStore = create<PostsState>((set) => ({
   clearSearchQuery: () => set({ searchQuery: "" }),
 }));
 
-export default usePostsStore;
+export default useGoodesStore;
