@@ -116,7 +116,11 @@ export default function ItemSheet({ itemId }: GoodeSheetProps) {
             <ContentWrapper>
               <TitleWrapper>
                 <h2>{goode.title}</h2>
-                <img src={ShareIcon} onClick={handleShareClick} />
+                <img
+                  src={ShareIcon}
+                  onClick={handleShareClick}
+                  alt="ShareIcon"
+                />
               </TitleWrapper>
               <ImageWeatherWrapper>
                 <img
