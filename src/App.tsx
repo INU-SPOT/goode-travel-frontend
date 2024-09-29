@@ -17,6 +17,22 @@ import WritePage from "./pages/WritePage";
 import PostPage from "./pages/PostPage";
 import FolderPage from "./pages/FolderPage";
 import FolderDetail from "./components/folder/FolderDetail";
+import GoodeSheet from "./components/goode/GoodeSheet";
+import CourseSheet from "./components/goode/CourseSheet";
+
+function QueryContent() {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const itemId = params.get("itemId");
+  const courseId = params.get("courseId");
+
+  return (
+    <>
+      <GoodeSheet itemId={itemId} />
+      <CourseSheet courseId={courseId} />
+    </>
+  );
+}
 
 function App() {
   useAuth();
@@ -24,9 +40,11 @@ function App() {
   return (
     <Router>
       <ScrollDetector />
+      <QueryContent />
       <Routes>
         <Route path="/" element={<MainPage />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="goode" element={<GoodePage />} />
           <Route path="community" element={<CommunityPage />} />
           <Route path="mypage" element={<MyPage />} />
           <Route path="random-goode" element={<RandomGoodePage />} />
