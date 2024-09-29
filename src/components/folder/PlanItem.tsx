@@ -7,10 +7,7 @@ import {
   delete_folders_plan,
 } from "../../services/folder";
 import { useEffect, useState } from "react";
-import {
-  local_government,
-  metropolitan_government,
-} from "../../data/districts";
+import { local_government } from "../../data/districts";
 
 interface PlanItemProps extends ItemFolderResponse {
   folderId: number;
@@ -35,25 +32,13 @@ export default function PlanItem({
   const [finishDate, setFinishDate] = useState<string | undefined>(
     initialFinishDate
   );
-  const [regionName, setRegionName] = useState<string>("");
 
   // 지역구 이름 찾기 로직
-  useEffect(() => {
-    if (localGovernmentId) {
-      const region = local_government.find(
-        (lg) => lg.metropolitanId === metropolitanGovernmentId
-      );
-      const district = region?.districts.find(
-        (d) => d.id === localGovernmentId
-      );
-
-      if (district) {
-        setRegionName(`${district.fullname}`);
-      }
-    } else {
-      setRegionName("");
-    }
-  }, [localGovernmentId]);
+  const region = local_government.find(
+    (lg) => lg.metropolitanId === metropolitanGovernmentId
+  );
+  const district = region?.districts.find((d) => d.id === localGovernmentId);
+  const regionName = district ? district.fullname : "";
 
   useEffect(() => {
     setFinished(!!isFinished);
