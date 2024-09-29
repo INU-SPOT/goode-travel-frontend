@@ -15,46 +15,30 @@ import ScrollDetector from "./components/ScrollDetector";
 import RandomGoodePage from "./pages/RandomGoodePage";
 import WritePage from "./pages/WritePage";
 import PostPage from "./pages/PostPage";
-import GoodeSheet from "./components/goode/GoodeSheet";
-import CourseSheet from "./components/goode/CourseSheet";
-
-function QueryContent() {
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const itemId = params.get("itemId");
-  const courseId = params.get("courseId");
-
-  return (
-    <>
-      <GoodeSheet itemId={itemId} />
-      <CourseSheet courseId={courseId} />
-    </>
-  );
-}
+import FolderPage from "./pages/FolderPage";
+import FolderDetail from "./components/folder/FolderDetail";
 
 function App() {
   useAuth();
 
   return (
-    <>
-      <Router>
-        <QueryContent />
-        <ScrollDetector />
-        <Routes>
-          <Route path="/" element={<MainPage />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="goode" element={<GoodePage />} />
-            <Route path="community" element={<CommunityPage />} />
-            <Route path="mypage" element={<MyPage />} />
-            <Route path="random-goode" element={<RandomGoodePage />} />
-          </Route>
-          <Route path="login" element={<LoginPage />} />
-          <Route path="write" element={<WritePage />} />
-          <Route path="edit/:id" element={<WritePage />} />
-          <Route path="post/:id" element={<PostPage />} />
-        </Routes>
-      </Router>
-    </>
+    <Router>
+      <ScrollDetector />
+      <Routes>
+        <Route path="/" element={<MainPage />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="community" element={<CommunityPage />} />
+          <Route path="mypage" element={<MyPage />} />
+          <Route path="random-goode" element={<RandomGoodePage />} />
+          <Route path="save" element={<FolderPage />} />
+        </Route>
+        <Route path="login" element={<LoginPage />} />
+        <Route path="write" element={<WritePage />} />
+        <Route path="edit/:id" element={<WritePage />} />
+        <Route path="post/:id" element={<PostPage />} />
+        <Route path="save/:folderId" element={<FolderDetail />} />
+      </Routes>
+    </Router>
   );
 }
 

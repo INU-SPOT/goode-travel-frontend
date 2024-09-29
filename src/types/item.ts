@@ -1,3 +1,11 @@
+export interface ItemCreateUpdateRequest {
+  type: string;
+  title: string;
+  imageUrl: string;
+  address?: string;
+  localGovernmentId: number;
+}
+
 export interface ItemPostThumbnailResponse {
   itemType: number;
   itemTitle: string;
@@ -31,20 +39,29 @@ export interface ItemPostResponse {
   images: ItemPostImageResponse[];
 }
 
-// 굳이 리스트에서 사용
-export interface ItemsResponse {
+export interface ItemFolderCreateRequest {
+  folderId: number;
   itemId: number;
-  metropolitanGovernmentName: string;
-  localGovernmentName: string;
-  title: string;
-  imageUrl: string;
+  emoji: string;
 }
 
-// 굳이 상세 정보에서 사용
-export interface ItemResponse {
+export interface ItemFolderUpdateRequest {
+  itemFolderId: number;
   title: string;
-  imageUrl: string;
+  emoji: string;
+  localGovernmentId: number;
   address: string;
-  description: string;
-  localGovernmentName: string;
+}
+
+export interface ItemFolderResponse {
+  itemId?: number;
+  itemFolderId: number;
+  isOfficial?: boolean;
+  itemType?: string;
+  title: string;
+  image: string;
+  address: string;
+  finishDate?: string;
+  isFinished?: boolean;
+  localGovernmentId: number;
 }
