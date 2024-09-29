@@ -26,7 +26,9 @@ export default function Comment({
         <CommentHeader>
           <span>
             <Nickname>{comment.nickname}</Nickname>
-            <Date>{comment.date}</Date>
+            <Date>
+              {comment.date} {comment.isModified && "(수정됨)"}
+            </Date>
           </span>
           <span>
             <button

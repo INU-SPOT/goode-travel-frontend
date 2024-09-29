@@ -44,6 +44,7 @@ export default function PostCard({ post }: PostCardProps) {
 
 const StyledPostCard = styled.div`
   display: flex;
+  justify-content: space-between;
   padding: 16px;
   min-height: 160px;
   border-radius: 8px;
@@ -59,6 +60,7 @@ const Thumbnail = styled.img`
 `;
 
 const PostContent = styled.div`
+  max-width: 68%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

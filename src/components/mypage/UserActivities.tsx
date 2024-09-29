@@ -3,7 +3,9 @@ import styled from "styled-components";
 import UserInfiniteScroll from "./UserInfiniteScroll";
 
 export default function UserActivities() {
-  const [activeTab, setActiveTab] = useState<"posts" | "likes">("posts");
+  const [activeTab, setActiveTab] = useState<"posts" | "likes" | "comments">(
+    "posts"
+  );
 
   return (
     <ActivitiesWrapper>
@@ -20,6 +22,12 @@ export default function UserActivities() {
         >
           좋아요 한 글
         </Title>
+        <Title
+          $active={activeTab === "comments"}
+          onClick={() => setActiveTab("comments")}
+        >
+          작성 댓글
+        </Title>
       </TitleWrapper>
 
       <ContentWrapper>
@@ -29,6 +37,12 @@ export default function UserActivities() {
 
         <TabContent $active={activeTab === "likes"}>
           <UserInfiniteScroll type="likes" isActive={activeTab === "likes"} />
+        </TabContent>
+        <TabContent $active={activeTab === "comments"}>
+          <UserInfiniteScroll
+            type="comments"
+            isActive={activeTab === "comments"}
+          />
         </TabContent>
       </ContentWrapper>
     </ActivitiesWrapper>
