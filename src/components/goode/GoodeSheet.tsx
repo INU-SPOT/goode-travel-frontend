@@ -134,14 +134,7 @@ export default function GoodeSheet({ itemId }: GoodeSheetProps) {
                   />
                 </TitleWrapper>
                 <ImageWeatherWrapper>
-                  <img
-                    src={
-                      goode.imageUrl
-                        ? goode.imageUrl
-                        : `${process.env.REACT_APP_IMAGE_URL}/frog.jpeg` // TODO: imageURL이 공백일 때, 로고 보이도록 하기
-                    }
-                    alt={goode.title}
-                  />
+                  <img src={goode.imageUrl} alt={goode.title} />
                   <span className="weather"></span>
                 </ImageWeatherWrapper>
                 <FolderAddressWrapper>
