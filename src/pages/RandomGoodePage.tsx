@@ -1,77 +1,68 @@
 import { useEffect, useState } from "react";
 import styled, { keyframes, css } from "styled-components";
-import Confetti from "react-confetti"; // react-confetti 추가
-import { goodeList } from "../data/goodeList";
+import Confetti from "react-confetti";
+import { get_items_random } from "../services/home";
+import { GoodeRandomResponse } from "../types/item";
 import { COLOR } from "../utils/color";
-
-const fetchRandomGoode = () => {
-  return new Promise<{ name: string; url: string }>((resolve) => {
-    setTimeout(() => {
-      const randomIndex = Math.floor(Math.random() * goodeList.length);
-      resolve({
-        name: goodeList[randomIndex],
-        url: `https://example.com/${goodeList[randomIndex]}`,
-      });
-    }, 3000);
-  });
-};
+import { useNavigate } from "react-router-dom";
 
 export default function RandomGoodePage() {
-  const [isAnimated, setIsAnimated] = useState(true);
-  const [selectedGoode, setSelectedGoode] = useState<{
-    name: string;
-    url: string;
-  } | null>(null);
-  const [showConfetti, setShowConfetti] = useState(false); // 폭죽 상태
+  const [isAnimated, setIsAnimated] = useState(false);
+  const [selectedGoode, setSelectedGoode] =
+    useState<GoodeRandomResponse | null>(null);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const navigate = useNavigate();
 
   const handleShuffleClick = () => {
     setSelectedGoode(null);
     setIsAnimated(true);
-    setShowConfetti(false); // 클릭할 때마다 폭죽을 숨기기
+    setShowConfetti(false);
 
     setTimeout(async () => {
-      const goode = await fetchRandomGoode();
+      const goode = await get_items_random();
       setIsAnimated(false);
       setSelectedGoode(goode);
-      setShowConfetti(true); // 애니메이션이 끝나면 폭죽 효과 나타내기
-    }, 3000);
+      setShowConfetti(true);
+    }, 1800);
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsAnimated(true);
-      const goode = await fetchRandomGoode();
-      setIsAnimated(false);
-      setSelectedGoode(goode);
-      setShowConfetti(true); // 처음 로드할 때도 폭죽 효과 추가
-    };
-    fetchData();
+    handleShuffleClick();
   }, []);
+
+  const handleClick = (itemId: number) => {
+    navigate(`?itemId=${itemId}`);
+  };
 
   return (
     <CardWrapper>
       {showConfetti && (
         <Confetti width={window.innerWidth} height={window.innerHeight} />
-      )}{" "}
-      {/* 폭죽 효과 */}
+      )}
       <CardList isAnimated={isAnimated}>
-        {goodeList.slice(0, 3).map((goode, index) => (
-          <CardItem key={index} data-card={index} zIndex={6 - index}>
+        {Array.from({ length: 6 }).map((_, index) => (
+          <CardItem key={index} data-card={index} zIndex={12 - index}>
             <Card
               color={
                 index === 0
                   ? COLOR.blue
                   : index === 1
                   ? COLOR.green
-                  : COLOR.beige
+                  : index === 2
+                  ? COLOR.beige
+                  : index === 3
+                  ? COLOR.yellow
+                  : index === 4
+                  ? COLOR.blue
+                  : COLOR.green
               }
               onClick={() => {
                 if (selectedGoode && index === 0) {
-                  window.location.href = selectedGoode.url;
+                  handleClick(selectedGoode.itemId);
                 }
               }}
             >
-              {selectedGoode && index === 0 ? selectedGoode.name : ""}
+              {selectedGoode && index === 0 ? selectedGoode.title : ""}
             </Card>
           </CardItem>
         ))}
@@ -112,19 +103,34 @@ const CardList = styled.ul<{ isAnimated: boolean }>`
     props.isAnimated &&
     css`
       & li[data-card="0"] {
-        animation: ${shuffle} 1s ease-in-out 0s 1 normal;
-        z-index: 2;
-        transition: z-index 0s ease-in-out 0.5s;
+        animation: ${shuffle} 0.5s ease-in-out 0s 1 normal;
+        z-index: 5;
+        transition: z-index 0s ease-in-out 0.25s;
       }
       & li[data-card="1"] {
-        animation: ${shuffle} 1s ease-in-out 1s 1 normal;
-        z-index: 1;
-        transition: z-index 0s ease-in-out 1.5s;
+        animation: ${shuffle} 0.5s ease-in-out 0.25s 1 normal;
+        z-index: 4;
+        transition: z-index 0s ease-in-out 0.5s;
       }
       & li[data-card="2"] {
-        animation: ${shuffle} 1s ease-in-out 2s 1 normal;
+        animation: ${shuffle} 0.5s ease-in-out 0.5s 1 normal;
+        z-index: 3;
+        transition: z-index 0s ease-in-out 0.75s;
+      }
+      & li[data-card="3"] {
+        animation: ${shuffle} 0.5s ease-in-out 0.75s 1 normal;
+        z-index: 2;
+        transition: z-index 0s ease-in-out 1s;
+      }
+      & li[data-card="4"] {
+        animation: ${shuffle} 0.5s ease-in-out 1s 1 normal;
+        z-index: 1;
+        transition: z-index 0s ease-in-out 1.25s;
+      }
+      & li[data-card="5"] {
+        animation: ${shuffle} 0.5s ease-in-out 1.25s 1 normal;
         z-index: 0;
-        transition: z-index 0s ease-in-out 2.5s;
+        transition: z-index 0s ease-in-out 1.5s;
       }
     `}
 `;
@@ -143,13 +149,17 @@ const Card = styled.div<{ color: string }>`
   width: 200px;
   max-height: 100%;
   height: 350px;
-  padding: 30px;
+  padding: 20px;
   border-radius: 15px;
   box-shadow: 0 1px 3px 0 #222;
   background: ${(props) => props.color};
   color: #fff;
-  font-size: 25px;
+  font-size: 22px;
+  font-weight: bold;
   cursor: pointer;
+  text-align: center;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 `;
 
 const ShuffleButton = styled.button`

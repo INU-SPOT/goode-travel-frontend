@@ -65,3 +65,8 @@ export interface ItemFolderResponse {
   isFinished?: boolean;
   localGovernmentId: number;
 }
+
+export interface GoodeRandomResponse {
+  itemId: number;
+  title: string;
+}
