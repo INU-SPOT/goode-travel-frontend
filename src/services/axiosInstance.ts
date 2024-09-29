@@ -1,5 +1,4 @@
 import axios from "axios";
-import { getMessaging, getToken } from "firebase/messaging";
 
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
