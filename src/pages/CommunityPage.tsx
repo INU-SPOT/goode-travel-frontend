@@ -1,17 +1,17 @@
 import styled from "styled-components";
 import CommunityHeader from "../components/community/CommunityHeader";
 import FilterSummary from "../components/community/FilterSummary";
-import PostList from "../components/community/PostList";
-import { usePosts } from "../hooks/usePosts";
+import InfiniteScrollComponent from "../components/community/InfiniteScrollComponent";
+import usePostsStore from "../store/usePostsStore";
 
 export default function CommunityPage() {
-  const { posts, searchQuery, filters } = usePosts();
+  const { searchQuery, filters } = usePostsStore();
 
   return (
     <CommunityContainer>
       <CommunityHeader />
       <FilterSummary searchQuery={searchQuery} filters={filters} />
-      <PostList posts={posts} />
+      <InfiniteScrollComponent searchQuery={searchQuery} filters={filters} />
     </CommunityContainer>
   );
 }

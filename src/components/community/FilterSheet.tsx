@@ -2,41 +2,34 @@ import { useState, useEffect } from "react";
 import { Sheet } from "react-modal-sheet";
 import usePostsStore from "../../store/usePostsStore";
 import { themes } from "../../data/themes";
-import { districts } from "../../data/districts";
+import {
+  metropolitan_government,
+  local_government,
+} from "../../data/districts";
 import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
-import { useScrollStore } from "../../store/scrollStore";
 import styled from "styled-components";
+import { City } from "../../types/common";
 
 interface FilterSheetProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const getScrollBarWidth = () => {
-  return window.innerWidth - document.documentElement.clientWidth;
-};
-
 export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
   const { filters, setFilters } = usePostsStore();
   const [selectedTheme, setSelectedTheme] = useState<string[]>([]);
-  const [selectedCity, setSelectedCity] = useState<string>("");
-  const [selectedDistricts, setSelectedDistricts] = useState<string[]>([]);
-  const hasScrollBar = useScrollStore((state) => state.hasScrollBar);
-  const [scrollBarWidth, setScrollBarWidth] = useState(0);
+  const [selectedCity, setSelectedCity] = useState<City | null>(null);
+  const [selectedMetropolitan, setSelectedMetropolitan] = useState<City[]>([]);
+  const [selectedLocal, setSelectedLocal] = useState<City[]>([]);
   const maxCount = 5;
-
-  useEffect(() => {
-    if (hasScrollBar) {
-      setScrollBarWidth(getScrollBarWidth());
-    }
-  }, [hasScrollBar]);
 
   // FilterSheet가 열릴 때: 전역 상태의 필터를 로컬 상태로 가져오기
   useEffect(() => {
     if (isOpen) {
       setSelectedTheme(filters.theme);
-      setSelectedCity("");
-      setSelectedDistricts(filters.district);
+      setSelectedCity(null);
+      setSelectedMetropolitan(filters.metropolitanGovernments);
+      setSelectedLocal(filters.localGovernments);
     }
   }, [isOpen, filters]);
 
@@ -50,54 +43,65 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
   };
 
   // 광역시/도 선택
-  const handleCitySelect = (city: string) => {
+  const handleCitySelect = (city: City) => {
     setSelectedCity(city);
   };
 
   // 시/군/구 선택
-  const handleDistrictSelect = (district: string) => {
-    const fullDistrict = `${selectedCity} ${district}`;
-
-    setSelectedDistricts((prevDistricts) => {
-      // '전체'가 선택된 경우: 현재 광역시/도의 기존 선택들을 모두 제거하고 '전체'만 추가
-      if (district === "전체") {
-        // 같은 광역시/도 내의 기존 선택을 모두 제거하고 '전체'만 추가
-        const updatedDistricts = prevDistricts.filter(
-          (d) => !d.startsWith(selectedCity)
-        );
-        return [...updatedDistricts, fullDistrict];
-      } else {
-        // 같은 광역시/도 내에서 선택을 관리
-        const isAlreadySelected = prevDistricts.includes(fullDistrict);
-
-        if (isAlreadySelected) {
-          // 이미 선택된 시/군/구를 클릭하면 제거
-          return prevDistricts.filter((d) => d !== fullDistrict);
-        } else {
-          // 만약 '전체'가 이전에 선택되어 있다면, 그것을 제거하고 새 선택을 추가
-          const updatedDistricts = prevDistricts.filter(
-            (d) => d !== `${selectedCity} 전체`
+  const handleDistrictSelect = (city: City) => {
+    if (selectedCity) {
+      // '전체'가 선택된 경우
+      if (city.id === -1) {
+        // 이미 포함되어 있는 경우
+        if (selectedMetropolitan.includes(selectedCity)) {
+          // selectedMetropolitan에서 selectedCity와 같은 것 제거
+          setSelectedMetropolitan(
+            selectedMetropolitan.filter((d) => d !== selectedCity)
           );
-
-          // 최대 maxCount개까지만 선택 가능
-          if (
-            updatedDistricts.filter((d) => d.startsWith(selectedCity)).length >=
-            maxCount
-          ) {
-            return prevDistricts; // maxCount개 이상 선택된 경우, 더 이상 추가하지 않음
-          }
-
-          return [...updatedDistricts, fullDistrict];
+        }
+        // 이미 포함되어 있지 않은 경우
+        else {
+          // selectedLocal에서 (selectedCity.id와 metropolitanId가 같은) district 제거
+          setSelectedLocal(
+            selectedLocal.filter((d) => {
+              const government = local_government.find(
+                (government) => government.metropolitanId === selectedCity.id
+              );
+              return (
+                government &&
+                !government.districts.some((district) => district === d)
+              );
+            })
+          );
+          // selectedMetropolitan에 selectedCity 추가
+          setSelectedMetropolitan([...selectedMetropolitan, selectedCity]);
+        }
+        // '전체'가 아닌 것이 선택된 경우
+      } else {
+        // 이미 포함되어 있는 경우
+        if (selectedLocal.includes(city)) {
+          // selectedLocal에서 city와 같은 것 제거
+          setSelectedLocal(selectedLocal.filter((d) => d.id !== city.id));
+        }
+        // 이미 포함되어 있지 않은 경우
+        else {
+          // selectedMetropolitan에서 (selectedCity.id와 metroplitan.id가 같은) district 제거
+          setSelectedMetropolitan(
+            selectedMetropolitan.filter((d) => d.id !== selectedCity.id)
+          );
+          // selectedLocal에 city 추가
+          setSelectedLocal([...selectedLocal, city]);
         }
       }
-    });
+    }
   };
 
   // 적용 버튼: 로컬 상태의 필터를 전역 상태로 set
   const handleApplyFilters = () => {
     setFilters({
       theme: selectedTheme,
-      district: selectedDistricts,
+      metropolitanGovernments: selectedMetropolitan,
+      localGovernments: selectedLocal,
     });
     onClose();
   };
@@ -105,28 +109,30 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
   // 필터 초기화
   const handleResetFilters = () => {
     setSelectedTheme([]);
-    setSelectedCity("");
-    setSelectedDistricts([]);
+    setSelectedCity(null);
+    setSelectedMetropolitan([]);
+    setSelectedLocal([]);
   };
 
   // 필터 제거
-  const handleRemoveFilter = (filterType: string, value: string) => {
-    if (filterType === "theme") {
-      setSelectedTheme((prevThemes) => prevThemes.filter((t) => t !== value));
-    } else if (filterType === "district") {
-      setSelectedDistricts((prevDistricts) =>
-        prevDistricts.filter((d) => d !== value)
-      );
-    }
+  const handleRemoveTheme = (value: string) => {
+    setSelectedTheme((prevThemes) => prevThemes.filter((t) => t !== value));
+  };
+
+  const handleRemoveMetropolitan = (value: City) => {
+    setSelectedMetropolitan((prevDistricts) =>
+      prevDistricts.filter((d) => d !== value)
+    );
+  };
+
+  const handleRemoveLocal = (value: City) => {
+    setSelectedLocal((prevDistricts) =>
+      prevDistricts.filter((d) => d !== value)
+    );
   };
 
   return (
-    <StyledSheet
-      isOpen={isOpen}
-      onClose={onClose}
-      hasScrollBar={hasScrollBar}
-      scrollBarWidth={scrollBarWidth}
-    >
+    <StyledSheet isOpen={isOpen} onClose={onClose}>
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content>
@@ -145,13 +151,19 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
             </FiltersWrapper>
             <h3>#광역시/도</h3>
             <FiltersWrapper>
-              {Object.keys(districts).map((city) => (
+              {metropolitan_government.map((city) => (
                 <FilterButton
-                  key={city}
-                  onClick={() => handleCitySelect(city)}
+                  key={city.id}
+                  onClick={() =>
+                    handleCitySelect({
+                      id: city.id,
+                      name: city.name,
+                      fullname: city.fullname,
+                    })
+                  }
                   selected={selectedCity === city}
                 >
-                  {city}
+                  {city.fullname}
                 </FilterButton>
               ))}
             </FiltersWrapper>
@@ -160,32 +172,40 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
                 <h3>#시/군/구</h3>
                 <FiltersWrapper>
                   <FilterButton
-                    key="전체"
-                    onClick={() => handleDistrictSelect("전체")}
-                    selected={selectedDistricts.includes(
-                      `${selectedCity} 전체`
-                    )}
-                    disabled={selectedDistricts.length >= maxCount}
+                    key={-1}
+                    onClick={() =>
+                      handleDistrictSelect({
+                        id: -1,
+                        name: selectedCity.name,
+                        fullname: selectedCity.fullname,
+                      })
+                    }
+                    selected={selectedMetropolitan.includes(selectedCity)}
+                    disabled={
+                      selectedMetropolitan.length + selectedLocal.length >=
+                      maxCount
+                    }
                   >
                     전체
                   </FilterButton>
-                  {districts[selectedCity].map((district) => (
-                    <FilterButton
-                      key={district}
-                      onClick={() => handleDistrictSelect(district)}
-                      selected={selectedDistricts.includes(
-                        `${selectedCity} ${district}`
-                      )}
-                      disabled={
-                        selectedDistricts.length >= maxCount &&
-                        !selectedDistricts.includes(
-                          `${selectedCity} ${district}`
-                        )
-                      }
-                    >
-                      {district}
-                    </FilterButton>
-                  ))}
+                  {local_government
+                    .find(
+                      (government) =>
+                        government.metropolitanId === selectedCity.id
+                    )
+                    ?.districts.map((district) => (
+                      <FilterButton
+                        key={district.id}
+                        onClick={() => handleDistrictSelect(district)}
+                        selected={selectedLocal.includes(district)}
+                        disabled={
+                          selectedMetropolitan.length + selectedLocal.length >=
+                            maxCount && !selectedLocal.includes(district)
+                        }
+                      >
+                        {district.name}
+                      </FilterButton>
+                    ))}
                 </FiltersWrapper>
               </>
             )}
@@ -195,7 +215,7 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
                   {selectedTheme.map((theme) => (
                     <FilterTag
                       key={theme}
-                      onClick={() => handleRemoveFilter("theme", theme)}
+                      onClick={() => handleRemoveTheme(theme)}
                     >
                       {theme}
                       <IconWrapper>
@@ -205,14 +225,14 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
                   ))}
                 </>
               )}
-              {selectedDistricts.length > 0 && (
+              {selectedMetropolitan.length > 0 && (
                 <>
-                  {selectedDistricts.map((district) => (
+                  {selectedMetropolitan.map((district) => (
                     <FilterTag
-                      key={district}
-                      onClick={() => handleRemoveFilter("district", district)}
+                      key={district.id}
+                      onClick={() => handleRemoveMetropolitan(district)}
                     >
-                      {district}
+                      {district.fullname}
                       <IconWrapper>
                         <StyledXIcon />
                       </IconWrapper>
@@ -220,15 +240,35 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
                   ))}
                 </>
               )}
-              {(selectedTheme.length > 0 || selectedDistricts.length > 0) && (
-                <FilterTag onClick={handleResetFilters}>초기화</FilterTag>
+              {selectedLocal.length > 0 && (
+                <>
+                  {selectedLocal.map((district) => (
+                    <FilterTag
+                      key={district.id}
+                      onClick={() => handleRemoveLocal(district)}
+                    >
+                      {district.fullname}
+                      <IconWrapper>
+                        <StyledXIcon />
+                      </IconWrapper>
+                    </FilterTag>
+                  ))}
+                </>
               )}
+              {selectedTheme.length +
+                selectedMetropolitan.length +
+                selectedLocal.length >
+                0 && <FilterTag onClick={handleResetFilters}>초기화</FilterTag>}
             </SelectedFilters>
             <SelectedCount>
-              선택된 도시: {selectedDistricts.length} / {maxCount}
+              선택된 도시: {selectedMetropolitan.length + selectedLocal.length}{" "}
+              / {maxCount}
             </SelectedCount>
           </ContentWrapper>
-          {(selectedTheme.length > 0 || selectedDistricts.length > 0) && (
+          {selectedTheme.length +
+            selectedMetropolitan.length +
+            selectedLocal.length >
+            0 && (
             <ActionButton onClick={handleApplyFilters}>GOOD !</ActionButton>
           )}
         </Sheet.Content>
@@ -238,14 +278,10 @@ export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
   );
 }
 
-const StyledSheet = styled(Sheet)<{
-  hasScrollBar: boolean;
-  scrollBarWidth: number;
-}>`
+const StyledSheet = styled(Sheet)`
   width: 100%;
   max-width: 480px;
-  margin-left: ${({ hasScrollBar, scrollBarWidth }) =>
-    hasScrollBar ? `calc(240px - ${scrollBarWidth / 2}px)` : "auto"};
+  margin-left: auto;
   margin-right: auto;
 `;
 

@@ -16,7 +16,7 @@ import useWriteStore from "../../store/useWriteStore";
 import ItemContainer from "./ItemContainer";
 
 export default function ItemsContainer() {
-  const { ItemPosts, reorderItems } = useWriteStore();
+  const { itemPosts, reorderItems } = useWriteStore();
 
   // 드래그 센서 설정: 터치와 마우스 모두 사용
   const sensors = useSensors(
@@ -38,8 +38,8 @@ export default function ItemsContainer() {
     if (active.id === null || over.id === null) return;
 
     if (active.id !== over.id) {
-      const oldIndex = ItemPosts.findIndex((item) => item.id === active.id);
-      const newIndex = ItemPosts.findIndex((item) => item.id === over.id);
+      const oldIndex = itemPosts.findIndex((item) => item.itemId === active.id);
+      const newIndex = itemPosts.findIndex((item) => item.itemId === over.id);
 
       // 삭제된 항목에 대한 예외 처리
       if (oldIndex === -1 || newIndex === -1) return;
@@ -54,11 +54,18 @@ export default function ItemsContainer() {
       collisionDetection={closestCenter}
       onDragEnd={onDragEnd}
     >
-      <SortableContext items={ItemPosts} strategy={verticalListSortingStrategy}>
+      <SortableContext
+        items={itemPosts.map((item) => item.itemId)}
+        strategy={verticalListSortingStrategy}
+      >
         <Container>
-          {ItemPosts.length > 0 &&
-            ItemPosts.map((item) => (
-              <SortableItem key={item.id} id={item.id} title={item.title} />
+          {itemPosts.length > 0 &&
+            itemPosts.map((item) => (
+              <SortableItem
+                key={item.itemId}
+                id={item.itemId}
+                title={item.itemTitle}
+              />
             ))}
         </Container>
       </SortableContext>
@@ -78,7 +85,7 @@ function SortableItem({ id, title }: { id: number; title: string }) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
-      <ItemContainer id={id} title={title} dragListeners={listeners} />
+      <ItemContainer itemId={id} title={title} dragListeners={listeners} />
     </div>
   );
 }
