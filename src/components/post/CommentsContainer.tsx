@@ -67,5 +67,5 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: 12px; // '답글 달 남기는 중' 공간
+  margin-bottom: calc(12px + 60px); // '답글 달 남기는 중' 공간 + 댓글 작성 공간
 `;

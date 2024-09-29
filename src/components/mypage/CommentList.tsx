@@ -1,12 +1,21 @@
 import styled from "styled-components";
 import { ReactComponent as CommentIconSVG } from "../../assets/icons/comment-icon.svg";
 import { UserCommentResponse } from "../../types/comment";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function CommentCard({ comment }: { comment: UserCommentResponse }) {
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const handleNavigateWithQuery = () => {
+    const params = new URLSearchParams(location.search);
+    params.set("postId", String(comment.postId) || "");
+    const newUrl = `${location.pathname}?${params.toString()}`;
+    navigate(newUrl);
+  };
+
   return (
-    <StyledCommentCard onClick={() => navigate(`/post/${comment.postId}`)}>
+    <StyledCommentCard onClick={handleNavigateWithQuery}>
       <TitleWrapper>
         <h4>{comment.postTitle}</h4>
         <p>{comment.date}</p>

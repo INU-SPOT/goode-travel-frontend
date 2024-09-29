@@ -47,7 +47,8 @@ export default function CourseSheet({ courseId }: CourseSheetProps) {
     params.delete("courseId");
     setIsEditing(false);
     setIsOpen(false);
-    navigate(`${location.pathname}?${params.toString()}`, { replace: true }); // 쿼리 업데이트
+    const newURL = `${location.pathname}?${params.toString()}`;
+    navigate(newURL); // 쿼리 업데이트
   };
 
   // goode.localGovernmentName으로 City 객체 찾기
@@ -82,7 +83,7 @@ export default function CourseSheet({ courseId }: CourseSheetProps) {
       } else {
         console.error("City not found for", course.goodeLocalGovernmentName);
       }
-      navigate("/community", { replace: true });
+      navigate("/community");
     }
   };
 

@@ -47,7 +47,9 @@ export default function GoodeCard({ goode }: GoodeCardProps) {
   };
 
   const handleNavigateWithQuery = () => {
-    const newUrl = `${location.pathname}?itemId=${goode.itemId}`;
+    const params = new URLSearchParams(location.search);
+    params.set("itemId", String(goode.itemId) || "");
+    const newUrl = `${location.pathname}?${params.toString()}`;
     navigate(newUrl);
   };
 
