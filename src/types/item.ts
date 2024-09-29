@@ -7,7 +7,7 @@ export interface ItemCreateUpdateRequest {
 }
 
 export interface ItemPostThumbnailResponse {
-  itemType: number;
+  itemType: string;
   itemTitle: string;
 }
 

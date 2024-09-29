@@ -4,7 +4,7 @@ import { COLOR } from "../utils/color";
 import { useState } from "react";
 import exampleImage from "../assets/images/KakaoTalk_Photo_2024-08-07-20-33-27.png";
 import BentoGrid from "../components/BentoGrid";
-import CommunityBlock from "../components/home/CommunityBlock";
+import CommunityBlock from "../components/home/CommunitySwiperBlock";
 import ImageBlock from "../components/home/ImageBlock";
 import CourseBlock from "../components/home/CourseBlock";
 import { ReactComponent as SearchIcon } from "../assets/icons/bell-svgrepo-com.svg";
@@ -14,6 +14,7 @@ import RandomBlock from "../components/home/RandomBlock";
 import AdBlock from "../components/home/AdBlock";
 import NotificationSheet from "../components/home/NotificationSheet";
 import { useNavigate } from "react-router-dom";
+import CommunitySwiperBlock from "../components/home/CommunitySwiperBlock";
 
 // 커뮤니티 게시글에 대한 임시 데이터입니다.
 const communityData = {
@@ -46,17 +47,7 @@ export default function HomePage() {
       id: 1,
       width: 10,
       height: 5,
-      component: (
-        <CommunityBlock
-          title={communityData.title}
-          goode={communityData.goode}
-          details={communityData.details}
-          recommendations={communityData.recommendations}
-          onClick={() => {
-            /* 비어있는 핸들러 */
-          }}
-        />
-      ),
+      component: <CommunitySwiperBlock />,
     },
     {
       id: 2,
