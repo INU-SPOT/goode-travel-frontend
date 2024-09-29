@@ -9,5 +9,6 @@ export interface CourseDetailResponse {
   goodeId: number;
   goodeTitle: string;
   goodeMetropolitanGovernmentName: string;
+  goodeLocalGovernmentName: string;
   itemCourses: ItemCourseResponse[];
 }

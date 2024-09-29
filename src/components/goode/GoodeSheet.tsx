@@ -64,7 +64,7 @@ export default function ItemSheet({ itemId }: GoodeSheetProps) {
   };
 
   // goode.localGovernmentName으로 City 객체 찾기
-  const findCityByFullname = (
+  const findCityByLocalname = (
     localGovernmentName: string
   ): City | undefined => {
     for (const region of local_government) {
@@ -92,7 +92,7 @@ export default function ItemSheet({ itemId }: GoodeSheetProps) {
       setIsOpen(false);
       setSearchQuery(goode.title);
 
-      const city = findCityByFullname(goode.localGovernmentName);
+      const city = findCityByLocalname(goode.localGovernmentName);
       if (city) {
         const filters: Filters = {
           theme: [],
@@ -162,6 +162,7 @@ const StyledSheet = styled(Sheet)`
 `;
 
 const ContentWrapper = styled.div`
+  overflow: auto;
   padding: 16px 24px;
   display: flex;
   flex-direction: column;
