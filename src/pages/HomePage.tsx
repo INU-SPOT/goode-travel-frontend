@@ -60,13 +60,7 @@ export default function HomePage() {
       id: 3,
       width: 6,
       height: 3,
-      component: (
-        <GoodeListBlock
-          onClick={() => {
-            /* 비어있는 핸들러 */
-          }}
-        />
-      ),
+      component: <GoodeListBlock />,
     },
     {
       id: 4,
