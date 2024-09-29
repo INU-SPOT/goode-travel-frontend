@@ -61,35 +61,6 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    // FCM 토큰 만료 시 재발급 처리 및 서버로 전송
-    if (
-      error.response.status === 400 &&
-      error.response.data.message ===
-        "The registration token is not a valid FCM registration token"
-    ) {
-      try {
-        const messaging = getMessaging();
-        const token = await getToken(messaging, {
-          vapidKey: process.env.REACT_APP_FCM_VAPID_KEY,
-          serviceWorkerRegistration: await navigator.serviceWorker.ready,
-        });
-
-        if (token) {
-          // 서버로 새로운 FCM 토큰 전송
-          await axiosInstance.post(`/v1/fcm`, { fcmToken: token });
-          console.log("토큰 재전송 성공");
-
-          // 기존 요청 다시 시도
-          return axiosInstance(originalRequest);
-        } else {
-          console.log("Failed to retrieve new FCM Token");
-        }
-      } catch (fcmError) {
-        console.error("Error reissuing FCM token", fcmError);
-        return Promise.reject(fcmError);
-      }
-    }
-
     return Promise.reject(error);
   }
 );
