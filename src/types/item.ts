@@ -81,6 +81,7 @@ export interface ItemFolderResponse {
   address: string;
   finishDate?: string;
   isFinished?: boolean;
+  metropolitanGovernmentId: number;
   localGovernmentId: number;
 }
 

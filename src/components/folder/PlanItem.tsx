@@ -24,6 +24,7 @@ export default function PlanItem({
   itemFolderId,
   finishDate: initialFinishDate,
   address,
+  metropolitanGovernmentId,
   localGovernmentId,
   isFinished,
   folderId,
@@ -39,20 +40,18 @@ export default function PlanItem({
   // 지역구 이름 찾기 로직
   useEffect(() => {
     if (localGovernmentId) {
-      const region = local_government.find((lg) =>
-        lg.districts.some((d) => d.id === localGovernmentId)
+      const region = local_government.find(
+        (lg) => lg.metropolitanId === metropolitanGovernmentId
       );
       const district = region?.districts.find(
         (d) => d.id === localGovernmentId
       );
-      const metropolitan = metropolitan_government.find(
-        (mg) => mg.id === region?.metropolitanId
-      );
-      if (metropolitan && district) {
-        setRegionName(`${metropolitan.name} ${district.name}`);
-      } else {
-        setRegionName("지역 정보 없음");
+
+      if (district) {
+        setRegionName(`${district.fullname}`);
       }
+    } else {
+      setRegionName("");
     }
   }, [localGovernmentId]);
 

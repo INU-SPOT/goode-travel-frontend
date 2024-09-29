@@ -16,13 +16,9 @@ import { post_folders_plan, put_folders_plan } from "../../services/folder";
 import { COLOR } from "../../utils/color";
 import { ItemFolderResponse } from "../../types/item";
 
-type ExtendedItemFolderResponse = ItemFolderResponse & {
-  localGovernmentId?: number;
-};
-
 interface CreateFolderItemProps {
   folderId: number;
-  editingItem?: ExtendedItemFolderResponse;
+  editingItem?: ItemFolderResponse;
   onComplete: () => void;
   resetForm: () => void;
 }
@@ -73,6 +69,11 @@ export default function CreateFolderItem({
   const handleAddOrUpdateItem = async () => {
     if (!selectedCity && !selectedLocal) {
       alert("지역을 선택해주세요.");
+      return;
+    }
+
+    if (!selectedLocal) {
+      alert("시/군/구를 선택해주세요.");
       return;
     }
 
