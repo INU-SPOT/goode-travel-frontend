@@ -17,3 +17,9 @@ export interface City {
   name: string;
   fullname: string;
 }
+
+export interface Filters {
+  theme: string[];
+  metropolitanGovernments: City[];
+  localGovernments: City[];
+}

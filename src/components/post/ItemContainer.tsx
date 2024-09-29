@@ -2,22 +2,27 @@ import styled from "styled-components";
 import { ReactComponent as InfoIcon } from "../../assets/icons/info-icon.svg";
 import { ItemPostResponse } from "../../types/item";
 import Content from "./Content";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function ItemContainer({
   itemPost,
 }: {
   itemPost: ItemPostResponse;
 }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleNavigateWithQuery = () => {
+    const newUrl = `${location.pathname}?itemId=${itemPost.itemId}`;
+    navigate(newUrl);
+  };
+
   return (
     <StyledItemContainer>
       <TitleWrapper>
         <span>{itemPost.itemTitle}</span>
         {itemPost.isOfficial && (
-          <StyledInfoIcon
-            onClick={() => {
-              /* TODO: itemPost.itemId 이용 페이지 이동 */
-            }}
-          />
+          <StyledInfoIcon onClick={handleNavigateWithQuery} />
         )}
       </TitleWrapper>
       <Content content={itemPost.content} />

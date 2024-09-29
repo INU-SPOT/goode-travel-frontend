@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Sheet } from "react-modal-sheet";
-import usePostsStore from "../../store/usePostsStore";
 import { themes } from "../../data/themes";
 import {
   metropolitan_government,
@@ -8,15 +7,21 @@ import {
 } from "../../data/districts";
 import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
 import styled from "styled-components";
-import { City } from "../../types/common";
+import { City, Filters } from "../../types/common";
 
 interface FilterSheetProps {
   isOpen: boolean;
   onClose: () => void;
+  filters: Filters;
+  setFilters: (filters: Filters) => void;
 }
 
-export default function FilterSheet({ isOpen, onClose }: FilterSheetProps) {
-  const { filters, setFilters } = usePostsStore();
+export default function FilterSheet({
+  isOpen,
+  onClose,
+  filters,
+  setFilters,
+}: FilterSheetProps) {
   const [selectedTheme, setSelectedTheme] = useState<string[]>([]);
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [selectedMetropolitan, setSelectedMetropolitan] = useState<City[]>([]);
