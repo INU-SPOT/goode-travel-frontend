@@ -22,8 +22,6 @@ export default function CommunitySwiperBlock() {
       try {
         const visitResponse = await get_post_top_visit();
         const likeResponse = await get_post_top_like();
-        console.log("Top Visit Post:", visitResponse);
-        console.log("Top Like Post:", likeResponse);
         setTopVisitPost(visitResponse); // API 응답 구조에 따라 수정
         setTopLikePost(likeResponse); // API 응답 구조에 따라 수정
       } catch (error) {

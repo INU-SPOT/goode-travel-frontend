@@ -18,14 +18,7 @@ import CommunitySwiperBlock from "../components/home/CommunitySwiperBlock";
 
 // 커뮤니티 게시글에 대한 임시 데이터입니다.
 const communityData = {
-  title: "대전 투어",
   goode: "굳이? 성심당 가서 망고시루 먹기",
-  details: [
-    "남선 공원에서 산책하기",
-    "대동하늘공원에서 일몰 보기",
-    "KAIST 거위 구경하기",
-  ],
-  recommendations: 123,
   image: exampleImage,
 };
 
@@ -92,25 +85,7 @@ export default function HomePage() {
       id: 5,
       width: 10,
       height: 6,
-      component: (
-        <FolderBlock
-          user={"지인"}
-          title={["나의 여름 대전 여행", "인천 여행", "임시 폴더"]}
-          // 임시 데이터로 이루어져 있습니다.
-          details={[
-            [
-              "남선 공원에서 산책하기",
-              "대동하늘공원에서 일몰 보기",
-              "KAIST 거위 구경하기",
-              "한화 이글스 경기 보기",
-            ],
-            ["솔찬공원에서 갈매기 새우깡 주기", "센트럴파크 가기"],
-          ]}
-          onClick={() => {
-            /* 비어있는 핸들러 */
-          }}
-        />
-      ),
+      component: <FolderBlock />,
     },
     {
       id: 6,
