@@ -9,17 +9,19 @@ import { ItemResponse } from "../../types/item";
 import usePostsStore from "../../store/usePostsStore";
 import { local_government } from "../../data/districts";
 import { City, Filters } from "../../types/common";
+import FolderSelectSheet from "./FolderSelectSheet";
 
 interface GoodeSheetProps {
   itemId: string | null;
 }
 
-export default function ItemSheet({ itemId }: GoodeSheetProps) {
+export default function GoodeSheet({ itemId }: GoodeSheetProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [goode, setGoode] = useState<ItemResponse | null>(null);
   const { setSearchQuery, setFilters } = usePostsStore();
+  const [isFolderSheetOpen, setIsFolderSheetOpen] = useState(false);
 
   // itemId가 있으면 시트 열기
   useEffect(() => {
@@ -61,6 +63,11 @@ export default function ItemSheet({ itemId }: GoodeSheetProps) {
     } else {
       alert("Sharing is not supported in this browser.");
     }
+  };
+
+  // 폴더에 추가
+  const handleFolderClick = () => {
+    setIsFolderSheetOpen(true);
   };
 
   // goode.localGovernmentName으로 City 객체 찾기
@@ -108,53 +115,62 @@ export default function ItemSheet({ itemId }: GoodeSheetProps) {
   };
 
   return (
-    <StyledSheet isOpen={isOpen} onClose={handleClose}>
-      <Sheet.Container>
-        <Sheet.Header />
-        <Sheet.Content>
-          {goode && (
-            <ContentWrapper>
-              <TitleWrapper>
-                <h2>{goode.title}</h2>
-                <img
-                  src={ShareIcon}
-                  onClick={handleShareClick}
-                  alt="ShareIcon"
-                />
-              </TitleWrapper>
-              <ImageWeatherWrapper>
-                <img
-                  src={
-                    goode.imageUrl
-                      ? goode.imageUrl
-                      : `${process.env.REACT_APP_IMAGE_URL}/frog.jpeg` // TODO: imageURL이 공백일 때, 로고 보이도록 하기
-                  }
-                  alt={goode.title}
-                />
-                <span className="weather"></span>
-              </ImageWeatherWrapper>
-              <FolderAddressWrapper>
-                <span className="folder">
-                  <img src={FolderPlusIcon} alt="폴더에 추가" />
-                </span>
-                <span className="address">{goode.address}</span>
-              </FolderAddressWrapper>
-              <Description>{goode.description}</Description>
-              <h3>주변 여행지가 궁금하다면?</h3>
-              <CourseCommunityWrapper>
-                <span className="course" onClick={handleCourseClick}>
-                  관광코스
-                </span>
-                <span className="community" onClick={handleCommunityClick}>
-                  커뮤니티
-                </span>
-              </CourseCommunityWrapper>
-            </ContentWrapper>
-          )}
-        </Sheet.Content>
-      </Sheet.Container>
-      <Sheet.Backdrop onTap={handleClose} />
-    </StyledSheet>
+    <>
+      <StyledSheet isOpen={isOpen} onClose={handleClose}>
+        <Sheet.Container>
+          <Sheet.Header />
+          <Sheet.Content>
+            {goode && (
+              <ContentWrapper>
+                <TitleWrapper>
+                  <h2>{goode.title}</h2>
+                  <img
+                    src={ShareIcon}
+                    onClick={handleShareClick}
+                    alt="ShareIcon"
+                  />
+                </TitleWrapper>
+                <ImageWeatherWrapper>
+                  <img
+                    src={
+                      goode.imageUrl
+                        ? goode.imageUrl
+                        : `${process.env.REACT_APP_IMAGE_URL}/frog.jpeg` // TODO: imageURL이 공백일 때, 로고 보이도록 하기
+                    }
+                    alt={goode.title}
+                  />
+                  <span className="weather"></span>
+                </ImageWeatherWrapper>
+                <FolderAddressWrapper>
+                  <span className="folder" onClick={handleFolderClick}>
+                    <img src={FolderPlusIcon} alt="폴더에 추가" />
+                  </span>
+                  <span className="address">{goode.address}</span>
+                </FolderAddressWrapper>
+                <Description>{goode.description}</Description>
+                <h3>주변 여행지가 궁금하다면?</h3>
+                <CourseCommunityWrapper>
+                  <span className="course" onClick={handleCourseClick}>
+                    관광코스
+                  </span>
+                  <span className="community" onClick={handleCommunityClick}>
+                    커뮤니티
+                  </span>
+                </CourseCommunityWrapper>
+              </ContentWrapper>
+            )}
+          </Sheet.Content>
+        </Sheet.Container>
+        <Sheet.Backdrop onTap={handleClose} />
+      </StyledSheet>
+      {isFolderSheetOpen && itemId && (
+        <FolderSelectSheet
+          isOpen={isFolderSheetOpen}
+          itemIds={[Number(itemId)]}
+          onClose={() => setIsFolderSheetOpen(false)}
+        />
+      )}
+    </>
   );
 }
 
