@@ -2,16 +2,25 @@ import styled from "styled-components";
 import { ReactComponent as HeartIconSVG } from "../../assets/icons/heart-icon.svg";
 import { ReactComponent as CommentIconSVG } from "../../assets/icons/comment-icon.svg";
 import { PostThumbnailResponse } from "../../types/post";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface PostCardProps {
   post: PostThumbnailResponse;
 }
 
 export default function PostCard({ post }: PostCardProps) {
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const handleNavigateWithQuery = () => {
+    const params = new URLSearchParams(location.search);
+    params.set("postId", String(post.postId) || "");
+    const newUrl = `${location.pathname}?${params.toString()}`;
+    navigate(newUrl);
+  };
+
   return (
-    <StyledPostCard onClick={() => navigate(`/post/${post.postId}`)}>
+    <StyledPostCard onClick={handleNavigateWithQuery}>
       <PostContent>
         <TitleWrapper>
           <Title>{post.title}</Title>
@@ -44,6 +53,7 @@ export default function PostCard({ post }: PostCardProps) {
 
 const StyledPostCard = styled.div`
   display: flex;
+  justify-content: space-between;
   padding: 16px;
   min-height: 160px;
   border-radius: 8px;
@@ -59,6 +69,7 @@ const Thumbnail = styled.img`
 `;
 
 const PostContent = styled.div`
+  max-width: 68%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
