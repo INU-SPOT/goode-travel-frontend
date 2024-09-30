@@ -1,4 +1,3 @@
-// import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
@@ -38,8 +37,28 @@ async function requestPermissionAndSendToken() {
     });
 
     if (token) {
-      // 토큰을 서버로 전송
-      await axiosInstance.post(`/v1/fcm`, { fcmToken: token });
+      localStorage.setItem("fcmToken", token);
+
+      try {
+        // 토큰을 서버로 전송
+        await axiosInstance.post(`/v1/fcm`, { fcmToken: token });
+      } catch (error) {
+        console.error("Error sending FCM token to server", error);
+
+        // 에러가 발생하면 토큰을 재발급 후 다시 전송
+        const newToken = await getToken(messaging, {
+          vapidKey: process.env.REACT_APP_FCM_VAPID_KEY,
+          serviceWorkerRegistration: await navigator.serviceWorker.ready,
+        });
+
+        if (newToken) {
+          localStorage.setItem("fcmToken", newToken);
+          // 새로 발급받은 토큰을 서버로 다시 전송
+          await axiosInstance.post(`/v1/fcm`, { fcmToken: newToken });
+        } else {
+          console.log("Failed to retrieve new FCM Token");
+        }
+      }
     } else {
       console.log("Failed to retrieve FCM Token");
     }

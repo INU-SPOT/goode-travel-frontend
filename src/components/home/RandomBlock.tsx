@@ -1,14 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 import { COLOR } from "../../utils/color";
+import { useNavigate } from "react-router-dom";
 
-interface RandomBlockProps {
-  onClick?: () => void;
-}
+export default function RandomBlock() {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate("/random-goode");
+  };
 
-export default function RandomBlock({ onClick }: RandomBlockProps) {
   return (
-    <RandomWrapper onClick={onClick}>
+    <RandomWrapper onClick={handleClick}>
       <Title>즉흥 굳이 뽑기</Title>
     </RandomWrapper>
   );

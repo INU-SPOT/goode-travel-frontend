@@ -7,7 +7,7 @@ export interface ItemCreateUpdateRequest {
 }
 
 export interface ItemPostThumbnailResponse {
-  itemType: number;
+  itemType: string;
   itemTitle: string;
 }
 
@@ -98,4 +98,16 @@ export interface WeatherResponse {
   temperature: string;
   day: string;
   todayWeatherLink: string;
+}
+
+export interface Course {
+  itemTitle: string;
+}
+
+export interface ItemRecommendResponse {
+  itemId: number;
+  localGovernmentName: string;
+  title: string;
+  imageUrl: string;
+  courses: Course[];
 }

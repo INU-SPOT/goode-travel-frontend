@@ -9,7 +9,7 @@ interface SharedProps {
 
 export default function ImageBlock({ goode, image, onClick }: SharedProps) {
   return (
-    <ImageWrapper image={image}>
+    <ImageWrapper image={image} onClick={onClick}>
       <ImageGoode>{goode}</ImageGoode>
     </ImageWrapper>
   );
@@ -25,7 +25,7 @@ const ImageWrapper = styled.div<{ image?: string }>`
   justify-content: center;
   border-radius: 13px;
   box-sizing: border-box;
-  padding: 0 10px;
+  padding: 0 3px;
   background-image: url(${(props) => props.image});
   background-size: cover;
   background-position: center;
@@ -33,12 +33,16 @@ const ImageWrapper = styled.div<{ image?: string }>`
 `;
 
 const ImageGoode = styled.h3`
+  max-width: 100%;
   position: absolute;
-  font-size: 20px;
+  font-size: 15px;
   top: 15px;
-  font-weight: bold;
+  font-weight: 900;
   color: white;
   margin: 0;
   padding: 4px 8px;
   border-radius: 4px;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
 `;

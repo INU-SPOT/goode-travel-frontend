@@ -3,18 +3,33 @@ import styled from "styled-components";
 import { COLOR } from "../../utils/color";
 import carImage from "../../assets/images/main-palisade-24my-45side.png";
 
-interface AdBlockProps {
-  onClick?: () => void; // 비어있는 onClick 핸들러
-}
+export default function AdBlock() {
+  const handleClick = () => {
+    window.location.href = process.env.REACT_APP_RENT_CAR_URL as string;
+  };
 
-export default function AdBlock({ onClick }: AdBlockProps) {
   return (
-    <AdWrapper>
-      <Title>현재 렌터카 최저가는?</Title>
-      <Image src={carImage} alt="렌터카 광고 이미지" />
-    </AdWrapper>
+    <Container>
+      <AdWrapper onClick={handleClick}>
+        <Title>
+          {`${process.env.REACT_APP_RENT_CAR_NAME}에서 렌터카를 신청해보세요!`}
+        </Title>
+        <Image src={carImage} alt="렌터카 광고 이미지" />
+      </AdWrapper>
+      <Warning>
+        이 포스팅은 제휴마케팅이 포함된 광고로 일정 커미션을 지급 받을 수
+        있습니다.
+      </Warning>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const AdWrapper = styled.div`
   height: 100%;
@@ -31,7 +46,7 @@ const AdWrapper = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 21px;
+  font-size: 19px;
   font-weight: 600;
   text-align: center;
 `;
@@ -40,4 +55,9 @@ const Image = styled.img`
   width: 60%;
   height: auto;
   object-fit: cover;
+`;
+
+const Warning = styled.div`
+  margin-top: 10px;
+  font-size: 10px;
 `;

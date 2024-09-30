@@ -27,14 +27,13 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // originalRequest._retry는 Axios 인터셉터 내에서 토큰이 만료된 경우 재요청을 한 번만 시도하기 위해 사용하는 플래그
+    // accessToken 만료 시 재발급 처리
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       const refreshToken = localStorage.getItem("refreshToken");
       if (refreshToken) {
         try {
-          // refreshToken을 헤더에 추가하여 재발급 요청
           const response = await axios.post(
             `${process.env.REACT_APP_BACKEND_URL}/v1/auth/reissue`,
             {},
@@ -48,19 +47,15 @@ axiosInstance.interceptors.response.use(
           const { accessToken, refreshToken: newRefreshToken } =
             response.data.data;
 
-          // 새로 받은 accessToken과 refreshToken을 저장
           localStorage.setItem("accessToken", accessToken);
           localStorage.setItem("refreshToken", newRefreshToken);
 
-          // 원래 요청에 새 accessToken을 넣어 다시 시도
           originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
-
           return axiosInstance(originalRequest);
         } catch (refreshError) {
-          // refreshToken이 유효하지 않거나 재발급 실패 시 로그아웃 처리
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
-          window.location.href = "/login"; // 로그인 페이지로 리다이렉트
+          window.location.href = "/login";
         }
       }
     }

@@ -1,10 +1,7 @@
-// HomePage.tsx
 import styled from "styled-components";
 import { COLOR } from "../utils/color";
-import { useState } from "react";
-import exampleImage from "../assets/images/KakaoTalk_Photo_2024-08-07-20-33-27.png";
+import { useEffect, useState } from "react";
 import BentoGrid from "../components/BentoGrid";
-import CommunityBlock from "../components/home/CommunityBlock";
 import ImageBlock from "../components/home/ImageBlock";
 import CourseBlock from "../components/home/CourseBlock";
 import { ReactComponent as SearchIcon } from "../assets/icons/bell-svgrepo-com.svg";
@@ -14,49 +11,39 @@ import RandomBlock from "../components/home/RandomBlock";
 import AdBlock from "../components/home/AdBlock";
 import NotificationSheet from "../components/home/NotificationSheet";
 import { useNavigate } from "react-router-dom";
-
-// 커뮤니티 게시글에 대한 임시 데이터입니다.
-const communityData = {
-  title: "대전 투어",
-  goode: "굳이? 성심당 가서 망고시루 먹기",
-  details: [
-    "남선 공원에서 산책하기",
-    "대동하늘공원에서 일몰 보기",
-    "KAIST 거위 구경하기",
-  ],
-  recommendations: 123,
-  image: exampleImage,
-};
-
-// 관광코스에 대한 임시 데이터입니다.
-const courseData = {
-  details: [
-    "한화 이글스 경기 보기 ^^",
-    "소제동 카페거리에서 커피 마시기",
-    "대전역에서 전역 사진 찍기",
-  ],
-};
+import CommunitySwiperBlock from "../components/home/CommunitySwiperBlock";
+import { get_items_recommend } from "../services/item";
+import { ItemRecommendResponse } from "../types/item";
 
 export default function HomePage() {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [recommendData, setRecommendData] =
+    useState<ItemRecommendResponse | null>(null);
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchRecommendItems = async () => {
+      try {
+        const data = await get_items_recommend();
+        setRecommendData(data.data);
+        setError(false);
+      } catch (error) {
+        setRecommendData(null);
+        setError(true);
+        console.error("Failed to fetch recommendation data", error);
+      }
+    };
+
+    fetchRecommendItems();
+  }, []);
 
   const items = [
     {
       id: 1,
       width: 10,
       height: 5,
-      component: (
-        <CommunityBlock
-          title={communityData.title}
-          goode={communityData.goode}
-          details={communityData.details}
-          recommendations={communityData.recommendations}
-          onClick={() => {
-            /* 비어있는 핸들러 */
-          }}
-        />
-      ),
+      component: <CommunitySwiperBlock />,
     },
     {
       id: 2,
@@ -64,10 +51,16 @@ export default function HomePage() {
       height: 7,
       component: (
         <ImageBlock
-          goode={communityData.goode}
-          image={communityData.image}
+          goode={
+            error
+              ? "해당 항목을 불러오는 데 실패했습니다."
+              : recommendData?.title || "Loading..."
+          }
+          image={recommendData?.imageUrl}
           onClick={() => {
-            /* 비어있는 핸들러 */
+            if (!error) {
+              navigate(`?itemId=${recommendData?.itemId}`);
+            }
           }}
         />
       ),
@@ -76,13 +69,7 @@ export default function HomePage() {
       id: 3,
       width: 6,
       height: 3,
-      component: (
-        <GoodeListBlock
-          onClick={() => {
-            /* 비어있는 핸들러 */
-          }}
-        />
-      ),
+      component: <GoodeListBlock />,
     },
     {
       id: 4,
@@ -90,9 +77,17 @@ export default function HomePage() {
       height: 4,
       component: (
         <CourseBlock
-          details={courseData.details}
+          details={
+            error
+              ? ["해당 항목을 불러오는 데 실패했습니다."]
+              : recommendData?.courses
+                  ?.slice(0, 3)
+                  .map((course) => course.itemTitle) || []
+          }
           onClick={() => {
-            /* 비어있는 핸들러 */
+            if (!error) {
+              navigate(`?itemId=${recommendData?.itemId}`);
+            }
           }}
         />
       ),
@@ -101,43 +96,19 @@ export default function HomePage() {
       id: 5,
       width: 10,
       height: 6,
-      component: (
-        <FolderBlock
-          user={"지인"}
-          title={["나의 여름 대전 여행", "인천 여행", "임시 폴더"]}
-          // 임시 데이터로 이루어져 있습니다.
-          details={[
-            [
-              "남선 공원에서 산책하기",
-              "대동하늘공원에서 일몰 보기",
-              "KAIST 거위 구경하기",
-              "한화 이글스 경기 보기",
-            ],
-            ["솔찬공원에서 갈매기 새우깡 주기", "센트럴파크 가기"],
-          ]}
-          onClick={() => {
-            /* 비어있는 핸들러 */
-          }}
-        />
-      ),
+      component: <FolderBlock />,
     },
     {
       id: 6,
       width: 10,
       height: 2,
-      component: <RandomBlock onClick={() => navigate("/random-goode")} />,
+      component: <RandomBlock />,
     },
     {
       id: 7,
       width: 10,
       height: 5,
-      component: (
-        <AdBlock
-          onClick={() => {
-            /* 비어있는 핸들러 */
-          }}
-        />
-      ),
+      component: <AdBlock />,
     },
   ];
 

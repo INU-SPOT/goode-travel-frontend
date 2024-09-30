@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { COLOR } from "../../utils/color";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -8,27 +8,65 @@ import "swiper/css/pagination";
 import "swiper/scss";
 import "swiper/scss/navigation";
 import "swiper/scss/pagination";
+import { get_users } from "../../services/user";
+import { get_folders, get_folders_folderid } from "../../services/folder";
+import { useNavigate } from "react-router-dom";
 
-interface FolderProps {
-  user: string;
-  title?: string[];
-  details?: string[][];
-  onClick?: () => void;
-}
-
-export default function FolderBlock({
-  user,
-  title = [],
-  details = [[]],
-  onClick,
-}: FolderProps) {
+export default function FolderBlock() {
   const colors = [COLOR.beige, COLOR.yellow, COLOR.green, COLOR.blue];
-  const totalblocks = title.length;
+  const [userNickname, setUserNickname] = useState<string | null>(null);
+  const [folders, setFolders] = useState<any[]>([]);
+  const [folderDetails, setFolderDetails] = useState<Record<number, any[]>>({});
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userResponse = await get_users();
+        const folderResponse = await get_folders();
+        setUserNickname(userResponse.data.nickName);
+        setFolders(folderResponse.data); // 폴더 목록 저장
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchFolderDetails = async () => {
+      try {
+        const folderDetailsPromises = folders.map(async (folder) => {
+          const folderDetail = await get_folders_folderid(folder.folderId);
+          return {
+            folderId: folder.folderId,
+            itemFolders: folderDetail.itemFolders,
+          };
+        });
+        const details = await Promise.all(folderDetailsPromises);
+        const detailsMap = details.reduce((acc, curr) => {
+          acc[curr.folderId] = curr.itemFolders.slice(0, 4); // 상위 4개의 아이템만 가져옴
+          return acc;
+        }, {} as Record<number, any[]>);
+        setFolderDetails(detailsMap);
+      } catch (error) {
+        console.error("Failed to fetch folder details:", error);
+      }
+    };
+
+    if (folders.length > 0) {
+      fetchFolderDetails();
+    }
+  }, [folders]);
+
+  const handleClick = (folderId: number) => {
+    navigate(`/save/${folderId}`);
+  };
 
   return (
     <OuterContainer>
-      <Title>{user}님의 저장된 리스트</Title>
-      {title.length > 0 ? (
+      <Title>{userNickname}님의 저장된 리스트</Title>
+      {folders.length > 0 ? (
         <StyledSwiper
           pagination={{
             dynamicBullets: true,
@@ -39,17 +77,18 @@ export default function FolderBlock({
           grabCursor={true}
           spaceBetween={20}
         >
-          {title.map((item, index) => (
+          {folders.map((folder, index) => (
             <StyledSlide
-              key={index}
+              key={folder.folderId}
+              onClick={() => handleClick(folder.folderId)}
               position={index}
-              totalblocks={totalblocks}
+              totalblocks={folders.length}
               color={colors[index % colors.length]}
             >
-              <TitleText>{title[index]}</TitleText>
+              <TitleText>{folder.title}</TitleText>
               <DetailList>
-                {details[index]?.map((detail, detailIndex) => (
-                  <DetailItem key={detailIndex}>{detail}</DetailItem>
+                {folderDetails[folder.folderId]?.map((detail, detailIndex) => (
+                  <DetailItem key={detailIndex}>{detail.title}</DetailItem>
                 ))}
               </DetailList>
             </StyledSlide>

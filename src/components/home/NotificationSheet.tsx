@@ -41,9 +41,9 @@ export default function NotificationSheet({
     <StyledSheet isOpen={isOpen} onClose={onClose}>
       <Sheet.Container>
         <Sheet.Header />
-        <Sheet.Content>
+        <StyledSheetContent>
           <NotificationBlock /> {/* 알림 목록을 보여줌 */}
-        </Sheet.Content>
+        </StyledSheetContent>
       </Sheet.Container>
       <Sheet.Backdrop onTap={onClose} />
     </StyledSheet>
@@ -56,4 +56,8 @@ const StyledSheet = styled(Sheet)`
   margin-top: 40px;
   margin-left: auto;
   margin-right: auto;
+`;
+
+const StyledSheetContent = styled(Sheet.Content)`
+  overflow: auto;
 `;

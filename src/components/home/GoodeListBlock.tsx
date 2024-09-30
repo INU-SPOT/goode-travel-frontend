@@ -2,11 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import TagButton from "./TagButton";
 
-interface GoodeListBlockProps {
-  onClick?: () => void;
-}
-
-export default function GoodeListBlock({ onClick }: GoodeListBlockProps) {
+export default function GoodeListBlock() {
   return (
     <GoodeListWrapper>
       <Title>더 많은 굳이? 보기 &gt;</Title>
