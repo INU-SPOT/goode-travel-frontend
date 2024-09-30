@@ -17,6 +17,7 @@ interface PlanItemProps extends ItemFolderResponse {
 
 export default function PlanItem({
   image,
+  isOfficial,
   title,
   itemFolderId,
   finishDate: initialFinishDate,
@@ -82,7 +83,7 @@ export default function PlanItem({
         {finished && <FinishDate>{finishDate}</FinishDate>}
         <Title isFinished={finished}>{title}</Title>
         <ButtonGroup>
-          <button>{regionName}</button>
+          {!isOfficial && <button>{regionName}</button>}
           {address && <button>{address}</button>}
           <button onClick={onEdit}>수정</button>
           <button onClick={handleDelete}>삭제</button>
@@ -103,15 +104,15 @@ const PlanItemContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 65px;
+  height: 70px;
   width: 100%;
-  margin-bottom: 18px;
+  margin-bottom: 10px;
 `;
 
 const ItemImage = styled.div`
   height: 100%;
-  width: 65px;
-  font-size: 50px;
+  width: 60px;
+  font-size: 45px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -119,12 +120,13 @@ const ItemImage = styled.div`
 `;
 
 const ItemDetails = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   flex-grow: 1;
-  margin-right: 10px;
+  margin-right: 5px;
 `;
 
 const FinishDate = styled.span`
@@ -134,8 +136,8 @@ const FinishDate = styled.span`
 `;
 
 const Title = styled.span<{ isFinished: boolean }>`
-  font-size: 17px;
-  margin: 2px 0;
+  font-size: 16px;
+  margin: 4px 0;
   color: ${({ isFinished }) => (isFinished ? "#b2b2b2" : "#000")};
   text-decoration: ${({ isFinished }) =>
     isFinished ? "line-through" : "none"};
@@ -144,6 +146,7 @@ const Title = styled.span<{ isFinished: boolean }>`
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: flex-start;
+  width: 100%;
 
   button {
     margin-right: 8px;
@@ -153,6 +156,10 @@ const ButtonGroup = styled.div`
     background: none;
     border: none;
     cursor: pointer;
+    white-space: normal;
+    max-width: 160px; /* 버튼의 최대 너비를 제한 */
+    word-break: break-word;
+    text-align: left;
 
     &:hover {
       text-decoration: underline;
@@ -164,7 +171,6 @@ const ItemCheckbox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
 `;
 
 const StyledCheckbox = styled.input`
