@@ -4,7 +4,6 @@ import { ReactComponent as PlusIcon } from "../../assets/icons/plus-icon.svg";
 import { Sheet } from "react-modal-sheet";
 import {
   get_folders,
-  post_folders_plan,
   post_folders,
   post_folders_plans,
 } from "../../services/folder";
