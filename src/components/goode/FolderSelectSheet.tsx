@@ -6,8 +6,10 @@ import {
   get_folders,
   post_folders_plan,
   post_folders,
+  post_folders_plans,
 } from "../../services/folder";
 import { FolderListResponse } from "../../types/folder";
+import { ItemFolderCreateRequest } from "../../types/item";
 
 interface FolderSelectSheetProps {
   isOpen: boolean;
@@ -58,15 +60,15 @@ export default function FolderSelectSheet({
     if (selectedFolderId && !isAdding) {
       setIsAdding(true);
       try {
-        for (const itemId of itemIds) {
-          await post_folders_plan(
-            {
-              itemId: itemId,
-              emoji: "⭐️",
-            },
-            selectedFolderId
-          );
-        }
+        const itemDataArray: ItemFolderCreateRequest[] = itemIds.map(
+          (itemId) => ({
+            itemId: itemId,
+            emoji: "⭐️",
+          })
+        );
+
+        await post_folders_plans(itemDataArray, selectedFolderId);
+
         alert(`굳이/계획 ${itemIds.length}개가 폴더에 추가되었습니다.`);
         onClose();
       } catch (error) {

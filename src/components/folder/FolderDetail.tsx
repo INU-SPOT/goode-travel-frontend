@@ -52,11 +52,14 @@ export default function FolderDetail() {
     })
   );
 
-  // 폴더 상세 정보 가져오기 (useCallback으로 메모이제이션)
+  // 폴더 상세 정보 가져오기
   const fetchFolderDetail = useCallback(async () => {
     try {
       const detail = await get_folders_folderid(Number(folderId));
       setFolderDetail(detail);
+
+      console.log(detail);
+
       setOriginalTitle(detail.title);
       setEditedTitle(detail.title);
       setItemOrder(detail.itemFolders.map((item: any) => item.itemFolderId));
@@ -327,6 +330,7 @@ export default function FolderDetail() {
               item.itemType === "PLAN" ? (
                 <PlanItem
                   key={item.itemFolderId}
+                  isOfficial={item.isOfficial}
                   image={item.image}
                   title={item.title}
                   itemFolderId={item.itemFolderId}
@@ -361,7 +365,7 @@ export default function FolderDetail() {
 }
 
 const DetailContainer = styled.div`
-  padding: 0 20px;
+  padding: 0 17px;
   display: flex;
   flex-direction: column;
   align-items: center;
