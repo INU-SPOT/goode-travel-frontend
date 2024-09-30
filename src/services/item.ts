@@ -38,3 +38,9 @@ export const get_items = async (
   const response = await axiosInstance.get(`/v1/items?${params.toString()}`);
   return response.data;
 };
+
+// 굳이 날씨 조회
+export const get_items_weather = async (itemid: number) => {
+  const response = await axiosInstance.get(`/v1/items/${itemid}/weather`);
+  return response.data;
+};
