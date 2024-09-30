@@ -25,9 +25,11 @@ function QueryContent() {
   const params = new URLSearchParams(location.search);
   const itemId = params.get("itemId");
   const courseId = params.get("courseId");
+  const postId = params.get("postId");
 
   return (
     <>
+      <PostPage postId={postId} />
       <GoodeSheet itemId={itemId} />
       <CourseSheet courseId={courseId} />
     </>
@@ -53,7 +55,6 @@ function App() {
         <Route path="login" element={<LoginPage />} />
         <Route path="write" element={<WritePage />} />
         <Route path="edit/:id" element={<WritePage />} />
-        <Route path="post/:id" element={<PostPage />} />
         <Route path="save/:folderId" element={<FolderDetail />} />
       </Routes>
     </Router>

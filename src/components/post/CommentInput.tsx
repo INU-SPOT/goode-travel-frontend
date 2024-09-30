@@ -44,10 +44,10 @@ export default function CommentInput({
         await post_posts_comments(postId, content);
       }
       setContent(""); // 입력 필드 비우기
-      onCommentSubmit(); // 콜백 호출로 댓글 목록 갱신
     } catch (error) {
       console.error("Failed to post comment:", error);
     } finally {
+      onCommentSubmit(); // 콜백 호출로 댓글 목록 갱신
       setIsSubmitting(false);
     }
   };

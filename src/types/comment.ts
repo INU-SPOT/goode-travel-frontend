@@ -20,3 +20,13 @@ export interface ReplyCommentResponse {
   isModified: boolean;
   content: string;
 }
+
+export interface UserCommentResponse {
+  type: string;
+  postId: number;
+  postTitle: string;
+  date: string;
+  isModified: boolean;
+  createDate: string;
+  content: string;
+}
