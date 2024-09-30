@@ -79,6 +79,12 @@ export const post_posts_comments = async (postId: number, content: string) => {
   return response.data;
 };
 
+// 유저가 쓴 댓글 가져오기
+export const get_users_comments = async () => {
+  const response = await axiosInstance.get(`v1/users/comments`);
+  return response.data;
+};
+
 // 게시글 댓글 가져오기
 export const get_posts_comments = async (postid: number) => {
   const response = await axiosInstance.get(`v1/posts/${postid}/comments`);

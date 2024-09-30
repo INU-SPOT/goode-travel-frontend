@@ -43,8 +43,11 @@ export default function GoodeSheet({ itemId }: GoodeSheetProps) {
 
   // 시트를 닫을 때 itemId를 쿼리에서 제거
   const handleClose = () => {
+    const params = new URLSearchParams(location.search);
+    params.delete("itemId");
     setIsOpen(false);
-    navigate(`${location.pathname}`, { replace: true }); // query 없이 메인 페이지로 이동
+    const newURL = `${location.pathname}?${params.toString()}`;
+    navigate(newURL); // 쿼리 업데이트
   };
 
   // 공유하기
@@ -110,7 +113,7 @@ export default function GoodeSheet({ itemId }: GoodeSheetProps) {
       } else {
         console.error("City not found for", goode.localGovernmentName);
       }
-      navigate("/community", { replace: true });
+      navigate("/community");
     }
   };
 
@@ -131,14 +134,7 @@ export default function GoodeSheet({ itemId }: GoodeSheetProps) {
                   />
                 </TitleWrapper>
                 <ImageWeatherWrapper>
-                  <img
-                    src={
-                      goode.imageUrl
-                        ? goode.imageUrl
-                        : `${process.env.REACT_APP_IMAGE_URL}/frog.jpeg` // TODO: imageURL이 공백일 때, 로고 보이도록 하기
-                    }
-                    alt={goode.title}
-                  />
+                  <img src={goode.imageUrl} alt={goode.title} />
                   <span className="weather"></span>
                 </ImageWeatherWrapper>
                 <FolderAddressWrapper>

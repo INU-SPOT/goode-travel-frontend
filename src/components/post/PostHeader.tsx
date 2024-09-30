@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { delete_posts_postid } from "../../services/post";
 
 export default function PostHeader({
@@ -10,7 +10,16 @@ export default function PostHeader({
   postId: number;
   isOwner: boolean;
 }) {
+  const location = useLocation();
   const navigate = useNavigate();
+
+  // 시트를 닫을 때 postId를 쿼리에서 제거
+  const handleClose = () => {
+    const params = new URLSearchParams(location.search);
+    params.delete("postId");
+    const newURL = `${location.pathname}?${params.toString()}`;
+    navigate(newURL); // 쿼리 업데이트
+  };
 
   const handleDelete = async () => {
     const confirmDelete = window.confirm(
@@ -20,7 +29,7 @@ export default function PostHeader({
       try {
         await delete_posts_postid(postId);
         alert("게시글이 삭제되었습니다.");
-        navigate(-1); // 이전 페이지로 이동
+        handleClose();
       } catch (error) {
         console.error("게시글 삭제 중 오류 발생:", error);
         alert("게시글 삭제에 실패했습니다. 다시 시도해주세요.");
@@ -30,8 +39,8 @@ export default function PostHeader({
 
   return (
     <StyledHeader>
-      <div>
-        <StyledXIcon onClick={() => navigate("/community")} />
+      <div onClick={handleClose}>
+        <StyledXIcon />
       </div>
       <div>
         {isOwner && (
