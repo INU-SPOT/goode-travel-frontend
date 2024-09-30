@@ -83,6 +83,9 @@ interface CommunityBlockProps {
   isVisit: boolean;
 }
 
+// TODO: 게시글 제목 길이 조정 -> ... 처리
+// 조회수가 블록 밖으로 밀려남... 80% 내에서 나가지 않도록 조정하자
+
 function CommunityBlock({ post, onClick, isVisit }: CommunityBlockProps) {
   const { postId, title, items, topNum } = post;
   const goodeItem = items.find((item) => item.itemType === "GOODE");
@@ -90,9 +93,11 @@ function CommunityBlock({ post, onClick, isVisit }: CommunityBlockProps) {
     .filter((item) => item.itemType === "PLAN")
     .slice(0, 2);
 
+  const shortenedTitle = title.length > 17 ? `${title.slice(0, 17)}...` : title;
+
   return (
     <BlockWrapper onClick={() => onClick(postId)} isVisit={isVisit}>
-      <Title>{title}</Title>
+      <Title>{shortenedTitle}</Title>
       {goodeItem && <Goode>{goodeItem.itemTitle}</Goode>}
       <DetailList>
         {planItems.map((detail, index) => (

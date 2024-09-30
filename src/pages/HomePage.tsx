@@ -30,6 +30,8 @@ export default function HomePage() {
         const data = await get_items_recommend();
         setRecommendData(data.data);
       } catch (error) {
+        const data = await get_items_recommend();
+        setRecommendData(data.data);
         console.error("Failed to fetch recommendation data", error);
       }
     };
@@ -53,7 +55,7 @@ export default function HomePage() {
           goode={recommendData?.title || "Loading..."}
           image={recommendData?.imageUrl}
           onClick={() => {
-            /* Add appropriate handler */
+            navigate(`?itemId=${recommendData?.itemId}`);
           }}
         />
       ),
@@ -76,7 +78,7 @@ export default function HomePage() {
               .map((course) => course.itemTitle) || []
           }
           onClick={() => {
-            /* Add appropriate handler */
+            navigate(`?itemId=${recommendData?.itemId}`);
           }}
         />
       ),

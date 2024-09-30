@@ -41,21 +41,28 @@ const DetailWrapper = styled.div`
   background-color: ${COLOR.blue};
   justify-content: center;
   border-radius: 13px;
-  padding: 18px;
+  padding: 16px;
   box-sizing: border-box;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
+  display: flex;
 `;
 
 const DetailList = styled.ul`
-  height: 100%;
+  width: 100%;
   list-style: none;
+  justify-content: center;
+  align-items: flex-start;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 5px;
 `;
 
 const DetailItem = styled.li`
-  font-size: 12px;
+  font-size: 11px;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
