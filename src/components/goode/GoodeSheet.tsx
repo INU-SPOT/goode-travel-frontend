@@ -136,7 +136,9 @@ export default function GoodeSheet({ itemId }: GoodeSheetProps) {
                 </TitleWrapper>
                 <ImageWeatherWrapper>
                   <img src={goode.imageUrl} alt={goode.title} />
-                  <span className="weather"></span>
+                  <span className="weather">
+                    <Weather itemId={itemId} />
+                  </span>
                 </ImageWeatherWrapper>
                 <FolderAddressWrapper>
                   <span className="folder" onClick={handleFolderClick}>
