@@ -10,6 +10,7 @@ import usePostsStore from "../../store/usePostsStore";
 import { local_government } from "../../data/districts";
 import { City, Filters } from "../../types/common";
 import FolderSelectSheet from "./FolderSelectSheet";
+import Weather from "./Weather";
 
 interface GoodeSheetProps {
   itemId: string | null;
@@ -123,7 +124,7 @@ export default function GoodeSheet({ itemId }: GoodeSheetProps) {
         <Sheet.Container>
           <Sheet.Header />
           <Sheet.Content>
-            {goode && (
+            {goode && itemId && (
               <ContentWrapper>
                 <TitleWrapper>
                   <h2>{goode.title}</h2>
@@ -135,7 +136,9 @@ export default function GoodeSheet({ itemId }: GoodeSheetProps) {
                 </TitleWrapper>
                 <ImageWeatherWrapper>
                   <img src={goode.imageUrl} alt={goode.title} />
-                  <span className="weather"></span>
+                  <span className="weather">
+                    <Weather itemId={itemId} />
+                  </span>
                 </ImageWeatherWrapper>
                 <FolderAddressWrapper>
                   <span className="folder" onClick={handleFolderClick}>
@@ -227,11 +230,6 @@ const ImageWeatherWrapper = styled.div`
   .weather {
     width: 32%;
     height: auto;
-    background: linear-gradient(
-      180deg,
-      #e4f3fc 0%,
-      #2dafff 100%
-    ); // TODO: 날씨에 맞게 표시
   }
 
   @media (max-width: 480px) {
