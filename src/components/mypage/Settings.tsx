@@ -51,7 +51,7 @@ export default function Settings({
   };
 
   const handleSave = async () => {
-    if (profileImage == "") {
+    if (profileImage === "") {
       await put_users(nickname, metropolitanId, null);
     } else {
       await put_users(nickname, metropolitanId, profileImage);
