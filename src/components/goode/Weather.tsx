@@ -184,7 +184,9 @@ export default function Weather({ itemId }: { itemId: string }) {
   };
 
   return (
-    <WeatherWrapper>
+    <WeatherWrapper
+      onClick={() => window.open(weather?.todayWeatherLink, "_blank")}
+    >
       {renderWeatherComponent()}
       {weather && (
         <WeatherInfo>
@@ -202,6 +204,7 @@ const WeatherWrapper = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
+  cursor: pointer;
 `;
 
 const WeatherInfo = styled.div`
