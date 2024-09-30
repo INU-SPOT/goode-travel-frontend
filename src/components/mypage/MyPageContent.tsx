@@ -9,6 +9,7 @@ import UserActivities from "./UserActivities";
 export default function MyPageContent() {
   const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const loadUser = async () => {
     try {
@@ -16,6 +17,8 @@ export default function MyPageContent() {
       setUserInfo(response.data);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -23,9 +26,13 @@ export default function MyPageContent() {
     loadUser();
   }, []);
 
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <Container>
-      {userInfo && (
+      {userInfo ? (
         <>
           {showSettings ? (
             <Settings
@@ -53,6 +60,20 @@ export default function MyPageContent() {
               <UserActivities />
             </>
           )}
+        </>
+      ) : (
+        <>
+          <Settings
+            isFirst={true}
+            userInfo={{
+              nickName: "",
+              metropolitanGovernmentId: 1,
+              metropolitanGovernmentName: "",
+              profileImageName: "",
+            }}
+            closeSetting={() => setShowSettings(false)}
+            loadUser={loadUser}
+          />
         </>
       )}
     </Container>

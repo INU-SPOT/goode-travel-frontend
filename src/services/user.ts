@@ -10,7 +10,7 @@ export const get_users = async () => {
 export const put_users = async (
   nickname: string,
   metropolitanGovernmentId: number,
-  profileImageName: string
+  profileImageName: string | null
 ) => {
   const response = await axiosInstance.put(`/v1/users`, {
     nickname: nickname,
@@ -24,4 +24,10 @@ export const put_users = async (
 export const post_users_image = async (formData: FormData) => {
   const resposne = await axiosInstance.post(`/v1/users/image`, formData);
   return resposne.data;
+};
+
+// 유저 가입 확인
+export const get_is_registered = async () => {
+  const response = await axiosInstance.get(`/v1/users/is-registered`);
+  return response.data;
 };

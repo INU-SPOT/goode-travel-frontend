@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import styled from "styled-components";
@@ -8,10 +9,12 @@ import { post_users_image, put_users } from "../../services/user";
 import { metropolitan_government } from "../../data/districts";
 
 export default function Settings({
+  isFirst,
   userInfo,
   closeSetting,
   loadUser,
 }: {
+  isFirst?: boolean;
   userInfo: UserInfoResponse;
   closeSetting: () => void;
   loadUser: () => void;
@@ -23,6 +26,12 @@ export default function Settings({
   const [metropolitanId, setMetropolitanId] = useState(
     userInfo.metropolitanGovernmentId
   );
+
+  useEffect(() => {
+    if (isFirst) {
+      setEditing(true);
+    }
+  }, [isFirst]);
 
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -42,7 +51,11 @@ export default function Settings({
   };
 
   const handleSave = async () => {
-    await put_users(nickname, metropolitanId, profileImage);
+    if (profileImage == "") {
+      await put_users(nickname, metropolitanId, null);
+    } else {
+      await put_users(nickname, metropolitanId, profileImage);
+    }
     loadUser();
     setEditing(false);
   };
@@ -68,8 +81,8 @@ export default function Settings({
             <img
               style={{ opacity: 0.4 }}
               src={`${process.env.REACT_APP_IMAGE_URL}/${profileImage}`}
-              alt="임시 프로필"
-            ></img>
+              alt=""
+            />
             <label htmlFor="upload">
               <StyledCameraIcon />
               <input
@@ -105,7 +118,7 @@ export default function Settings({
             </select>
           </EditFiledWrapper>
           <button onClick={handleSave}>완료</button>
-          <button onClick={handleCancel}>취소</button>
+          {!isFirst && <button onClick={handleCancel}>취소</button>}
         </>
       ) : (
         <>
