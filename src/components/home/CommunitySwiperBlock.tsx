@@ -192,8 +192,3 @@ const LoadingMessage = styled.div`
   padding: 20px;
 `;
 
-const NoPostsMessage = styled.div`
-  text-align: center;
-  font-size: 16px;
-  color: #888;
-`;
