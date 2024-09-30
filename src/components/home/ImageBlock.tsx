@@ -9,7 +9,7 @@ interface SharedProps {
 
 export default function ImageBlock({ goode, image, onClick }: SharedProps) {
   return (
-    <ImageWrapper image={image}>
+    <ImageWrapper image={image} onClick={onClick}>
       <ImageGoode>{goode}</ImageGoode>
     </ImageWrapper>
   );

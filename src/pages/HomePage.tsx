@@ -1,10 +1,7 @@
-// HomePage.tsx
 import styled from "styled-components";
 import { COLOR } from "../utils/color";
 import { useEffect, useState } from "react";
-import exampleImage from "../assets/images/KakaoTalk_Photo_2024-08-07-20-33-27.png";
 import BentoGrid from "../components/BentoGrid";
-import CommunityBlock from "../components/home/CommunitySwiperBlock";
 import ImageBlock from "../components/home/ImageBlock";
 import CourseBlock from "../components/home/CourseBlock";
 import { ReactComponent as SearchIcon } from "../assets/icons/bell-svgrepo-com.svg";
@@ -22,6 +19,7 @@ export default function HomePage() {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [recommendData, setRecommendData] =
     useState<ItemRecommendResponse | null>(null);
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,9 +27,10 @@ export default function HomePage() {
       try {
         const data = await get_items_recommend();
         setRecommendData(data.data);
+        setError(false);
       } catch (error) {
-        const data = await get_items_recommend();
-        setRecommendData(data.data);
+        setRecommendData(null);
+        setError(true);
         console.error("Failed to fetch recommendation data", error);
       }
     };
@@ -52,10 +51,16 @@ export default function HomePage() {
       height: 7,
       component: (
         <ImageBlock
-          goode={recommendData?.title || "Loading..."}
+          goode={
+            error
+              ? "해당 항목을 불러오는 데 실패했습니다."
+              : recommendData?.title || "Loading..."
+          }
           image={recommendData?.imageUrl}
           onClick={() => {
-            navigate(`?itemId=${recommendData?.itemId}`);
+            if (!error) {
+              navigate(`?itemId=${recommendData?.itemId}`);
+            }
           }}
         />
       ),
@@ -73,12 +78,16 @@ export default function HomePage() {
       component: (
         <CourseBlock
           details={
-            recommendData?.courses
-              ?.slice(0, 3)
-              .map((course) => course.itemTitle) || []
+            error
+              ? ["해당 항목을 불러오는 데 실패했습니다."]
+              : recommendData?.courses
+                  ?.slice(0, 3)
+                  .map((course) => course.itemTitle) || []
           }
           onClick={() => {
-            navigate(`?itemId=${recommendData?.itemId}`);
+            if (!error) {
+              navigate(`?itemId=${recommendData?.itemId}`);
+            }
           }}
         />
       ),
@@ -93,19 +102,13 @@ export default function HomePage() {
       id: 6,
       width: 10,
       height: 2,
-      component: <RandomBlock onClick={() => navigate("/random-goode")} />,
+      component: <RandomBlock />,
     },
     {
       id: 7,
       width: 10,
       height: 5,
-      component: (
-        <AdBlock
-          onClick={() => {
-            /* 비어있는 핸들러 */
-          }}
-        />
-      ),
+      component: <AdBlock />,
     },
   ];
 

@@ -152,6 +152,7 @@ export default function CreateFolderItem({
           placeholder="계획의 이름을 입력해주세요!"
           value={newTitle}
           onChange={(e) => setNewTitle(e.target.value)}
+          maxLength={37}
         />
       </EmojiButtonContainer>
 
@@ -219,7 +220,7 @@ const EmojiButton = styled.button`
   border: none;
   cursor: pointer;
   font-size: 35px;
-  margin-right: 10px; /* Reduce margin for better alignment */
+  margin-right: 10px;
 `;
 
 const PickerWrapper = styled.div`

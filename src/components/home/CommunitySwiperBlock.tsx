@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { COLOR } from "../../utils/color";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/pagination";
 import { get_post_top_visit, get_post_top_like } from "../../services/home";
 import { TopPostResponse } from "../../types/post";
+import { useEffect, useState } from "react";
 
 export default function CommunitySwiperBlock() {
   const [topVisitPost, setTopVisitPost] = useState<TopPostResponse | null>(
@@ -15,17 +15,21 @@ export default function CommunitySwiperBlock() {
   );
   const [topLikePost, setTopLikePost] = useState<TopPostResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const visitResponse = await get_post_top_visit();
         const likeResponse = await get_post_top_like();
-        setTopVisitPost(visitResponse); // API 응답 구조에 따라 수정
-        setTopLikePost(likeResponse); // API 응답 구조에 따라 수정
+        setTopVisitPost(visitResponse);
+        setTopLikePost(likeResponse);
+        setError(false);
       } catch (error) {
         console.error("Failed to fetch data:", error);
+        setError(true); // 에러 상태 설정
       } finally {
         setLoading(false);
       }
@@ -33,8 +37,11 @@ export default function CommunitySwiperBlock() {
     fetchData();
   }, []);
 
-  const handleClick = (postId: number) => {
-    navigate(`/post/${postId}`);
+  const handleNavigateWithQuery = (postId: number) => {
+    const params = new URLSearchParams(location.search);
+    params.set("postId", String(postId));
+    const newUrl = `${location.pathname}?${params.toString()}`;
+    navigate(newUrl);
   };
 
   if (loading) {
@@ -51,26 +58,20 @@ export default function CommunitySwiperBlock() {
         spaceBetween={20}
       >
         <SwiperSlide>
-          {topVisitPost ? (
-            <CommunityBlock
-              post={topVisitPost}
-              onClick={handleClick}
-              isVisit={true}
-            />
-          ) : (
-            <NoPostsMessage>현재 게시물이 없습니다.</NoPostsMessage>
-          )}
+          <CommunityBlock
+            post={topVisitPost}
+            onClick={handleNavigateWithQuery}
+            isVisit={true}
+            error={error}
+          />
         </SwiperSlide>
         <SwiperSlide>
-          {topLikePost ? (
-            <CommunityBlock
-              post={topLikePost}
-              onClick={handleClick}
-              isVisit={false}
-            />
-          ) : (
-            <NoPostsMessage>현재 게시물이 없습니다.</NoPostsMessage>
-          )}
+          <CommunityBlock
+            post={topLikePost}
+            onClick={handleNavigateWithQuery}
+            isVisit={false}
+            error={error}
+          />
         </SwiperSlide>
       </StyledSwiper>
     </SwiperContainer>
@@ -78,30 +79,43 @@ export default function CommunitySwiperBlock() {
 }
 
 interface CommunityBlockProps {
-  post: TopPostResponse;
+  post: TopPostResponse | null;
   onClick: (postId: number) => void;
   isVisit: boolean;
+  error: boolean;
 }
 
-// TODO: 게시글 제목 길이 조정 -> ... 처리
-// 조회수가 블록 밖으로 밀려남... 80% 내에서 나가지 않도록 조정하자
+function CommunityBlock({
+  post,
+  onClick,
+  isVisit,
+  error,
+}: CommunityBlockProps) {
+  if (error || !post) {
+    return (
+      <BlockWrapper isVisit={isVisit}>
+        <Title>해당 항목을 불러오는 데 실패했습니다.</Title>
+      </BlockWrapper>
+    );
+  }
 
-function CommunityBlock({ post, onClick, isVisit }: CommunityBlockProps) {
   const { postId, title, items, topNum } = post;
   const goodeItem = items.find((item) => item.itemType === "GOODE");
   const planItems = items
     .filter((item) => item.itemType === "PLAN")
     .slice(0, 2);
 
-  const shortenedTitle = title.length > 17 ? `${title.slice(0, 17)}...` : title;
-
   return (
     <BlockWrapper onClick={() => onClick(postId)} isVisit={isVisit}>
-      <Title>{shortenedTitle}</Title>
+      <Title>{title.length > 16 ? `${title.slice(0, 16)}...` : title}</Title>
       {goodeItem && <Goode>{goodeItem.itemTitle}</Goode>}
       <DetailList>
         {planItems.map((detail, index) => (
-          <DetailItem key={index}>{detail.itemTitle}</DetailItem>
+          <DetailItem key={index}>
+            {detail.itemTitle.length > 24
+              ? `${detail.itemTitle.slice(0, 24)}...`
+              : detail.itemTitle}
+          </DetailItem>
         ))}
       </DetailList>
       <Recommendations>
@@ -126,7 +140,7 @@ interface BlockWrapperProps {
 }
 
 const BlockWrapper = styled.div<BlockWrapperProps>`
-  height: 80%;
+  height: 85%;
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -136,19 +150,20 @@ const BlockWrapper = styled.div<BlockWrapperProps>`
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
   margin-bottom: 15px;
   justify-content: space-between;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 `;
 
 const Title = styled.div`
-  font-size: 19px;
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 900;
+  margin-bottom: 7px;
   text-align: center;
 `;
 
 const Goode = styled.div`
-  font-size: 15px;
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 500;
 `;
 
 const DetailList = styled.ul`
@@ -159,14 +174,15 @@ const DetailList = styled.ul`
 `;
 
 const DetailItem = styled.li`
-  font-size: 14px;
+  font-size: 13px;
   margin: 5px 0;
 `;
 
 const Recommendations = styled.div`
-  font-size: 12px;
+  position: absolute;
+  font-size: 11px;
   text-align: right;
-  margin-top: 10px;
+  bottom: 45px;
   align-self: flex-end;
 `;
 

@@ -11,7 +11,7 @@ export default function CourseBlock({ details, onClick }: CourseProps) {
   return (
     <CourseWrapper>
       <Title>관광코스 살펴보기 &gt;</Title>
-      <DetailWrapper>
+      <DetailWrapper onClick={onClick}>
         <DetailList>
           {details?.map((detail, index) => (
             <DetailItem key={index}>{detail}</DetailItem>
