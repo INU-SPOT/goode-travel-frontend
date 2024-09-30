@@ -59,11 +59,13 @@ export default function FolderSelectSheet({
       setIsAdding(true);
       try {
         for (const itemId of itemIds) {
-          await post_folders_plan({
-            folderId: selectedFolderId,
-            itemId: itemId,
-            emoji: "⭐️",
-          });
+          await post_folders_plan(
+            {
+              itemId: itemId,
+              emoji: "⭐️",
+            },
+            selectedFolderId
+          );
         }
         alert(`굳이/계획 ${itemIds.length}개가 폴더에 추가되었습니다.`);
         onClose();

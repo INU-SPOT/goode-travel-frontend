@@ -11,9 +11,27 @@ export const put_folders_plan = async (itemData: ItemFolderUpdateRequest) => {
   return response.data;
 };
 
+// 새 계획들 생성
+export const post_folders_plans = async (
+  itemData: ItemFolderCreateRequest[],
+  folderId: number
+) => {
+  const response = await axiosInstance.post(
+    `/v1/folders/${folderId}/plan`,
+    itemData
+  );
+  return response.data;
+};
+
 // 새 계획 생성
-export const post_folders_plan = async (itemData: ItemFolderCreateRequest) => {
-  const response = await axiosInstance.post(`/v1/folders/plan`, itemData);
+export const post_folders_plan = async (
+  itemData: ItemFolderCreateRequest,
+  folderId: number
+) => {
+  const response = await axiosInstance.post(
+    `/v1/folders/${folderId}/plan`,
+    itemData
+  );
   return response.data;
 };
 
