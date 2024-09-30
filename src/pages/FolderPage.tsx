@@ -87,20 +87,18 @@ export default function FolderPage() {
             </CancelButton>
           </ButtonContainer>
         </AddFolderContainer>
-      ) : (
+      ) : folders.length > 0 ? (
         <FolderContainer>
-          {folders.length > 0 ? (
-            folders.map((folder) => (
-              <FolderBlock
-                key={folder.folderId}
-                folder={folder}
-                onDelete={handleDeleteFolder}
-              />
-            ))
-          ) : (
-            <p>폴더가 없습니다.</p>
-          )}
+          {folders.map((folder) => (
+            <FolderBlock
+              key={folder.folderId}
+              folder={folder}
+              onDelete={handleDeleteFolder}
+            />
+          ))}
         </FolderContainer>
+      ) : (
+        <NoFolder>폴더를 생성해보세요!</NoFolder>
       )}
     </>
   );
@@ -192,4 +190,16 @@ const CancelButton = styled.button`
   border-radius: 10px;
   cursor: pointer;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
+`;
+
+const NoFolder = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 18px;
 `;
