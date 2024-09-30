@@ -81,12 +81,23 @@ export interface ItemFolderResponse {
   address: string;
   finishDate?: string;
   isFinished?: boolean;
+  metropolitanGovernmentId: number;
   localGovernmentId: number;
 }
 
 export interface GoodeRandomResponse {
   itemId: number;
   title: string;
+}
+
+export interface WeatherResponse {
+  metropolitanGovernmentName: string;
+  localGovernmentName: string;
+  date: string;
+  sky: string;
+  temperature: string;
+  day: string;
+  todayWeatherLink: string;
 }
 
 export interface Course {

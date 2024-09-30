@@ -47,18 +47,16 @@ export default function GoodeCard({ goode }: GoodeCardProps) {
   };
 
   const handleNavigateWithQuery = () => {
-    const newUrl = `${location.pathname}?itemId=${goode.itemId}`;
+    const params = new URLSearchParams(location.search);
+    params.set("itemId", String(goode.itemId) || "");
+    const newUrl = `${location.pathname}?${params.toString()}`;
     navigate(newUrl);
   };
 
   return (
     <GoodeItemContainer>
       <ItemImage
-        src={
-          goode.imageUrl
-            ? goode.imageUrl
-            : `${process.env.REACT_APP_IMAGE_URL}/frog.jpeg` // TODO: imageURL이 공백일 때, 로고 보이도록 하기
-        }
+        src={goode.imageUrl}
         alt={goode.title}
         onClick={handleNavigateWithQuery}
       />

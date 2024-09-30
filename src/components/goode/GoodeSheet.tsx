@@ -10,6 +10,7 @@ import usePostsStore from "../../store/usePostsStore";
 import { local_government } from "../../data/districts";
 import { City, Filters } from "../../types/common";
 import FolderSelectSheet from "./FolderSelectSheet";
+import Weather from "./Weather";
 
 interface GoodeSheetProps {
   itemId: string | null;
@@ -43,8 +44,11 @@ export default function GoodeSheet({ itemId }: GoodeSheetProps) {
 
   // 시트를 닫을 때 itemId를 쿼리에서 제거
   const handleClose = () => {
+    const params = new URLSearchParams(location.search);
+    params.delete("itemId");
     setIsOpen(false);
-    navigate(`${location.pathname}`, { replace: true }); // query 없이 메인 페이지로 이동
+    const newURL = `${location.pathname}?${params.toString()}`;
+    navigate(newURL); // 쿼리 업데이트
   };
 
   // 공유하기
@@ -110,7 +114,7 @@ export default function GoodeSheet({ itemId }: GoodeSheetProps) {
       } else {
         console.error("City not found for", goode.localGovernmentName);
       }
-      navigate("/community", { replace: true });
+      navigate("/community");
     }
   };
 
@@ -120,7 +124,7 @@ export default function GoodeSheet({ itemId }: GoodeSheetProps) {
         <Sheet.Container>
           <Sheet.Header />
           <Sheet.Content>
-            {goode && (
+            {goode && itemId && (
               <ContentWrapper>
                 <TitleWrapper>
                   <h2>{goode.title}</h2>
@@ -131,15 +135,10 @@ export default function GoodeSheet({ itemId }: GoodeSheetProps) {
                   />
                 </TitleWrapper>
                 <ImageWeatherWrapper>
-                  <img
-                    src={
-                      goode.imageUrl
-                        ? goode.imageUrl
-                        : `${process.env.REACT_APP_IMAGE_URL}/frog.jpeg` // TODO: imageURL이 공백일 때, 로고 보이도록 하기
-                    }
-                    alt={goode.title}
-                  />
-                  <span className="weather"></span>
+                  <img src={goode.imageUrl} alt={goode.title} />
+                  <span className="weather">
+                    <Weather itemId={itemId} />
+                  </span>
                 </ImageWeatherWrapper>
                 <FolderAddressWrapper>
                   <span className="folder" onClick={handleFolderClick}>
@@ -231,11 +230,6 @@ const ImageWeatherWrapper = styled.div`
   .weather {
     width: 32%;
     height: auto;
-    background: linear-gradient(
-      180deg,
-      #e4f3fc 0%,
-      #2dafff 100%
-    ); // TODO: 날씨에 맞게 표시
   }
 
   @media (max-width: 480px) {

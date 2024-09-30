@@ -13,7 +13,9 @@ export default function ItemContainer({
   const location = useLocation();
 
   const handleNavigateWithQuery = () => {
-    const newUrl = `${location.pathname}?itemId=${itemPost.itemId}`;
+    const params = new URLSearchParams(location.search);
+    params.set("itemId", String(itemPost.itemId) || "");
+    const newUrl = `${location.pathname}?${params.toString()}`;
     navigate(newUrl);
   };
 
