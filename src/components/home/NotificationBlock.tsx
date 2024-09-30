@@ -28,7 +28,6 @@ export default function NotificationBlock() {
             Number(a.isConfirm) - Number(b.isConfirm)
         );
         setNotifications(sortedNotifications);
-        console.log("알림 불러오기");
       } catch (err) {
         setError("알림이 없습니다.");
       }
