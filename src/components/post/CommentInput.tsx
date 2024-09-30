@@ -48,6 +48,7 @@ export default function CommentInput({
     } catch (error) {
       console.error("Failed to post comment:", error);
     } finally {
+      onCommentSubmit();
       setIsSubmitting(false);
     }
   };
