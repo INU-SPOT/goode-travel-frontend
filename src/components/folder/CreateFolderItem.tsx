@@ -11,7 +11,7 @@ import {
   ItemFolderCreateRequest,
   ItemFolderUpdateRequest,
 } from "../../types/item";
-import { post_items } from "../../services/items";
+import { post_items } from "../../services/item";
 import { post_folders_plan, put_folders_plan } from "../../services/folder";
 import { COLOR } from "../../utils/color";
 import { ItemFolderResponse } from "../../types/item";
@@ -109,11 +109,10 @@ export default function CreateFolderItem({
         const newItemId = itemResponse.data;
 
         const folderPlanData: ItemFolderCreateRequest = {
-          folderId,
           itemId: newItemId,
           emoji: finalEmoji,
         };
-        await post_folders_plan(folderPlanData);
+        await post_folders_plan(folderPlanData, folderId);
       }
 
       onComplete();

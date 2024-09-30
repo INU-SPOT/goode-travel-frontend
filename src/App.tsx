@@ -21,6 +21,7 @@ import GoodeSheet from "./components/goode/GoodeSheet";
 import CourseSheet from "./components/goode/CourseSheet";
 
 function QueryContent() {
+  useAuth();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const itemId = params.get("itemId");
@@ -37,8 +38,6 @@ function QueryContent() {
 }
 
 function App() {
-  useAuth();
-
   return (
     <Router>
       <ScrollDetector />

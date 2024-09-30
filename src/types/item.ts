@@ -58,7 +58,6 @@ export interface ItemResponse {
 }
 
 export interface ItemFolderCreateRequest {
-  folderId: number;
   itemId: number;
   emoji: string;
 }
