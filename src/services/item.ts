@@ -38,3 +38,8 @@ export const get_items = async (
   const response = await axiosInstance.get(`/v1/items?${params.toString()}`);
   return response.data;
 };
+
+export const get_items_recommend = async () => {
+  const response = await axiosInstance.get(`/v1/items/recommend`);
+  return response.data;
+};

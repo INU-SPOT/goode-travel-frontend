@@ -88,3 +88,15 @@ export interface GoodeRandomResponse {
   itemId: number;
   title: string;
 }
+
+export interface Course {
+  itemTitle: string;
+}
+
+export interface ItemRecommendResponse {
+  itemId: number;
+  localGovernmentName: string;
+  title: string;
+  imageUrl: string;
+  courses: Course[];
+}

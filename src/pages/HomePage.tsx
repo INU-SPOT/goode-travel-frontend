@@ -1,7 +1,7 @@
 // HomePage.tsx
 import styled from "styled-components";
 import { COLOR } from "../utils/color";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import exampleImage from "../assets/images/KakaoTalk_Photo_2024-08-07-20-33-27.png";
 import BentoGrid from "../components/BentoGrid";
 import CommunityBlock from "../components/home/CommunitySwiperBlock";
@@ -15,25 +15,27 @@ import AdBlock from "../components/home/AdBlock";
 import NotificationSheet from "../components/home/NotificationSheet";
 import { useNavigate } from "react-router-dom";
 import CommunitySwiperBlock from "../components/home/CommunitySwiperBlock";
-
-// 커뮤니티 게시글에 대한 임시 데이터입니다.
-const communityData = {
-  goode: "굳이? 성심당 가서 망고시루 먹기",
-  image: exampleImage,
-};
-
-// 관광코스에 대한 임시 데이터입니다.
-const courseData = {
-  details: [
-    "한화 이글스 경기 보기 ^^",
-    "소제동 카페거리에서 커피 마시기",
-    "대전역에서 전역 사진 찍기",
-  ],
-};
+import { get_items_recommend } from "../services/item";
+import { ItemRecommendResponse } from "../types/item";
 
 export default function HomePage() {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [recommendData, setRecommendData] =
+    useState<ItemRecommendResponse | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchRecommendItems = async () => {
+      try {
+        const data = await get_items_recommend();
+        setRecommendData(data.data);
+      } catch (error) {
+        console.error("Failed to fetch recommendation data", error);
+      }
+    };
+
+    fetchRecommendItems();
+  }, []);
 
   const items = [
     {
@@ -48,10 +50,10 @@ export default function HomePage() {
       height: 7,
       component: (
         <ImageBlock
-          goode={communityData.goode}
-          image={communityData.image}
+          goode={recommendData?.title || "Loading..."}
+          image={recommendData?.imageUrl}
           onClick={() => {
-            /* 비어있는 핸들러 */
+            /* Add appropriate handler */
           }}
         />
       ),
@@ -68,9 +70,13 @@ export default function HomePage() {
       height: 4,
       component: (
         <CourseBlock
-          details={courseData.details}
+          details={
+            recommendData?.courses
+              ?.slice(0, 3)
+              .map((course) => course.itemTitle) || []
+          }
           onClick={() => {
-            /* 비어있는 핸들러 */
+            /* Add appropriate handler */
           }}
         />
       ),
