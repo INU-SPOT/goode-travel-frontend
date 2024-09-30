@@ -36,7 +36,7 @@ export default function WriteHeader({
         // 수정 모드일 경우 patch_posts 호출
         await patch_posts(postId, postData);
         alert("게시글이 성공적으로 수정되었습니다.");
-        navigate(`/post/${postId}`);
+        navigate(`/community?postId=${postId}`);
       } else {
         // 새로운 글 작성 모드일 경우 post_posts 호출
         await post_posts(postData);
@@ -60,7 +60,7 @@ export default function WriteHeader({
 
   const handleCancel = () => {
     if (isEditMode && postId) {
-      navigate(`/post/${postId}`);
+      navigate(-1);
     } else {
       navigate("/community");
     }

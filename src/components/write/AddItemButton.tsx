@@ -1,52 +1,91 @@
 import styled from "styled-components";
 import { ReactComponent as PlusIcon } from "../../assets/icons/plus-icon.svg";
+import folderIcon from "../../assets/icons/folder-icon.svg";
 import { Sheet } from "react-modal-sheet";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useWriteStore from "../../store/useWriteStore";
+import { get_folders, get_folders_folderid } from "../../services/folder";
 import { ItemPostCreateUpdateRequest } from "../../types/item";
+import { FolderListResponse, FolderDetailResponse } from "../../types/folder";
+import CreateItemPost from "./CreateItemPost";
 
 export default function AddItemButton() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCreateItemPostOpen, setIsCreateItemPostOpen] = useState(false);
   const { itemPosts, addItemPost, removeItemPost } = useWriteStore();
   const [localItemPosts, setLocalItemPosts] = useState<
     ItemPostCreateUpdateRequest[]
   >([]);
+  const [folders, setFolders] = useState<FolderDetailResponse[]>([]);
 
-  const dummyItems = [
-    {
-      itemId: 1,
-      itemTitle: "굳이? 성심당 가서 망고시루 먹기",
-      content: "",
-      images: [],
-    },
-    { itemId: 2, itemTitle: "남선공원에서 산책하기", content: "", images: [] },
-    {
-      itemId: 3,
-      itemTitle: "대동하늘공원에서 일몰 보기",
-      content: "",
-      images: [],
-    },
-    { itemId: 4, itemTitle: "KAIST 거위 구경하기", content: "", images: [] },
-    {
-      itemId: 5,
-      itemTitle: "오월드 가서 동물원 구경하기",
-      content: "",
-      images: [],
-    },
-    {
-      itemId: 6,
-      itemTitle: "뿌리공원에서 나의 성씨 비석 찾기",
-      content: "",
-      images: [],
-    },
-  ];
+  // 폴더 목록 및 상세 정보 가져오기
+  const fetchFolders = useCallback(async () => {
+    try {
+      const folderData = await get_folders();
 
-  // Sheet가 열릴 때: 전역 상태의 필터를 로컬 상태로 가져오기
+      // 각 폴더의 상세 정보 가져오기
+      const folderDetailsPromises = folderData.data.map(
+        async (folder: FolderListResponse) => {
+          const folderDetailData = await get_folders_folderid(folder.folderId);
+          return folderDetailData;
+        }
+      );
+
+      const foldersDetails = await Promise.all(folderDetailsPromises);
+
+      // 직접 추가한 아이템이 있는 폴더를 포함하여 전체 폴더 설정
+      let allFolders: FolderDetailResponse[] = [
+        {
+          folderId: 0,
+          title: "직접 추가한 일정",
+          itemFolders: [],
+        },
+        ...foldersDetails,
+      ];
+
+      // useWriteStore의 itemPosts 중 폴더에 없는 itemPosts를 찾기
+      const existingItemIds = allFolders.flatMap((folder) =>
+        folder.itemFolders.map((item) => item.itemId)
+      );
+
+      const missingItemPosts = itemPosts.filter(
+        (post) => !existingItemIds.includes(post.itemId)
+      );
+
+      // missingItemPosts를 folderId가 0인 폴더의 itemFolders에 추가
+      allFolders = allFolders.map((folder) =>
+        folder.folderId === 0
+          ? {
+              ...folder,
+              itemFolders: [
+                ...folder.itemFolders,
+                ...missingItemPosts.map((post) => ({
+                  itemFolderId: 0, // 필요에 따라 설정
+                  itemId: post.itemId,
+                  title: post.itemTitle,
+                  image: "", // 필요에 따라 설정
+                  address: "", // 필요에 따라 설정
+                  localGovernmentId: 0, // 필요에 따라 설정
+                  metropolitanGovernmentId: 0, // 필요에 따라 설정
+                })),
+              ],
+            }
+          : folder
+      );
+
+      setFolders(allFolders);
+    } catch (error) {
+      console.error("Failed to fetch folders:", error);
+    }
+  }, [itemPosts]);
+
+  // Sheet가 열릴 때: 전역 상태의 itemPosts를 로컬 상태로 가져오기
   useEffect(() => {
     if (isOpen) {
       setLocalItemPosts([...itemPosts]);
+      fetchFolders();
     }
-  }, [isOpen, itemPosts]);
+  }, [isOpen, itemPosts, fetchFolders]);
 
   // 이미 추가된 항목인지 확인
   const isItemAdded = (itemId: number) => {
@@ -98,6 +137,32 @@ export default function AddItemButton() {
     setIsOpen(false);
   };
 
+  // CreateItemPost에서 아이템을 추가했을 때 호출되는 함수
+  const handleAddNewItem = (newItem: ItemPostCreateUpdateRequest) => {
+    // 폴더 ID가 0인 폴더에 아이템 추가
+    setFolders((prevFolders) =>
+      prevFolders.map((folder) =>
+        folder.folderId === 0
+          ? {
+              ...folder,
+              itemFolders: [
+                ...folder.itemFolders,
+                {
+                  itemFolderId: 0,
+                  itemId: newItem.itemId,
+                  title: newItem.itemTitle,
+                  image: "", // 필요에 따라 설정
+                  address: newItem.content, // 필요에 따라 설정
+                  localGovernmentId: 0, // 필요에 따라 설정
+                  metropolitanGovernmentId: 0, // 필요에 따라 설정
+                },
+              ],
+            }
+          : folder
+      )
+    );
+  };
+
   return (
     <>
       <StyledAddItemButton onClick={() => setIsOpen(true)}>
@@ -109,18 +174,42 @@ export default function AddItemButton() {
           <Sheet.Header />
           <Sheet.Content>
             <ContentWrapper>
-              {dummyItems.map((item) => {
-                const isAdded = isItemAdded(item.itemId);
-                return (
-                  <StyledItemButton
-                    key={item.itemId}
-                    onClick={() => handleToggleItem(item)}
-                    $isAdded={isAdded}
-                  >
-                    {item.itemTitle}
-                  </StyledItemButton>
-                );
-              })}
+              <StyledAddItemButton
+                onClick={() => setIsCreateItemPostOpen(true)}
+              >
+                <h3>직접 일정 추가</h3>
+                <StyledPlusIcon />
+              </StyledAddItemButton>
+              {folders.map((folder) => (
+                <div key={`folder-${folder.folderId}`}>
+                  <FolderTitle>
+                    <img src={folderIcon} alt={folder.title} />
+                    {folder.title}
+                  </FolderTitle>
+                  <ItemList>
+                    {folder.itemFolders.map((item) => {
+                      const isAdded = isItemAdded(item.itemId!);
+                      return (
+                        <StyledItemButton
+                          key={item.itemId}
+                          onClick={() =>
+                            handleToggleItem({
+                              itemId: item.itemId!,
+                              itemTitle: item.title,
+                              content: "",
+                              images: [],
+                            })
+                          }
+                          $isAdded={isAdded}
+                        >
+                          {item.title}
+                        </StyledItemButton>
+                      );
+                    })}
+                  </ItemList>
+                </div>
+              ))}
+
               {localItemPosts.length > 0 && (
                 <ConfirmButton onClick={handleConfirm}>
                   {localItemPosts.length}개 추가!
@@ -130,6 +219,26 @@ export default function AddItemButton() {
           </Sheet.Content>
         </Sheet.Container>
         <Sheet.Backdrop onTap={() => setIsOpen(false)} />
+      </StyledSheet>
+
+      {/* CreateItemPost Sheet */}
+      <StyledSheet
+        isOpen={isCreateItemPostOpen}
+        onClose={() => setIsCreateItemPostOpen(false)}
+      >
+        <Sheet.Container>
+          <Sheet.Header />
+          <Sheet.Content>
+            <CreateItemPost
+              onAddItem={(newItem) => {
+                handleAddNewItem(newItem);
+                setIsCreateItemPostOpen(false);
+              }}
+              onClose={() => setIsCreateItemPostOpen(false)}
+            />
+          </Sheet.Content>
+        </Sheet.Container>
+        <Sheet.Backdrop onTap={() => setIsCreateItemPostOpen(false)} />
       </StyledSheet>
     </>
   );
@@ -169,14 +278,32 @@ const ContentWrapper = styled.div`
   gap: 32px;
 `;
 
-const StyledItemButton = styled.button<{ $isAdded: boolean }>`
-  height: 48px;
-  margin: 0 24px;
-  border-radius: 8px;
-  border: none;
-  background-color: ${({ $isAdded }) => ($isAdded ? "#ccc" : "white")};
-  box-shadow: 0px 2px 8px 0px #0000001a;
-  color: ${({ $isAdded }) => ($isAdded ? "#888" : "black")};
+const FolderTitle = styled.h4`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  img {
+    width: 20px;
+    height: 20px;
+  }
+`;
+
+const ItemList = styled.div`
+  margin: 12px 0 0 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+`;
+
+const StyledItemButton = styled.div<{ $isAdded: boolean }>`
+  align-self: flex-start;
+  font-size: 16px;
+  word-break: keep-all;
+  background-color: white;
+  color: ${({ $isAdded }) => ($isAdded ? "#3C61E6" : "black")};
+  text-decoration: ${({ $isAdded }) => ($isAdded ? "underline" : "none")};
 `;
 
 const ConfirmButton = styled.button`

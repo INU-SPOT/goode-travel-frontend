@@ -17,7 +17,7 @@ export const post_folders_plans = async (
   folderId: number
 ) => {
   const response = await axiosInstance.post(
-    `/v1/folders/${folderId}/plan`,
+    `/v1/folders/${folderId}/plans`,
     itemData
   );
   return response.data;

@@ -33,7 +33,7 @@ export interface ItemPostResponse {
   itemPostId: number;
   itemId: number;
   itemTitle: string;
-  itemType: number;
+  itemType: string;
   isOfficial: boolean;
   content: string;
   images: ItemPostImageResponse[];
