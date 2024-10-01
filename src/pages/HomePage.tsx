@@ -97,7 +97,9 @@ export default function HomePage() {
           }
           onClick={() => {
             if (!error) {
-              navigate(`?itemId=${recommendData?.itemId}`);
+              navigate(
+                `?itemId=${recommendData?.itemId}&courseId=${recommendData?.itemId}`
+              );
             }
           }}
         />
