@@ -19,7 +19,9 @@ export default function Navbar() {
         <NavItem
           key={index}
           onClick={() => navigate(item.url)}
-          isActive={location.pathname === item.url}
+          $isActive={location.pathname === item.url}
+          $isFirst={index === 0} // 첫 번째 요소
+          $isLast={index === navItems.length - 1} // 마지막 요소
         >
           {item.text}
         </NavItem>
@@ -40,17 +42,29 @@ const NavbarContainer = styled.nav`
   align-items: center;
   justify-content: space-around;
   z-index: 1000;
+  border-top-right-radius: 14px;
+  border-top-left-radius: 14px;
 `;
 
-const NavItem = styled.div<{ isActive: boolean }>`
+const NavItem = styled.div<{
+  $isActive: boolean;
+  $isFirst: boolean;
+  $isLast: boolean;
+}>`
+  height: 100%;
   flex: 1;
   display: flex;
+  align-items: center;
   justify-content: center;
   font-size: 14px;
-  color: ${(props) =>
-    props.isActive ? "#007bff" : "#000"}; /* 활성화된 항목 색상 */
-  font-weight: ${(props) => (props.isActive ? "bold" : "normal")};
+  color: ${(props) => (props.$isActive ? "#fff" : "#000")};
+  background-color: ${(props) => (props.$isActive ? "#ABE5E3" : "transparent")};
+  font-weight: ${(props) => (props.$isActive ? "bold" : "normal")};
   cursor: pointer;
+
+  border-top-left-radius: ${(props) => (props.$isFirst ? "14px" : "0")};
+
+  border-top-right-radius: ${(props) => (props.$isLast ? "14px" : "0")};
 
   &:hover {
     color: #007bff;
