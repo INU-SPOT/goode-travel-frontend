@@ -44,7 +44,7 @@ export default function NotificationSheet({
         <Sheet.Header />
         <StyledSheetContent>
           {isLoggedIn ? (
-            <NotificationBlock /> // 알림 목록을 보여줌
+            <NotificationBlock onClose={onClose} /> // 알림 목록을 보여줌
           ) : (
             <NoFolder>로그인 후 이용 가능합니다.</NoFolder>
           )}
