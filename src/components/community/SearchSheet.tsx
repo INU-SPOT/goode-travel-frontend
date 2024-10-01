@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Sheet } from "react-modal-sheet";
 import styled from "styled-components";
 import { ReactComponent as SearchIcon } from "../../assets/icons/search-icon.svg";
+import { useSheetPadding } from "../../hooks/useSheetPadding";
 
 interface SearchSheetProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ export default function SearchSheet({
   onClose,
   setSearchQuery,
 }: SearchSheetProps) {
+  useSheetPadding(isOpen);
   const [inputValue, setInputValue] = useState("");
 
   const handleSearch = () => {

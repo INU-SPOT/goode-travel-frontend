@@ -8,6 +8,7 @@ import { get_folders, get_folders_folderid } from "../../services/folder";
 import { ItemPostCreateUpdateRequest } from "../../types/item";
 import { FolderListResponse, FolderDetailResponse } from "../../types/folder";
 import CreateItemPost from "./CreateItemPost";
+import { useSheetPadding } from "../../hooks/useSheetPadding";
 
 export default function AddItemButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,7 @@ export default function AddItemButton() {
   >([]);
   const [folders, setFolders] = useState<FolderDetailResponse[]>([]);
 
+  useSheetPadding(isOpen);
   // 폴더 목록 및 상세 정보 가져오기
   const fetchFolders = useCallback(async () => {
     try {

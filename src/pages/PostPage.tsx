@@ -4,12 +4,14 @@ import styled from "styled-components";
 import { Sheet } from "react-modal-sheet";
 import PostContainer from "../components/post/PostContainer";
 import CommentsContainer from "../components/post/CommentsContainer";
+import { useSheetPadding } from "../hooks/useSheetPadding";
 
 export default function PostPage({ postId }: { postId: string | null }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
+  useSheetPadding(isOpen);
   // postId가 있으면 시트 열기
   useEffect(() => {
     if (postId) {

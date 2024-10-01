@@ -8,6 +8,7 @@ import {
 import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
 import styled from "styled-components";
 import { City, Filters } from "../../types/common";
+import { useSheetPadding } from "../../hooks/useSheetPadding";
 
 interface FilterSheetProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ export default function FilterSheet({
   filters,
   setFilters,
 }: FilterSheetProps) {
+  useSheetPadding(isOpen);
   const [selectedTheme, setSelectedTheme] = useState<string[]>([]);
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [selectedMetropolitan, setSelectedMetropolitan] = useState<City[]>([]);

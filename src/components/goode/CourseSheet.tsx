@@ -8,6 +8,7 @@ import usePostsStore from "../../store/usePostsStore";
 import { local_government } from "../../data/districts";
 import { City, Filters } from "../../types/common";
 import FolderSelectSheet from "./FolderSelectSheet";
+import { useSheetPadding } from "../../hooks/useSheetPadding";
 
 interface CourseSheetProps {
   courseId: string | null;
@@ -23,6 +24,7 @@ export default function CourseSheet({ courseId }: CourseSheetProps) {
   const [selectedItemIds, setSelectedItemIds] = useState<number[]>([]);
   const [isFolderSheetOpen, setIsFolderSheetOpen] = useState(false);
 
+  useSheetPadding(isOpen);
   // courseId가 있으면 시트 열기
   useEffect(() => {
     const fetchData = async () => {

@@ -11,6 +11,7 @@ import { local_government } from "../../data/districts";
 import { City, Filters } from "../../types/common";
 import FolderSelectSheet from "./FolderSelectSheet";
 import Weather from "./Weather";
+import { useSheetPadding } from "../../hooks/useSheetPadding";
 
 interface GoodeSheetProps {
   itemId: string | null;
@@ -24,6 +25,7 @@ export default function GoodeSheet({ itemId }: GoodeSheetProps) {
   const { setSearchQuery, setFilters } = usePostsStore();
   const [isFolderSheetOpen, setIsFolderSheetOpen] = useState(false);
 
+  useSheetPadding(isOpen);
   // itemId가 있으면 시트 열기
   useEffect(() => {
     const fetchData = async () => {
