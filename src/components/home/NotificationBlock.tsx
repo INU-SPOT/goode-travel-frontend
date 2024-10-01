@@ -47,7 +47,7 @@ export default function NotificationBlock() {
         )
       );
       // post 페이지로 이동
-      navigate(`/post/${notification.postId}`);
+      navigate(`/community?postId=${notification.postId}`);
     } catch (err) {
       console.error("Error confirming notification", err);
     }
