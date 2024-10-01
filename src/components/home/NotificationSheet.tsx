@@ -1,4 +1,3 @@
-// NotificationSheet.tsx
 import { useEffect } from "react";
 import styled from "styled-components";
 import { Sheet } from "react-modal-sheet";
@@ -7,6 +6,7 @@ import NotificationBlock from "./NotificationBlock";
 interface NotificationSheetProps {
   isOpen: boolean;
   onClose: () => void;
+  isLoggedIn: boolean;
 }
 
 const getScrollBarWidth = () => {
@@ -16,6 +16,7 @@ const getScrollBarWidth = () => {
 export default function NotificationSheet({
   isOpen,
   onClose,
+  isLoggedIn,
 }: NotificationSheetProps) {
   useEffect(() => {
     const scrollBarWidth = getScrollBarWidth();
@@ -42,7 +43,11 @@ export default function NotificationSheet({
       <Sheet.Container>
         <Sheet.Header />
         <StyledSheetContent>
-          <NotificationBlock /> {/* 알림 목록을 보여줌 */}
+          {isLoggedIn ? (
+            <NotificationBlock /> // 알림 목록을 보여줌
+          ) : (
+            <NoFolder>로그인 후 이용 가능합니다.</NoFolder>
+          )}
         </StyledSheetContent>
       </Sheet.Container>
       <Sheet.Backdrop onTap={onClose} />
@@ -60,4 +65,16 @@ const StyledSheet = styled(Sheet)`
 
 const StyledSheetContent = styled(Sheet.Content)`
   overflow: auto;
+`;
+
+const NoFolder = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 18px;
 `;

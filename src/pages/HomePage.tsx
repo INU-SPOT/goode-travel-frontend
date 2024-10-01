@@ -20,7 +20,18 @@ export default function HomePage() {
   const [recommendData, setRecommendData] =
     useState<ItemRecommendResponse | null>(null);
   const [error, setError] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+
+  // 로그인 여부 확인
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchRecommendItems = async () => {
@@ -96,7 +107,7 @@ export default function HomePage() {
       id: 5,
       width: 10,
       height: 6,
-      component: <FolderBlock />,
+      component: <FolderBlock isLoggedIn={isLoggedIn} />,
     },
     {
       id: 6,
@@ -127,6 +138,7 @@ export default function HomePage() {
       <NotificationSheet
         isOpen={isNotificationOpen}
         onClose={() => setIsNotificationOpen(false)}
+        isLoggedIn={isLoggedIn}
       />
     </HomeContainer>
   );

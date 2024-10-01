@@ -12,7 +12,7 @@ import { get_users } from "../../services/user";
 import { get_folders, get_folders_folderid } from "../../services/folder";
 import { useNavigate } from "react-router-dom";
 
-export default function FolderBlock() {
+export default function FolderBlock({ isLoggedIn }: { isLoggedIn: boolean }) {
   const colors = [COLOR.beige, COLOR.yellow, COLOR.green, COLOR.blue];
   const [userNickname, setUserNickname] = useState<string | null>(null);
   const [folders, setFolders] = useState<any[]>([]);
@@ -65,7 +65,9 @@ export default function FolderBlock() {
 
   return (
     <OuterContainer>
-      <Title>{userNickname}님의 저장된 리스트</Title>
+      <Title>
+        {isLoggedIn ? `${userNickname}` : `Guest`}님의 저장된 리스트
+      </Title>
       {folders.length > 0 ? (
         <StyledSwiper
           pagination={{
@@ -95,7 +97,11 @@ export default function FolderBlock() {
           ))}
         </StyledSwiper>
       ) : (
-        <EmptyBlock>폴더를 생성해보세요!</EmptyBlock>
+        <EmptyBlock>
+          {isLoggedIn
+            ? "폴더를 생성해보세요!"
+            : "로그인 후 폴더를 생성해보세요!"}
+        </EmptyBlock>
       )}
     </OuterContainer>
   );
