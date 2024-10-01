@@ -23,7 +23,7 @@ export default function ItemContainer({
     <StyledItemContainer>
       <TitleWrapper>
         <span>{itemPost.itemTitle}</span>
-        {itemPost.isOfficial && (
+        {itemPost.isOfficial && itemPost.itemType === "GOODE" && (
           <StyledInfoIcon onClick={handleNavigateWithQuery} />
         )}
       </TitleWrapper>
