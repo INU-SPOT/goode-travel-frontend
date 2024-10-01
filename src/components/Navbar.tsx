@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const navItems = [
     { url: "/", text: "홈" },
@@ -15,7 +16,11 @@ export default function Navbar() {
   return (
     <NavbarContainer>
       {navItems.map((item, index) => (
-        <NavItem key={index} onClick={() => navigate(item.url)}>
+        <NavItem
+          key={index}
+          onClick={() => navigate(item.url)}
+          isActive={location.pathname === item.url}
+        >
           {item.text}
         </NavItem>
       ))}
@@ -37,9 +42,17 @@ const NavbarContainer = styled.nav`
   z-index: 1000;
 `;
 
-const NavItem = styled.div`
+const NavItem = styled.div<{ isActive: boolean }>`
   flex: 1;
   display: flex;
   justify-content: center;
   font-size: 14px;
+  color: ${(props) =>
+    props.isActive ? "#007bff" : "#000"}; /* 활성화된 항목 색상 */
+  font-weight: ${(props) => (props.isActive ? "bold" : "normal")};
+  cursor: pointer;
+
+  &:hover {
+    color: #007bff;
+  }
 `;
