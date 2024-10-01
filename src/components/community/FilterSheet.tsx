@@ -166,7 +166,7 @@ export default function FilterSheet({
                       fullname: city.fullname,
                     })
                   }
-                  selected={selectedCity === city}
+                  selected={selectedCity?.id === city.id}
                 >
                   {city.fullname}
                 </FilterButton>
