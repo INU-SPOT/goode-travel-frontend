@@ -35,11 +35,18 @@ export default function PlanItem({
   );
 
   // 지역구 이름 찾기 로직
-  const region = local_government.find(
-    (lg) => lg.metropolitanId === metropolitanGovernmentId
-  );
-  const district = region?.districts.find((d) => d.id === localGovernmentId);
-  const regionName = district ? district.fullname : "";
+  const regionName =
+    metropolitanGovernmentId === 8
+      ? "세종특별자치시"
+      : (() => {
+          const region = local_government.find(
+            (lg) => lg.metropolitanId === metropolitanGovernmentId
+          );
+          const district = region?.districts.find(
+            (d) => d.id === localGovernmentId
+          );
+          return district ? district.fullname : "";
+        })();
 
   useEffect(() => {
     setFinished(!!isFinished);
@@ -112,7 +119,7 @@ const PlanItemContainer = styled.div`
 const ItemImage = styled.div`
   height: 100%;
   width: 60px;
-  font-size: 45px;
+  font-size: 48px;
   display: flex;
   justify-content: center;
   align-items: center;

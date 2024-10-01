@@ -10,6 +10,20 @@ export default function FolderPage() {
   const [folders, setFolders] = useState<FolderListResponse[]>([]);
   const [isAddingFolder, setIsAddingFolder] = useState(false); // 폴더 추가 모드 상태
   const [newFolderName, setNewFolderName] = useState(""); // 폴더명 입력 상태
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부 확인 상태
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 관리
+
+  // 로그인 여부 확인
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      setIsLoggedIn(true);
+      fetchFolders();
+    } else {
+      setIsLoggedIn(false);
+      setIsLoading(false); // 로그인이 안 되어 있을 때 로딩을 멈춤
+    }
+  }, []);
 
   // 폴더 목록 가져오기
   const fetchFolders = async () => {
@@ -21,6 +35,8 @@ export default function FolderPage() {
       setFolders(foldersArray);
     } catch (error) {
       console.error("Error fetching folders:", error);
+    } finally {
+      setIsLoading(false); // 폴더 데이터를 불러오면 로딩을 멈춤
     }
   };
 
@@ -58,51 +74,69 @@ export default function FolderPage() {
     }
   };
 
-  useEffect(() => {
-    fetchFolders();
-  }, []);
+  if (isLoading) {
+    return <Loading>Loading...</Loading>; // 로딩 상태일 때 로딩 메시지 표시
+  }
 
   return (
     <>
       <StyledHeader>
         저장된 폴더
-        <PlusIconButton onClick={() => setIsAddingFolder(true)}>
-          <img src={PlusIcon} alt="Add Folder" />
-        </PlusIconButton>
+        {isLoggedIn && (
+          <PlusIconButton onClick={() => setIsAddingFolder(true)}>
+            <img src={PlusIcon} alt="Add Folder" />
+          </PlusIconButton>
+        )}
       </StyledHeader>
 
-      {isAddingFolder ? (
-        <AddFolderContainer>
-          <Text>새 폴더</Text>
-          <Input
-            type="text"
-            placeholder="폴더명을 입력하세요."
-            value={newFolderName}
-            onChange={handleInputChange}
-          />
-          <ButtonContainer>
-            <ConfirmButton onClick={handleAddFolder}>확인</ConfirmButton>
-            <CancelButton onClick={() => setIsAddingFolder(false)}>
-              취소
-            </CancelButton>
-          </ButtonContainer>
-        </AddFolderContainer>
-      ) : folders.length > 0 ? (
-        <FolderContainer>
-          {folders.map((folder) => (
-            <FolderBlock
-              key={folder.folderId}
-              folder={folder}
-              onDelete={handleDeleteFolder}
+      {isLoggedIn ? (
+        isAddingFolder ? (
+          <AddFolderContainer>
+            <Text>새 폴더</Text>
+            <Input
+              type="text"
+              placeholder="폴더명을 입력하세요."
+              value={newFolderName}
+              onChange={handleInputChange}
             />
-          ))}
-        </FolderContainer>
+            <ButtonContainer>
+              <ConfirmButton onClick={handleAddFolder}>확인</ConfirmButton>
+              <CancelButton onClick={() => setIsAddingFolder(false)}>
+                취소
+              </CancelButton>
+            </ButtonContainer>
+          </AddFolderContainer>
+        ) : folders.length > 0 ? (
+          <FolderContainer>
+            {folders.map((folder) => (
+              <FolderBlock
+                key={folder.folderId}
+                folder={folder}
+                onDelete={handleDeleteFolder}
+              />
+            ))}
+          </FolderContainer>
+        ) : (
+          <NoFolder>폴더를 생성해보세요!</NoFolder>
+        )
       ) : (
-        <NoFolder>폴더를 생성해보세요!</NoFolder>
+        <NoFolder>로그인 후 이용 가능합니다.</NoFolder>
       )}
     </>
   );
 }
+
+const Loading = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 50%;
+`;
 
 const FolderContainer = styled.div`
   height: 100%;
