@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axiosInstance from "../../services/axiosInstance";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // Notification data interface
 interface NotificationData {
@@ -13,9 +13,14 @@ interface NotificationData {
   isConfirm: boolean;
 }
 
-export default function NotificationBlock() {
+interface NotificationBlockProps {
+  onClose: () => void;
+}
+
+export default function NotificationBlock({ onClose }: NotificationBlockProps) {
   const [notifications, setNotifications] = useState<NotificationData[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +41,13 @@ export default function NotificationBlock() {
     loadNotifications();
   }, []);
 
+  const handleNavigateWithQuery = (postId: number) => {
+    const params = new URLSearchParams(location.search);
+    params.set("postId", String(postId) || "");
+    const newUrl = `${location.pathname}?${params.toString()}`;
+    navigate(newUrl);
+  };
+
   const handleNotificationClick = async (notification: NotificationData) => {
     try {
       // 확인 여부 변경
@@ -46,8 +58,11 @@ export default function NotificationBlock() {
           n.id === notification.id ? { ...n, isConfirm: true } : n
         )
       );
-      // post 페이지로 이동
-      navigate(`/post/${notification.postId}`);
+      // postId를 query로 넘기기
+      handleNavigateWithQuery(notification.postId);
+
+      // 알림 시트 닫기
+      onClose();
     } catch (err) {
       console.error("Error confirming notification", err);
     }
