@@ -57,9 +57,6 @@ export default function FolderDetail() {
     try {
       const detail = await get_folders_folderid(Number(folderId));
       setFolderDetail(detail);
-
-      console.log(detail);
-
       setOriginalTitle(detail.title);
       setEditedTitle(detail.title);
       setItemOrder(detail.itemFolders.map((item: any) => item.itemFolderId));
@@ -73,7 +70,7 @@ export default function FolderDetail() {
     fetchFolderDetail();
   }, [fetchFolderDetail]);
 
-  if (!folderDetail) return <p>Loading...</p>;
+  if (!folderDetail) return <Loading>Loading...</Loading>;
 
   // SortableItem 컴포넌트 정의
   function SortableItem({ id, title }: { id: number; title: string }) {
@@ -243,7 +240,7 @@ export default function FolderDetail() {
     } else if (isAdding) {
       resetForm(); // 추가 모드를 취소
     } else {
-      navigate(-1); // 폴더 상세 페이지에서 나가기
+      navigate(`/save`); // 폴더 상세 페이지에서 나가기
     }
   };
 
@@ -251,18 +248,20 @@ export default function FolderDetail() {
     <>
       <StyledHeader>
         저장된 폴더
-        <PlusIconButton
-          onClick={() => {
-            if (isAdding) {
-              resetForm();
-            } else {
-              setIsAdding(true);
-              setEditingItem(null);
-            }
-          }}
-        >
-          <img src={PlusIcon} alt="Add Plan Item" />
-        </PlusIconButton>
+        {!isEditing && !isAdding && (
+          <PlusIconButton
+            onClick={() => {
+              if (isAdding) {
+                resetForm();
+              } else {
+                setIsAdding(true);
+                setEditingItem(null);
+              }
+            }}
+          >
+            <img src={PlusIcon} alt="추가" />
+          </PlusIconButton>
+        )}
       </StyledHeader>
 
       <DetailContainer>
@@ -286,7 +285,7 @@ export default function FolderDetail() {
             <Text>{folderDetail.title}</Text>
           )}
           <EditButton onClick={toggleEditing}>
-            {isEditing ? "완료" : "편집"}
+            {isEditing ? "완료" : !isAdding && "편집"}
           </EditButton>
         </TitleContainer>
 
@@ -346,6 +345,7 @@ export default function FolderDetail() {
               ) : (
                 <GoodeItem
                   key={item.itemFolderId}
+                  itemId={item.itemId}
                   image={item.image}
                   title={item.title}
                   itemFolderId={item.itemFolderId}
@@ -364,8 +364,20 @@ export default function FolderDetail() {
   );
 }
 
+const Loading = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 50%;
+`;
+
 const DetailContainer = styled.div`
-  padding: 0 17px;
+  padding: 0 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
