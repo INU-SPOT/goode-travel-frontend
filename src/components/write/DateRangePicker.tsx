@@ -5,6 +5,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { TileClassNameFunc } from "react-calendar";
 import useWriteStore from "../../store/useWriteStore";
+import { useSheetPadding } from "../../hooks/useSheetPadding";
 
 // 날짜를 YYYY-MM-DD 형식으로 변환하는 함수 (Date -> string)
 const formatDate = (date: Date | null): string | null => {
@@ -27,6 +28,7 @@ export default function DateRangePicker() {
   const [tmpDate, setTmpDate] = useState<TmpDate>(null);
   const [selectedDate, setSelectedDate] = useState<TmpDate>(null);
 
+  useSheetPadding(isOpen);
   useEffect(() => {
     if (selectedDate instanceof Date) {
       if (tmpDate instanceof Date) {

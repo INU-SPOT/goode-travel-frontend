@@ -1,7 +1,7 @@
-import { useEffect } from "react";
 import styled from "styled-components";
 import { Sheet } from "react-modal-sheet";
 import NotificationBlock from "./NotificationBlock";
+import { useSheetPadding } from "../../hooks/useSheetPadding";
 
 interface NotificationSheetProps {
   isOpen: boolean;
@@ -9,34 +9,12 @@ interface NotificationSheetProps {
   isLoggedIn: boolean;
 }
 
-const getScrollBarWidth = () => {
-  return window.innerWidth - document.documentElement.clientWidth;
-};
-
 export default function NotificationSheet({
   isOpen,
   onClose,
   isLoggedIn,
 }: NotificationSheetProps) {
-  useEffect(() => {
-    const scrollBarWidth = getScrollBarWidth();
-
-    if (isOpen) {
-      // 스크롤바 너비만큼 body에 padding-right 추가
-      document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = `${scrollBarWidth}px`;
-    } else {
-      // 원래대로 복원
-      document.body.style.overflow = "";
-      document.body.style.paddingRight = "";
-    }
-
-    // 컴포넌트가 언마운트될 때 원래대로 복원
-    return () => {
-      document.body.style.overflow = "";
-      document.body.style.paddingRight = "";
-    };
-  }, [isOpen]);
+  useSheetPadding(isOpen);
 
   return (
     <StyledSheet isOpen={isOpen} onClose={onClose}>

@@ -35,23 +35,6 @@ const useAuth = () => {
         }
         navigate("/");
       }
-
-      // localStorage에서 accessToken 가져오기
-      const accessToken = localStorage.getItem("accessToken");
-
-      // accessToken이 있을 경우 get_is_registered 호출
-      if (accessToken) {
-        try {
-          const response = await get_is_registered();
-
-          // 만약 유저가 등록되지 않았다면 /mypage로 이동
-          if (!response.data) {
-            navigate("/mypage");
-          }
-        } catch (error) {
-          console.error("Error checking registration status:", error);
-        }
-      }
     };
 
     authenticateUser();

@@ -9,6 +9,7 @@ import {
 } from "../../services/folder";
 import { FolderListResponse } from "../../types/folder";
 import { ItemFolderCreateRequest } from "../../types/item";
+import { useSheetPadding } from "../../hooks/useSheetPadding";
 
 interface FolderSelectSheetProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ export default function FolderSelectSheet({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isAdding, setIsAdding] = useState<boolean>(false);
 
+  useSheetPadding(isOpen);
   useEffect(() => {
     fetchFolders();
   }, []);
