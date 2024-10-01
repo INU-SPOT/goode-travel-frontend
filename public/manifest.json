@@ -3,17 +3,17 @@
   "name": "굳이?",
   "icons": [
     {
-      "src": "goode-logo-rounded-64.png",
+      "src": "goode-logo-64.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "goode-logo-rounded-192.png",
+      "src": "goode-logo-192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "goode-logo-rounded-512.png",
+      "src": "goode-logo-512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
