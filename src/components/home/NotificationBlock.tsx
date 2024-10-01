@@ -63,7 +63,6 @@ export default function NotificationBlock({ onClose }: NotificationBlockProps) {
 
       // 알림 시트 닫기
       onClose();
-      console.log(1);
     } catch (err) {
       console.error("Error confirming notification", err);
     }
