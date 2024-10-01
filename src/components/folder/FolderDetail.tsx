@@ -248,18 +248,20 @@ export default function FolderDetail() {
     <>
       <StyledHeader>
         저장된 폴더
-        <PlusIconButton
-          onClick={() => {
-            if (isAdding) {
-              resetForm();
-            } else {
-              setIsAdding(true);
-              setEditingItem(null);
-            }
-          }}
-        >
-          <img src={PlusIcon} alt="Add Plan Item" />
-        </PlusIconButton>
+        {!isEditing && !isAdding && (
+          <PlusIconButton
+            onClick={() => {
+              if (isAdding) {
+                resetForm();
+              } else {
+                setIsAdding(true);
+                setEditingItem(null);
+              }
+            }}
+          >
+            <img src={PlusIcon} alt="추가" />
+          </PlusIconButton>
+        )}
       </StyledHeader>
 
       <DetailContainer>
@@ -283,7 +285,7 @@ export default function FolderDetail() {
             <Text>{folderDetail.title}</Text>
           )}
           <EditButton onClick={toggleEditing}>
-            {isEditing ? "완료" : "편집"}
+            {isEditing ? "완료" : !isAdding && "편집"}
           </EditButton>
         </TitleContainer>
 
