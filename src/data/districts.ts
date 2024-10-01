@@ -130,6 +130,12 @@ export const local_government = [
     ],
   },
   {
+    metropolitanId: 8,
+    districts: [
+      { id: 229, name: "세종특별자치시", fullname: "세종특별자치시" },
+    ],
+  },
+  {
     metropolitanId: 9,
     districts: [
       { id: 76, name: "수원시", fullname: "경기도 수원시" },
@@ -295,6 +301,7 @@ export const local_government = [
       { id: 206, name: "예천군", fullname: "경상북도 예천군" },
       { id: 207, name: "봉화군", fullname: "경상북도 봉화군" },
       { id: 208, name: "울진군", fullname: "경상북도 울진군" },
+      { id: 230, name: "울릉군", fullname: "경상북도 울릉군" },
     ],
   },
   {

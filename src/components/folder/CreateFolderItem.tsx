@@ -72,7 +72,7 @@ export default function CreateFolderItem({
       return;
     }
 
-    // 세종특별자치시(8번)를 선택하지 않았을 때 시/군/구 필수 선택
+    // 세종특별자치시(8번) 이외에 시/군/구 필수 선택
     if (!selectedLocal && selectedCity?.id !== 8) {
       alert("시/군/구를 선택해주세요.");
       return;
@@ -90,12 +90,7 @@ export default function CreateFolderItem({
       title: newTitle.trim(),
       imageUrl: finalEmoji,
       // 세종특별자치시일 경우 localGovernmentId는 229로 설정
-      localGovernmentId:
-        selectedCity?.id === 8
-          ? 229
-          : selectedLocal
-          ? selectedLocal.id
-          : selectedCity!.id,
+      localGovernmentId: selectedCity?.id === 8 ? 229 : selectedLocal!.id,
       address: address.trim(),
     };
 
@@ -105,12 +100,7 @@ export default function CreateFolderItem({
           itemFolderId: editingItem.itemFolderId,
           title: newTitle.trim(),
           emoji: finalEmoji,
-          localGovernmentId:
-            selectedCity?.id === 8
-              ? 229
-              : selectedLocal
-              ? selectedLocal.id
-              : selectedCity!.id,
+          localGovernmentId: selectedCity?.id === 8 ? 229 : selectedLocal!.id,
           address: address.trim(),
         };
         await put_folders_plan(updatedData);

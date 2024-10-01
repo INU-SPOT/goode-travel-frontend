@@ -62,8 +62,8 @@ const GoodeItemContainer = styled.div`
 `;
 
 const ItemImage = styled.img`
-  height: 85%;
-  width: 60px;
+  height: 68%;
+  width: 48px;
   border-radius: 50%;
   margin: 0 10px 0 0;
 `;
@@ -96,7 +96,7 @@ const ButtonGroup = styled.div`
     border: none;
     cursor: pointer;
     white-space: normal;
-    max-width: 200px; /* 버튼의 최대 너비를 제한 */
+    max-width: 180px; /* 버튼의 최대 너비를 제한 */
     word-break: break-word;
     text-align: left;
 
