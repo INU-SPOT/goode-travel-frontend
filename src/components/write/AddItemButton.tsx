@@ -174,7 +174,7 @@ export default function AddItemButton() {
       <StyledSheet isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <Sheet.Container>
           <Sheet.Header />
-          <Sheet.Content>
+          <Sheet.Content disableDrag>
             <ContentWrapper>
               <StyledAddItemButton
                 onClick={() => setIsCreateItemPostOpen(true)}

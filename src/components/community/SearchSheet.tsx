@@ -27,7 +27,7 @@ export default function SearchSheet({
     <StyledSheet isOpen={isOpen} onClose={onClose}>
       <Sheet.Container>
         <Sheet.Header />
-        <Sheet.Content>
+        <Sheet.Content disableDrag>
           <ContentWrapper>
             <StyledInput
               type="text"

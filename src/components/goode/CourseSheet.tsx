@@ -120,7 +120,7 @@ export default function CourseSheet({ courseId }: CourseSheetProps) {
       <StyledSheet isOpen={isOpen} onClose={handleClose}>
         <Sheet.Container>
           <Sheet.Header />
-          <Sheet.Content>
+          <Sheet.Content disableDrag>
             {course && (
               <ContentWrapper>
                 <h3 className="title">{course.goodeTitle}</h3>
