@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
 import { useLocation, useNavigate } from "react-router-dom";
 import { delete_posts_postid } from "../../services/post";
 
@@ -39,9 +38,7 @@ export default function PostHeader({
 
   return (
     <StyledHeader>
-      <div onClick={handleClose}>
-        <StyledXIcon />
-      </div>
+      <div />
       <div>
         {isOwner && (
           <>
@@ -89,9 +86,4 @@ const StyledHeader = styled.header`
   .delete {
     background-color: #ff0000;
   }
-`;
-
-const StyledXIcon = styled(XIcon)`
-  width: 12px;
-  height: 12px;
 `;
