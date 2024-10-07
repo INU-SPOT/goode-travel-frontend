@@ -98,7 +98,7 @@ export default function FolderSelectSheet({
     <StyledSheet isOpen={isOpen} onClose={handleClose}>
       <Sheet.Container>
         <Sheet.Header />
-        <Sheet.Content>
+        <Sheet.Content disableDrag>
           {isLoading ? (
             <LoadingMessage>로딩 중...</LoadingMessage>
           ) : (
