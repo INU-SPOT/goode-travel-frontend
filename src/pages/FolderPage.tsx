@@ -12,6 +12,7 @@ export default function FolderPage() {
   const [newFolderName, setNewFolderName] = useState(""); // 폴더명 입력 상태
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부 확인 상태
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 관리
+  const [isCreating, setIsCreating] = useState(false); // 폴더 생성 중인지 확인 상태
 
   // 로그인 여부 확인
   useEffect(() => {
@@ -61,6 +62,9 @@ export default function FolderPage() {
 
   // 폴더 추가 API 호출
   const handleAddFolder = async () => {
+    if (isCreating) return; // 폴더 생성 중이면 추가로 호출되지 않도록 방지
+
+    setIsCreating(true); // 폴더 생성 중 상태 설정
     try {
       const folderData: FolderCreateRequest = {
         title: newFolderName,
@@ -71,6 +75,8 @@ export default function FolderPage() {
       fetchFolders(); // 폴더 목록 새로고침
     } catch (error) {
       console.error("Error adding folder:", error);
+    } finally {
+      setIsCreating(false); // 폴더 생성 중 상태 해제
     }
   };
 
@@ -100,7 +106,12 @@ export default function FolderPage() {
               onChange={handleInputChange}
             />
             <ButtonContainer>
-              <ConfirmButton onClick={handleAddFolder}>확인</ConfirmButton>
+              <ConfirmButton
+                onClick={handleAddFolder}
+                disabled={isCreating} // 폴더 생성 중일 때 버튼 비활성화
+              >
+                {isCreating ? "생성 중..." : "확인"}
+              </ConfirmButton>
               <CancelButton onClick={() => setIsAddingFolder(false)}>
                 취소
               </CancelButton>
