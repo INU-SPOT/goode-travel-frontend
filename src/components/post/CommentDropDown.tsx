@@ -23,6 +23,7 @@ export default function CommentDropDown({
   fetchCommentDetail: () => void;
 }) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleEdit = async () => {
     const newContent = prompt("수정할 내용을 입력해주세요:", content);
@@ -42,6 +43,9 @@ export default function CommentDropDown({
 
   const handleDelete = async () => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
+      if (isDeleting) return; // 중복 호출 방지
+      setIsDeleting(true);
+
       try {
         if (type === "comment") {
           await delete_posts_comments(id);
@@ -51,6 +55,8 @@ export default function CommentDropDown({
         fetchCommentDetail();
       } catch (error) {
         console.error("삭제 실패:", error);
+      } finally {
+        setIsDeleting(false);
       }
     }
   };

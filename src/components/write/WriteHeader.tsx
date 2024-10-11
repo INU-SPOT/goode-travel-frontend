@@ -3,6 +3,7 @@ import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
 import { useNavigate } from "react-router-dom";
 import { post_posts, patch_posts } from "../../services/post";
 import useWriteStore from "../../store/useWriteStore";
+import { useState } from "react";
 
 export default function WriteHeader({
   saveData,
@@ -20,8 +21,12 @@ export default function WriteHeader({
   const navigate = useNavigate();
   const { title, firstContent, lastContent, startDate, endDate, itemPosts } =
     useWriteStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
+    if (isSubmitting) return; // 중복 호출 방지
+    setIsSubmitting(true);
+
     const postData = {
       title,
       firstContent,
@@ -55,6 +60,8 @@ export default function WriteHeader({
           ? "게시글 수정에 실패했습니다."
           : "게시글 등록에 실패했습니다."
       );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
