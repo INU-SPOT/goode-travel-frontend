@@ -10,7 +10,13 @@ import DateRange from "./DateRange";
 import Writer from "./Writer";
 import Utility from "./Utility";
 
-export default function PostContainer({ postId }: { postId: number }) {
+export default function PostContainer({
+  postId,
+  handleClose,
+}: {
+  postId: number;
+  handleClose: () => void;
+}) {
   const [postDetail, setPostDetail] = useState<PostDetailResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,12 +26,18 @@ export default function PostContainer({ postId }: { postId: number }) {
       setLoading(true);
       const response = await get_posts_postid(postId);
       setPostDetail(response.data);
-    } catch (err) {
-      setError("Failed to load post details");
+    } catch (err: any) {
+      if (err.response && err.response.status === 404) {
+        // 404일 경우
+        alert("존재하지 않는 게시글입니다.");
+        handleClose();
+      } else {
+        setError("Failed to load post details"); // 다른 에러는 기존 처리
+      }
     } finally {
       setLoading(false);
     }
-  }, [postId]);
+  }, [postId, handleClose]);
 
   useEffect(() => {
     if (postId) {

@@ -45,7 +45,7 @@ export default function PostPage({ postId }: { postId: string | null }) {
             <CloseButton onClick={handleClose}>
               <StyledXIcon />
             </CloseButton>
-            <PostContainer postId={Number(postId)} />
+            <PostContainer postId={Number(postId)} handleClose={handleClose} />
             <Line />
             <CommentsContainer postId={Number(postId)} />
           </PostPageContainer>
