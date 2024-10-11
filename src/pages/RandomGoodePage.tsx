@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import styled, { keyframes, css } from "styled-components";
 import Confetti from "react-confetti";
 import { get_items_random } from "../services/home";
@@ -11,24 +11,37 @@ export default function RandomGoodePage() {
   const [selectedGoode, setSelectedGoode] =
     useState<GoodeRandomResponse | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [isShuffling, setIsShuffling] = useState(false);
+  const isShufflingRef = useRef(false); // useRef로 isShuffling 관리
   const navigate = useNavigate();
 
-  const handleShuffleClick = () => {
+  const handleShuffleClick = useCallback(async () => {
+    if (isShufflingRef.current) return; // 중복 호출 방지
+    isShufflingRef.current = true; // 호출 시작 표시
+    setIsShuffling(true);
+
     setSelectedGoode(null);
     setIsAnimated(true);
     setShowConfetti(false);
 
     setTimeout(async () => {
-      const goode = await get_items_random();
-      setIsAnimated(false);
-      setSelectedGoode(goode);
-      setShowConfetti(true);
+      try {
+        const goode = await get_items_random();
+        setSelectedGoode(goode);
+        setShowConfetti(true);
+      } catch (error) {
+        console.error("Failed to fetch random Goode", error);
+      } finally {
+        setIsAnimated(false);
+        setIsShuffling(false);
+        isShufflingRef.current = false; // 호출 종료 표시
+      }
     }, 1800);
-  };
+  }, []); // 빈 배열로 의존성 설정
 
   useEffect(() => {
     handleShuffleClick();
-  }, []);
+  }, [handleShuffleClick]); // handleShuffleClick은 재생성되지 않으므로 한 번만 실행
 
   const handleClick = (itemId: number) => {
     navigate(`?itemId=${itemId}`);
@@ -67,7 +80,9 @@ export default function RandomGoodePage() {
           </CardItem>
         ))}
       </CardList>
-      <ShuffleButton onClick={handleShuffleClick}>다시 뽑기</ShuffleButton>
+      <ShuffleButton onClick={handleShuffleClick} disabled={isShuffling}>
+        {isShuffling ? "로딩 중..." : "다시 뽑기"}
+      </ShuffleButton>
     </CardWrapper>
   );
 }
@@ -162,18 +177,18 @@ const Card = styled.div<{ color: string }>`
   overflow-wrap: break-word;
 `;
 
-const ShuffleButton = styled.button`
+const ShuffleButton = styled.button<{ disabled: boolean }>`
   margin-top: 20px;
   padding: 10px 20px;
   border: none;
   border-radius: 10px;
-  background-color: #000000;
+  background-color: ${({ disabled }) => (disabled ? "#ccc" : "#000000")};
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
   color: white;
   font-size: 18px;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
 
   &:hover {
-    background-color: #0d2a3d;
+    background-color: ${({ disabled }) => (disabled ? "#ccc" : "#0d2a3d")};
   }
 `;

@@ -1,6 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import styled from "styled-components";
 import { ReactComponent as XIcon } from "../../assets/icons/x-icon.svg";
 import { ReactComponent as CameraIcon } from "../../assets/icons/camera-icon.svg";
@@ -26,6 +25,8 @@ export default function Settings({
   const [metropolitanId, setMetropolitanId] = useState(
     userInfo.metropolitanGovernmentId
   );
+  const [isSaving, setIsSaving] = useState(false); // 저장 중 상태
+  const [isUploading, setIsUploading] = useState(false); // 업로드 중 상태
 
   useEffect(() => {
     if (isFirst) {
@@ -40,24 +41,35 @@ export default function Settings({
       const file = event.target.files[0];
       const formData = new FormData();
       formData.append("file", file);
+      setIsUploading(true); // 업로드 시작
       try {
         const response = await post_users_image(formData);
         const imageName = response.data;
         setProfileImage(imageName);
       } catch (error) {
         console.error("Image upload failed:", error);
+      } finally {
+        setIsUploading(false); // 업로드 완료
       }
     }
   };
 
   const handleSave = async () => {
-    if (profileImage === "") {
-      await put_users(nickname, metropolitanId, null);
-    } else {
-      await put_users(nickname, metropolitanId, profileImage);
+    if (isSaving) return; // 중복 호출 방지
+    setIsSaving(true); // 저장 시작
+    try {
+      if (profileImage === "") {
+        await put_users(nickname, metropolitanId, null);
+      } else {
+        await put_users(nickname, metropolitanId, profileImage);
+      }
+      loadUser();
+      setEditing(false);
+    } catch (error) {
+      console.error("저장 실패:", error);
+    } finally {
+      setIsSaving(false); // 저장 완료
     }
-    loadUser();
-    setEditing(false);
   };
 
   const handleCancel = () => {
@@ -79,7 +91,7 @@ export default function Settings({
         <>
           <ImageWrapper>
             <img
-              style={{ opacity: 0.4 }}
+              style={{ opacity: isUploading ? 0.4 : 1 }}
               src={`${process.env.REACT_APP_IMAGE_URL}/${profileImage}`}
               alt=""
             />
@@ -91,6 +103,7 @@ export default function Settings({
                 accept="image/*"
                 style={{ display: "none" }}
                 onChange={handleImageUpload}
+                disabled={isUploading} // 업로드 중에는 비활성화
               />
             </label>
           </ImageWrapper>
@@ -108,17 +121,21 @@ export default function Settings({
               value={metropolitanId}
               onChange={(e) => setMetropolitanId(Number(e.target.value))}
             >
-              {metropolitan_government.map((gov, index) => {
-                return (
-                  <option key={index} value={gov.id}>
-                    {gov.name}
-                  </option>
-                );
-              })}
+              {metropolitan_government.map((gov, index) => (
+                <option key={index} value={gov.id}>
+                  {gov.name}
+                </option>
+              ))}
             </select>
           </EditFiledWrapper>
-          <button onClick={handleSave}>완료</button>
-          {!isFirst && <button onClick={handleCancel}>취소</button>}
+          <button onClick={handleSave} disabled={isSaving || isUploading}>
+            {isSaving ? "저장 중..." : "완료"}
+          </button>
+          {!isFirst && (
+            <button onClick={handleCancel} disabled={isSaving || isUploading}>
+              취소
+            </button>
+          )}
         </>
       ) : (
         <>

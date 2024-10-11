@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import { delete_posts_postid } from "../../services/post";
+import { useState } from "react";
 
 export default function PostHeader({
   postId,
@@ -11,6 +12,7 @@ export default function PostHeader({
 }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // 시트를 닫을 때 postId를 쿼리에서 제거
   const handleClose = () => {
@@ -24,15 +26,19 @@ export default function PostHeader({
     const confirmDelete = window.confirm(
       "정말로 이 게시글을 삭제하시겠습니까?"
     );
-    if (confirmDelete) {
-      try {
-        await delete_posts_postid(postId);
-        alert("게시글이 삭제되었습니다.");
-        handleClose();
-      } catch (error) {
-        console.error("게시글 삭제 중 오류 발생:", error);
-        alert("게시글 삭제에 실패했습니다. 다시 시도해주세요.");
-      }
+    if (!confirmDelete || isDeleting) return; // 중복 호출 방지
+
+    setIsDeleting(true);
+
+    try {
+      await delete_posts_postid(postId);
+      alert("게시글이 삭제되었습니다.");
+      handleClose();
+    } catch (error) {
+      console.error("게시글 삭제 중 오류 발생:", error);
+      alert("게시글 삭제에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
