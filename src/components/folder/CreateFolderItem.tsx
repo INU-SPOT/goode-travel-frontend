@@ -37,6 +37,7 @@ export default function CreateFolderItem({
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState<boolean>(false);
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [selectedLocal, setSelectedLocal] = useState<City | null>(null);
+  const [isCreating, setIsCreating] = useState<boolean>(false); // 중복 호출 방지 상태
 
   // 컴포넌트가 마운트되거나 editingItem이 변경될 때 상태 초기화
   useEffect(() => {
@@ -67,19 +68,26 @@ export default function CreateFolderItem({
   }, [editingItem]);
 
   const handleAddOrUpdateItem = async () => {
+    if (isCreating) return; // API 호출 중이면 중복 호출 방지
+
+    setIsCreating(true); // API 호출 중 상태 설정
+
     if (!selectedCity && !selectedLocal) {
       alert("지역을 선택해주세요.");
+      setIsCreating(false); // 오류 발생 시 상태 해제
       return;
     }
 
     // 세종특별자치시(8번) 이외에 시/군/구 필수 선택
     if (!selectedLocal && selectedCity?.id !== 8) {
       alert("시/군/구를 선택해주세요.");
+      setIsCreating(false); // 오류 발생 시 상태 해제
       return;
     }
 
     if (newTitle.trim() === "") {
       alert("계획의 이름을 입력해주세요.");
+      setIsCreating(false); // 오류 발생 시 상태 해제
       return;
     }
 
@@ -119,6 +127,8 @@ export default function CreateFolderItem({
       resetForm();
     } catch (error) {
       alert("계획을 저장하는 중 오류가 발생했습니다.");
+    } finally {
+      setIsCreating(false); // API 호출 완료 후 상태 해제
     }
   };
 
@@ -195,7 +205,9 @@ export default function CreateFolderItem({
         onChange={(e) => setAddress(e.target.value)}
       />
 
-      <ConfirmButton onClick={handleAddOrUpdateItem}>완료</ConfirmButton>
+      <ConfirmButton onClick={handleAddOrUpdateItem} disabled={isCreating}>
+        {isCreating ? "생성 중..." : "완료"}
+      </ConfirmButton>
     </AddPlanItemContainer>
   );
 }
