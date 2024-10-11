@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled, { keyframes, css } from "styled-components";
 import Confetti from "react-confetti";
 import { get_items_random } from "../services/home";
@@ -11,12 +11,12 @@ export default function RandomGoodePage() {
   const [selectedGoode, setSelectedGoode] =
     useState<GoodeRandomResponse | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [isShuffling, setIsShuffling] = useState(false); // 중복 호출 방지 상태
+  const [isShuffling, setIsShuffling] = useState(false);
   const navigate = useNavigate();
 
-  const handleShuffleClick = async () => {
+  const handleShuffleClick = useCallback(async () => {
     if (isShuffling) return; // 중복 호출 방지
-    setIsShuffling(true); // 호출 중 상태 설정
+    setIsShuffling(true);
 
     setSelectedGoode(null);
     setIsAnimated(true);
@@ -31,14 +31,14 @@ export default function RandomGoodePage() {
         console.error("Failed to fetch random Goode", error);
       } finally {
         setIsAnimated(false);
-        setIsShuffling(false); // 호출 완료 후 상태 해제
+        setIsShuffling(false);
       }
     }, 1800);
-  };
+  }, [isShuffling]);
 
   useEffect(() => {
     handleShuffleClick();
-  }, []);
+  }, [handleShuffleClick]);
 
   const handleClick = (itemId: number) => {
     navigate(`?itemId=${itemId}`);
