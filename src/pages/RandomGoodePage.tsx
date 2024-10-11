@@ -11,18 +11,28 @@ export default function RandomGoodePage() {
   const [selectedGoode, setSelectedGoode] =
     useState<GoodeRandomResponse | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [isShuffling, setIsShuffling] = useState(false); // 중복 호출 방지 상태
   const navigate = useNavigate();
 
-  const handleShuffleClick = () => {
+  const handleShuffleClick = async () => {
+    if (isShuffling) return; // 중복 호출 방지
+    setIsShuffling(true); // 호출 중 상태 설정
+
     setSelectedGoode(null);
     setIsAnimated(true);
     setShowConfetti(false);
 
     setTimeout(async () => {
-      const goode = await get_items_random();
-      setIsAnimated(false);
-      setSelectedGoode(goode);
-      setShowConfetti(true);
+      try {
+        const goode = await get_items_random();
+        setSelectedGoode(goode);
+        setShowConfetti(true);
+      } catch (error) {
+        console.error("Failed to fetch random Goode", error);
+      } finally {
+        setIsAnimated(false);
+        setIsShuffling(false); // 호출 완료 후 상태 해제
+      }
     }, 1800);
   };
 
@@ -67,7 +77,9 @@ export default function RandomGoodePage() {
           </CardItem>
         ))}
       </CardList>
-      <ShuffleButton onClick={handleShuffleClick}>다시 뽑기</ShuffleButton>
+      <ShuffleButton onClick={handleShuffleClick} disabled={isShuffling}>
+        {isShuffling ? "로딩 중..." : "다시 뽑기"}
+      </ShuffleButton>
     </CardWrapper>
   );
 }
@@ -162,18 +174,18 @@ const Card = styled.div<{ color: string }>`
   overflow-wrap: break-word;
 `;
 
-const ShuffleButton = styled.button`
+const ShuffleButton = styled.button<{ disabled: boolean }>`
   margin-top: 20px;
   padding: 10px 20px;
   border: none;
   border-radius: 10px;
-  background-color: #000000;
+  background-color: ${({ disabled }) => (disabled ? "#ccc" : "#000000")};
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
   color: white;
   font-size: 18px;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
 
   &:hover {
-    background-color: #0d2a3d;
+    background-color: ${({ disabled }) => (disabled ? "#ccc" : "#0d2a3d")};
   }
 `;
