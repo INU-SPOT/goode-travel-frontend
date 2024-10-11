@@ -20,7 +20,7 @@ export default function NotificationSheet({
     <StyledSheet isOpen={isOpen} onClose={onClose}>
       <Sheet.Container>
         <Sheet.Header />
-        <StyledSheetContent>
+        <StyledSheetContent disableDrag>
           {isLoggedIn ? (
             <NotificationBlock onClose={onClose} /> // 알림 목록을 보여줌
           ) : (

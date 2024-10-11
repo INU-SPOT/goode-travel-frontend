@@ -137,6 +137,13 @@ export default function HomePage() {
         </HeaderContainer>
         <BentoGrid items={items} />
       </Container>
+      <iframe
+        src="/hotel-widget.html"
+        title="Hotel Widget"
+        width="100%"
+        height="320px"
+        style={{ border: "none", marginTop: "20px" }}
+      />
       <NotificationSheet
         isOpen={isNotificationOpen}
         onClose={() => setIsNotificationOpen(false)}

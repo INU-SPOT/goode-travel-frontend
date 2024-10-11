@@ -125,7 +125,7 @@ export default function GoodeSheet({ itemId }: GoodeSheetProps) {
       <StyledSheet isOpen={isOpen} onClose={handleClose}>
         <Sheet.Container>
           <Sheet.Header />
-          <Sheet.Content>
+          <Sheet.Content disableDrag>
             {goode && itemId && (
               <ContentWrapper>
                 <TitleWrapper>

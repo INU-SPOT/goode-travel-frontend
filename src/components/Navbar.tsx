@@ -65,8 +65,4 @@ const NavItem = styled.div<{
   border-top-left-radius: ${(props) => (props.$isFirst ? "14px" : "0")};
 
   border-top-right-radius: ${(props) => (props.$isLast ? "14px" : "0")};
-
-  &:hover {
-    color: #007bff;
-  }
 `;

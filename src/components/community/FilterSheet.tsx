@@ -142,7 +142,7 @@ export default function FilterSheet({
     <StyledSheet isOpen={isOpen} onClose={onClose}>
       <Sheet.Container>
         <Sheet.Header />
-        <Sheet.Content>
+        <Sheet.Content disableDrag>
           <ContentWrapper>
             <h3>#여행테마</h3>
             <FiltersWrapper>

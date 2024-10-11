@@ -90,7 +90,7 @@ export default function DateRangePicker() {
       <StyledSheet isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <Sheet.Container>
           <Sheet.Header />
-          <Sheet.Content>
+          <Sheet.Content disableDrag>
             <ContentWrapper>
               <h3>언제 다녀오셨나요?</h3>
               <Calendar

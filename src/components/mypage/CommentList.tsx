@@ -88,9 +88,13 @@ export default function CommentList({
 }) {
   return (
     <StyledCommentList>
-      {comments.map((comment, index) => (
-        <CommentCard key={index} comment={comment} />
-      ))}
+      {comments.length === 0 ? (
+        <NoCommentsMessage>작성한 댓글이 없습니다.</NoCommentsMessage>
+      ) : (
+        comments.map((comment, index) => (
+          <CommentCard key={index} comment={comment} />
+        ))
+      )}
     </StyledCommentList>
   );
 }
@@ -100,4 +104,11 @@ const StyledCommentList = styled.div`
   flex-direction: column;
   gap: 16px;
   margin: 0 24px 0 24px;
+`;
+
+const NoCommentsMessage = styled.div`
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  padding: 24px;
 `;

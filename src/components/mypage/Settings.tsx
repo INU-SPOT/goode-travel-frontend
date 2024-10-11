@@ -141,7 +141,7 @@ export default function Settings({
           <button onClick={handleLogout}>로그아웃</button>
           <span>
             <p>이용 약관</p>
-            <p>회원 탈퇴</p>
+            {/* <p>회원 탈퇴</p> // TODO: 회원 탈퇴는 일단 숨기기 */}
           </span>
         </>
       )}

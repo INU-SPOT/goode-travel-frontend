@@ -5,6 +5,7 @@ import { Sheet } from "react-modal-sheet";
 import PostContainer from "../components/post/PostContainer";
 import CommentsContainer from "../components/post/CommentsContainer";
 import { useSheetPadding } from "../hooks/useSheetPadding";
+import { ReactComponent as XIcon } from "../assets/icons/x-icon.svg";
 
 export default function PostPage({ postId }: { postId: string | null }) {
   const location = useLocation();
@@ -41,6 +42,9 @@ export default function PostPage({ postId }: { postId: string | null }) {
       >
         <Sheet.Content>
           <PostPageContainer>
+            <CloseButton onClick={handleClose}>
+              <StyledXIcon />
+            </CloseButton>
             <PostContainer postId={Number(postId)} />
             <Line />
             <CommentsContainer postId={Number(postId)} />
@@ -59,6 +63,7 @@ const StyledSheet = styled(Sheet)`
 `;
 
 const PostPageContainer = styled.div`
+  position: relative;
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -69,4 +74,18 @@ const Line = styled.div`
   height: 2px;
   width: 100%;
   background-color: #e0e0e0;
+`;
+
+const CloseButton = styled.div`
+  position: absolute;
+  padding: 4px;
+  top: 22px;
+  left: 22px;
+  z-index: 1000;
+  cursor: pointer;
+`;
+
+const StyledXIcon = styled(XIcon)`
+  width: 12px;
+  height: 12px;
 `;
