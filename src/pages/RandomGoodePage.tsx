@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import styled, { keyframes, css } from "styled-components";
 import Confetti from "react-confetti";
 import { get_items_random } from "../services/home";
@@ -12,10 +12,12 @@ export default function RandomGoodePage() {
     useState<GoodeRandomResponse | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [isShuffling, setIsShuffling] = useState(false);
+  const isShufflingRef = useRef(false); // useRef로 isShuffling 관리
   const navigate = useNavigate();
 
   const handleShuffleClick = useCallback(async () => {
-    if (isShuffling) return; // 중복 호출 방지
+    if (isShufflingRef.current) return; // 중복 호출 방지
+    isShufflingRef.current = true; // 호출 시작 표시
     setIsShuffling(true);
 
     setSelectedGoode(null);
@@ -32,13 +34,14 @@ export default function RandomGoodePage() {
       } finally {
         setIsAnimated(false);
         setIsShuffling(false);
+        isShufflingRef.current = false; // 호출 종료 표시
       }
     }, 1800);
-  }, [isShuffling]);
+  }, []); // 빈 배열로 의존성 설정
 
   useEffect(() => {
     handleShuffleClick();
-  }, [handleShuffleClick]);
+  }, [handleShuffleClick]); // handleShuffleClick은 재생성되지 않으므로 한 번만 실행
 
   const handleClick = (itemId: number) => {
     navigate(`?itemId=${itemId}`);
